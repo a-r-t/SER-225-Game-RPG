@@ -21,8 +21,8 @@ permalink: /GameCodeDetails/Player/PlayerStates
 # Player States
 
 The `Player` has several different states it can be in based on the value of its `playerState` instance variable.
-Each state can lead to another state based on the player's actions each cycle of the game loop. The states also dictate
-which animation/frames the player should switch to (e.g. player walking animation when in the `WALKING` state)
+Each flagManager can lead to another flagManager based on the player's actions each cycle of the game loop. The states also dictate
+which animation/frames the player should switch to (e.g. player walking animation when in the `WALKING` flagManager)
 The `PlayerState` enum in the `Level` package define the following states that the player can be in:
 - **STANDING** -- player is standing still
 - **WALKING** -- player is walking
@@ -33,9 +33,9 @@ The `PlayerState` enum in the `Level` package define the following states that t
 
 ![player-standing.PNG](../../../assets/images/player-standing.PNG)
 
-If the player is on the ground and no keys are pressed, the player will enter its `STANDING` state, where it does nothing
-and just waits for another key to be pressed which will activate another state. The `playerStanding` method contains
-the simple logic for the `STANDING` state, which looks like this:
+If the player is on the ground and no keys are pressed, the player will enter its `STANDING` flagManager, where it does nothing
+and just waits for another key to be pressed which will activate another flagManager. The `playerStanding` method contains
+the simple logic for the `STANDING` flagManager, which looks like this:
 
 ```java
 protected void playerStanding() {
@@ -51,7 +51,7 @@ protected void playerStanding() {
 }
 ```
 
-It really just checks for key presses and if so sets the player to a new state. Not much else to do when you're standing still.
+It really just checks for key presses and if so sets the player to a new flagManager. Not much else to do when you're standing still.
 
 While standing, the player uses either the `STAND_RIGHT` or `STAND_LEFT` animation.
 
@@ -59,10 +59,10 @@ While standing, the player uses either the `STAND_RIGHT` or `STAND_LEFT` animati
 
 ![player-walking.gif](../../../assets/images/player-walking.gif)
 
-If the player is on the ground and either the right or left arrow key is pressed, the player will enter its `WALKING` state,
-where it will move either left or right in the level. If no keys are pressed while in this state, the player will stop moving and go
-back into its `STANDING` state. How fast the player walks is determined by the `walkSpeed` instance variable. The `playerWalking` method
-contains the logic for the `WALKING` state. The player will change the direction it's facing based on which arrow key is pressed.
+If the player is on the ground and either the right or left arrow key is pressed, the player will enter its `WALKING` flagManager,
+where it will move either left or right in the level. If no keys are pressed while in this flagManager, the player will stop moving and go
+back into its `STANDING` flagManager. How fast the player walks is determined by the `walkSpeed` instance variable. The `playerWalking` method
+contains the logic for the `WALKING` flagManager. The player will change the direction it's facing based on which arrow key is pressed.
 
 While walking, the player uses either the `WALK_RIGHT` or `WALK_LEFT` animation.
 
@@ -70,14 +70,14 @@ While walking, the player uses either the `WALK_RIGHT` or `WALK_LEFT` animation.
 
 ![player-jumping.gif](../../../assets/images/player-jumping.gif)
 
-This state's logic is a bit more complicated from the others.
-If the player is on the ground and presses the up arrow key, the player will enter its `JUMPING` state. The player's `airGroundState` will
+This flagManager's logic is a bit more complicated from the others.
+If the player is on the ground and presses the up arrow key, the player will enter its `JUMPING` flagManager. The player's `airGroundState` will
 be changed to `AIR`, and the player will start rising until gravity catches up, at which point the player will fall downwards until it
 hits the ground again, at which point the player's `airGroundState` will be changed back to `GROUND` and the player will transition
-into either a standing or walking state. While in the air in the `JUMPING` state, the player can move left and right, but will not change
-the direction it is facing. The player is still considered in `JUMPING` state while it is falling downwards, and if the player runs off the edge
-of a cliff and ends up in the air, that is also considered `JUMPING` state -- basically if the player is in the air, it is put in
-`JUMPING` state. I probably should have made a separate falling state but...meh it's not really needed.
+into either a standing or walking flagManager. While in the air in the `JUMPING` flagManager, the player can move left and right, but will not change
+the direction it is facing. The player is still considered in `JUMPING` flagManager while it is falling downwards, and if the player runs off the edge
+of a cliff and ends up in the air, that is also considered `JUMPING` flagManager -- basically if the player is in the air, it is put in
+`JUMPING` flagManager. I probably should have made a separate falling flagManager but...meh it's not really needed.
 
 The player's jumping physics are all determined through instance variable values(`gravity`, `jumpHeight`, `jumpDegrade`, `terminalVelocityY`, and `momentumYIncrease)
 which alter how high the player jumps, how fast the player falls, and what the peak of the jump looks like in terms of motion (e.g. the player can go up and then go right down after reaching
@@ -97,5 +97,5 @@ the player uses either the `FALL_RIGHT` or `FALL_LEFT` animation.
 
 ![player-crouching.gif](../../../assets/images/player-crouching.gif)
 
-If the player is on the ground and presses the down arrow key, the player will enter its `CROUCHING` state. Basically, the player goes
-lower to the ground to shrink its hurtbox, but that's all it does (and the player cannot walk out of `CROUCHING` state, but they can jump out of it).
+If the player is on the ground and presses the down arrow key, the player will enter its `CROUCHING` flagManager. Basically, the player goes
+lower to the ground to shrink its hurtbox, but that's all it does (and the player cannot walk out of `CROUCHING` flagManager, but they can jump out of it).

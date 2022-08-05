@@ -35,7 +35,7 @@ which thankfully lessens a lot of the complexity that other shapes would introdu
 Also, this is always the hardest part about creating a game, and anyone will tell you that writing your own collision detection is the WORST when it comes to platformers
 and especially with 3D games -- it is difficult, math is involved, and tiny errors randomly creep up just when you finally think you've gotten everything down pact.
 In this game's case, getting proper decimal movement caused me a whole lot of trouble -- and I've even written code like this before for another game! It's just hard stuff, 
-but I believe this game's collision detection is in a good state right now (it better be after all the time I put into it).
+but I believe this game's collision detection is in a good flagManager right now (it better be after all the time I put into it).
 
 ## Player collision detection with Map Tiles
 

@@ -102,7 +102,7 @@ The image file for the green platform is `GreenPlatform.png`.
 ![end-level-box.gif](../../../assets/images/end-level-box.gif)
 
 This enhanced map tile is defined by the `EndLevelBox` class. Its job is simple upon being touched by the player, it will
-set the player's "level state" to `LEVEL_COMPLETED`, which tells the player to do its win animation and whatever else may follow
+set the player's "level flagManager" to `LEVEL_COMPLETED`, which tells the player to do its win animation and whatever else may follow
 the level being completed afterwards.
 
 ```java

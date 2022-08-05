@@ -21,7 +21,7 @@ permalink: /GameCodeDetails/Player/PlayerWinOrLoseLevelLogic
 # Player Win or Lose Level Logic
 
 The `Player` class has a `levelState` variable which it uses to determine if it is currently playing the level, completed the level,
-or lost the level (died). Upon the `levelState` being set to either the `LEVEL_COMPLETED` or `PLAYER_DEAD` state,
+or lost the level (died). Upon the `levelState` being set to either the `LEVEL_COMPLETED` or `PLAYER_DEAD` flagManager,
 different `update` logic will be run instead of the usual player traversing through the level.
 
 ## Player Win Logic -- Level Completed

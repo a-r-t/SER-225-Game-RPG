@@ -52,12 +52,14 @@ public abstract class Map {
     protected String mapFileName;
 
     // lists to hold map entities that are a part of the map
-    protected ArrayList<Enemy> enemies;
     protected ArrayList<EnhancedMapTile> enhancedMapTiles;
     protected ArrayList<NPC> npcs;
 
     // if set to false, camera will not move as player moves
     protected boolean adjustCamera = true;
+
+    protected FlagManager flagManager;
+    protected Textbox textbox;
 
     public Map(String mapFileName, Tileset tileset, Point playerStartTile) {
         this.mapFileName = mapFileName;
@@ -70,6 +72,7 @@ public abstract class Map {
         this.xMidPoint = ScreenManager.getScreenWidth() / 2;
         this.yMidPoint = (ScreenManager.getScreenHeight() / 2);
         this.playerStartTile = playerStartTile;
+        this.textbox = new Textbox();
     }
 
     // sets up map by reading in the map file to create the tile map
@@ -78,10 +81,7 @@ public abstract class Map {
     public void setupMap() {
         loadMapFile();
 
-        this.enemies = loadEnemies();
-        for (Enemy enemy: this.enemies) {
-            enemy.setMap(this);
-        }
+        this.loadScripts();
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
         for (EnhancedMapTile enhancedMapTile: this.enhancedMapTiles) {
@@ -243,8 +243,7 @@ public abstract class Map {
     }
 
     // list of enemies defined to be a part of the map, should be overridden in a subclass
-    protected ArrayList<Enemy> loadEnemies() {
-        return new ArrayList<>();
+    protected void loadScripts() {
     }
 
     // list of enhanced map tiles defined to be a part of the map, should be overridden in a subclass
@@ -261,9 +260,6 @@ public abstract class Map {
         return camera;
     }
 
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
     public ArrayList<EnhancedMapTile> getEnhancedMapTiles() {
         return enhancedMapTiles;
     }
@@ -286,12 +282,6 @@ public abstract class Map {
         return camera.getActiveNPCs();
     }
 
-    // add an enemy to the map's list of enemies
-    public void addEnemy(Enemy enemy) {
-        enemy.setMap(this);
-        this.enemies.add(enemy);
-    }
-
     // add an enhanced map tile to the map's list of enhanced map tiles
     public void addEnhancedMapTile(EnhancedMapTile enhancedMapTile) {
         enhancedMapTile.setMap(this);
@@ -308,12 +298,68 @@ public abstract class Map {
         this.adjustCamera = adjustCamera;
     }
 
+
+    public ArrayList<MapTile> getSurroundingMapTiles(Player player) {
+        ArrayList<MapTile> surroundingMapTiles = new ArrayList<>();
+        Point playerCurrentTile = getTileIndexByPosition((int)player.getX(), (int)player.getY());
+        System.out.println(playerCurrentTile);
+        for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
+            for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
+                MapTile mapTile = getMapTile(j, i);
+                if (mapTile != null && mapTile.getScript() != null) {
+                    surroundingMapTiles.add(mapTile);
+                }
+            }
+        }
+        System.out.println("surrounding map tiles: " + surroundingMapTiles);
+        return surroundingMapTiles;
+    }
+
+    public void onInteract(Player player) {
+        ArrayList<MapTile> surroundingMapTiles = getSurroundingMapTiles(player);
+        ArrayList<MapTile> playerTouchingMapTiles = new ArrayList<>();
+        for (MapTile mapTile : surroundingMapTiles) {
+            System.out.println(player.getScaledBounds());
+            if (mapTile.intersects(player.getInteractionRange())) {
+                playerTouchingMapTiles.add(mapTile);
+            }
+        }
+        MapTile interactedTile = null;
+        System.out.println("Player touching map tiles: " + playerTouchingMapTiles);
+        if (playerTouchingMapTiles.size() == 0) {
+            interactedTile = null;
+        }
+        else if (playerTouchingMapTiles.size() == 1) {
+            interactedTile = playerTouchingMapTiles.get(0);
+        }
+        else {
+            MapTile currentLargestAreaOverlappedTile = null;
+            float currentLargestAreaOverlapped = 0;
+            for (MapTile mapTile : playerTouchingMapTiles) {
+                float areaOverlapped = mapTile.getAreaOverlapped(player);
+                if (areaOverlapped > currentLargestAreaOverlapped) {
+                    currentLargestAreaOverlappedTile = mapTile;
+                    currentLargestAreaOverlapped = areaOverlapped;
+                }
+            }
+            interactedTile = currentLargestAreaOverlappedTile;
+        }
+        if (interactedTile == null || interactedTile.getScript() == null) {
+            return;
+        }
+        interactedTile.getScript().setIsActive(true);
+    }
+
+
     public void update(Player player) {
         if (adjustCamera) {
             adjustMovementY(player);
             adjustMovementX(player);
         }
         camera.update(player);
+        if (textbox.isActive()) {
+            textbox.update();
+        }
     }
 
     // based on the player's current X position (which in a level can potentially be updated each frame),
@@ -376,5 +422,16 @@ public abstract class Map {
 
     public void draw(GraphicsHandler graphicsHandler) {
         camera.draw(graphicsHandler);
+        if (textbox.isActive()) {
+            textbox.draw(graphicsHandler);
+        }
     }
+
+    public FlagManager getFlagManager() { return flagManager; }
+
+    public void setFlagManager(FlagManager flagManager) {
+        this.flagManager = flagManager;
+    }
+
+    public Textbox getTextbox() { return textbox; }
 }

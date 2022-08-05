@@ -8,14 +8,14 @@ import GameObject.GameObject;
 import GameObject.SpriteSheet;
 import Utils.AirGroundState;
 import Utils.Direction;
-
-import java.awt.*;
+import GameObject.Rectangle;
 import java.util.ArrayList;
 
 public abstract class Player extends GameObject {
     // values that affect player movement
     // these should be set in a subclass
     protected float walkSpeed = 0;
+    protected int interactionRange = 5;
 
     // values used to handle player movement
     protected float moveAmountX, moveAmountY;
@@ -35,6 +35,7 @@ public abstract class Player extends GameObject {
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
     protected Key MOVE_UP_KEY = Key.UP;
     protected Key MOVE_DOWN_KEY = Key.DOWN;
+    protected Key INTERACT_KEY = Key.Z;
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
         super(spriteSheet, x, y, startingAnimationName);
@@ -86,6 +87,9 @@ public abstract class Player extends GameObject {
             case WALKING:
                 playerWalking();
                 break;
+            case INTERACTING:
+                playerInteracting();
+                break;
         }
     }
 
@@ -93,6 +97,12 @@ public abstract class Player extends GameObject {
     protected void playerStanding() {
         // sets animation to a STAND animation based on which way player is facing
         currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+
+        if (!keyLocker.isKeyLocked(INTERACT_KEY) && Keyboard.isKeyDown(INTERACT_KEY)) {
+            System.out.println("INTERACT ACTIVATED");
+            keyLocker.lockKey(INTERACT_KEY);
+            map.onInteract(this);
+        }
 
         // if walk left or walk right key is pressed, player enters WALKING state
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY) || Keyboard.isKeyDown(MOVE_UP_KEY) || Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
@@ -104,6 +114,12 @@ public abstract class Player extends GameObject {
     protected void playerWalking() {
         // sets animation to a WALK animation based on which way player is facing
         currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
+
+        if (!keyLocker.isKeyLocked(INTERACT_KEY) && Keyboard.isKeyDown(INTERACT_KEY)) {
+            System.out.println("INTERACT ACTIVATED");
+            keyLocker.lockKey(INTERACT_KEY);
+            map.onInteract(this);
+        }
 
         // if walk left key is pressed, move player to the left
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
@@ -129,11 +145,16 @@ public abstract class Player extends GameObject {
         }
     }
 
-
-
+    // player INTERACTING state logic
+    protected void playerInteracting() {
+        // sets animation to a STAND animation based on which way player is facing
+        currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+    }
 
     protected void updateLockedKeys() {
-
+        if (Keyboard.isKeyUp(INTERACT_KEY) && playerState != PlayerState.INTERACTING) {
+            keyLocker.unlockKey(INTERACT_KEY);
+        }
     }
 
     // anything extra the player should do based on interactions can be handled here
@@ -194,5 +215,13 @@ public abstract class Player extends GameObject {
 
     public void addListener(PlayerListener listener) {
         listeners.add(listener);
+    }
+
+    public Rectangle getInteractionRange() {
+        return new Rectangle(
+                getScaledBounds().getX1() - interactionRange,
+                getScaledBounds().getY1() - interactionRange,
+                getScaledBounds().getWidth() + interactionRange,
+                getScaledBounds().getHeight() + interactionRange);
     }
 }

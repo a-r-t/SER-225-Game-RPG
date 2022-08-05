@@ -65,6 +65,7 @@ public class MapTile extends MapEntity {
         return tileIndex;
     }
 
+    @Override
     public void update() {
         super.update();
     }

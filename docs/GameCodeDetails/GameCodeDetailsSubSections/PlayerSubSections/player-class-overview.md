@@ -36,16 +36,16 @@ These are all float values, so decimal precision for movement is available.
 
 Generally, `Player` subclasses will set those values as desired.
 
-The `Player` has several other important variables it uses to keep track of its current state:
-- **playerState** - based on the `PlayerState` enum in the `Level` package, a `Player` can be in a certain state which affects its game logic; currently, the supported states are `STANDING`, `WALKING`, `JUMPING`, `CROUCHING`
+The `Player` has several other important variables it uses to keep track of its current flagManager:
+- **playerState** - based on the `PlayerState` enum in the `Level` package, a `Player` can be in a certain flagManager which affects its game logic; currently, the supported states are `STANDING`, `WALKING`, `JUMPING`, `CROUCHING`
 - **facingDirection** - which direction the player is facing; can be either `LEFT` or `RIGHT`
 - **airGroundState** - if the player is currently on the ground `GROUND` or in the air `AIR` (what a horrible variable name, what was I thinking...)
-- **levelState** - allows the player to keep track of the current level state so it can track if it has beaten or has died in a level; more details on `LevelState` can be found in the `PlayLevelScreen` documentation [here](../ScreensSubSections/play-level-screen.md)
+- **levelState** - allows the player to keep track of the current level flagManager so it can track if it has beaten or has died in a level; more details on `LevelState` can be found in the `PlayLevelScreen` documentation [here](../ScreensSubSections/play-level-screen.md)
 
 ## Player Class Methods
 
 The player's `update` cycle handles a ton of different cases based on the current `PlayerState`, and the `Player` class has split up
-most of that state logic into separate methods. For example, walking logic is in a separate method as well as jumping logic and crouching logic. The
+most of that flagManager logic into separate methods. For example, walking logic is in a separate method as well as jumping logic and crouching logic. The
 `handlePlayerState` method determines which game logic method to go to based on the `playerState` instance variable:
 
 ```java
@@ -133,6 +133,6 @@ that movement amount to the camera to show more of the map. This gives the appea
 
 Each `update` cycle, the `Player` class will do a few things:
 1. Apply gravity (downward force)
-1. Handle player state (more details on player state [here](./player-states.md))
+1. Handle player flagManager (more details on player flagManager [here](./player-states.md))
 1. Update player animation and see if a switch is needed (`super.update()` does this)
-1. Move player by the amount it should be moved by based on the results of the handle player state step
+1. Move player by the amount it should be moved by based on the results of the handle player flagManager step

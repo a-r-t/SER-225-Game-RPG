@@ -29,7 +29,7 @@ The class file for it is `MenuScreen.java` which can be found in the `Screens` p
 ## Functionality
 
 The menu screen's only real job is to allow the player to select between its two options "Play Game" and "Credits".
-Upon selecting an option, `MenuScreen` will change `ScreenCoordinator's` game state which will force it to load the appropriate screen based
+Upon selecting an option, `MenuScreen` will change `ScreenCoordinator's` game flagManager which will force it to load the appropriate screen based
 on the option selected.
 
 ```java
@@ -51,18 +51,18 @@ if (Keyboard.isKeyDown(Key.DOWN) && keyTimer.isTimeUp()) {
 
 The `MenuScreen` class's update cycle mainly checks if the user has pressed the down or up keys and if so will move the little blue square from one
 option to the other and make it clear which option is currently being "hovered" over. Pressing the space bar will select the option and is the trigger
-that leads to `ScreenCoordinator's` game state being changed.
+that leads to `ScreenCoordinator's` game flagManager being changed.
 
 ```java
 // if space is pressed, item is selected
 if (!keyLocker.isKeyLocked(Key.SPACE) && Keyboard.isKeyDown(Key.SPACE)) {
     menuItemSelected = currentMenuItemHovered;
     
-    // if first menu item is selected "PLAY GAME", set ScreenCoordinator game state to LEVEL
+    // if first menu item is selected "PLAY GAME", set ScreenCoordinator game flagManager to LEVEL
     if (menuItemSelected == 0) {
         screenCoordinator.setGameState(GameState.LEVEL);
 
-    // if secpmd menu item is selected "CREDITS, set ScreenCoordinator game state to CREDITS
+    // if secpmd menu item is selected "CREDITS, set ScreenCoordinator game flagManager to CREDITS
     } else if (menuItemSelected == 1) {
         screenCoordinator.setGameState(GameState.CREDITS);
     }

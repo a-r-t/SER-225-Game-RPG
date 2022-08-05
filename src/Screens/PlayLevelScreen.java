@@ -4,6 +4,7 @@ import Engine.GraphicsHandler;
 import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
+import Level.FlagManager;
 import Level.Map;
 import Level.Player;
 import Level.PlayerListener;
@@ -20,15 +21,20 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     protected Stopwatch screenTimer = new Stopwatch();
     protected LevelClearedScreen levelClearedScreen;
     protected LevelLoseScreen levelLoseScreen;
+    protected FlagManager flagManager;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
     }
 
     public void initialize() {
+        // setup state
+        flagManager = new FlagManager();
+
         // define/setup map
         this.map = new TestMap();
         map.reset();
+        map.setFlagManager(flagManager);
 
         // setup player
         this.player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);

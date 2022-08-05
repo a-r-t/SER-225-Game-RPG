@@ -29,7 +29,7 @@ The class file for it is `CreditsScreen.java` which can be found in the `Screens
 ## Functionality
  
 This screen is pretty limited, all it does is display the graphics shown above in the screenshot. When the space
-button is pressed, `CreditsScreen` will change `ScreenCoordinator's` game state back to MENU to load the 
+button is pressed, `CreditsScreen` will change `ScreenCoordinator's` game flagManager back to MENU to load the 
 `MenuScreen` back up.
 
 ```java

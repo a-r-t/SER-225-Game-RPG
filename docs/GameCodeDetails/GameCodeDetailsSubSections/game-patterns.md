@@ -340,7 +340,7 @@ public void onLevelCompleted() {
 }
 ```
 
-Essentially it just updates its own level state here and then its `update` cycle logic will see that change and perform the
+Essentially it just updates its own level flagManager here and then its `update` cycle logic will see that change and perform the
 desired actions (in this case, will load the level win message screen).
 
 Now, while I could have just passed in the `PlayLevelScreen` instance to the `Player` class, I didn't want to do that because it really

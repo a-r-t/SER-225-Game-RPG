@@ -6,6 +6,7 @@ import Level.Map;
 import Level.MapTile;
 import Level.MapTileCollisionCheckResult;
 import Level.MapTileCollisionHandler;
+import Players.Cat;
 import Utils.Direction;
 import Utils.MathUtils;
 
@@ -315,6 +316,14 @@ public class GameObject extends AnimatedSprite {
 					currentFrame.getScaledWidth(),
 					currentFrame.getScaledHeight(),
 					currentFrame.getImageEffect());
+//			if (this instanceof Cat) {
+//				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
+//
+//			}
+//			else if (this instanceof MapTile) {
+//				drawBounds(graphicsHandler, new Color(0, 255, 0, 100));
+//			}
+
 		} else {
 			super.draw(graphicsHandler);
 		}
