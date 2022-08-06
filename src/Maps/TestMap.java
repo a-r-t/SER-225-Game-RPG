@@ -1,6 +1,7 @@
 package Maps;
 
 import Level.*;
+import NPCs.Walrus;
 import Scripts.SignEvent;
 import Tilesets.CommonTileset;
 import Utils.Point;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class TestMap extends Map {
 
     public TestMap() {
-        super("test_map.txt", new CommonTileset(), new Point(21, 20));
+        super("test_map.txt", new CommonTileset(), new Point(4, 26));
     }
 
     @Override
@@ -23,6 +24,7 @@ public class TestMap extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
+        npcs.add(new Walrus(getMapTile(4, 28).getLocation().subtractY(40)));
         return npcs;
     }
 
@@ -33,6 +35,35 @@ public class TestMap extends Map {
         getMapTile(7, 26).setScript(new Script(new SignEvent("Walrus's house")));
 
         getMapTile(20, 4).setScript(new Script(new SignEvent("Dino's house")));
+
+        npcs.get(0).setScript(new Script(new InteractEvent() {
+            private boolean start = true;
+
+            @Override
+            public ScriptState onInteract(Player player, Map map) {
+                if (start) {
+                    start = false;
+                    map.getTextbox().setIsActive(true);
+                    player.setPlayerState(PlayerState.INTERACTING);
+                    if (!map.getFlagManager().isFlagSet("hasTalkedToWalrus")) {
+                        map.getTextbox().addText("Hi Cat!");
+                        map.getTextbox().addText("...oh, you lost your ball?");
+                        map.getTextbox().addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+                    }
+                    else {
+                        map.getTextbox().addText("I sure love doing walrus things!");
+                    }
+                }
+                if (!map.getTextbox().isTextQueueEmpty()) {
+                    return ScriptState.RUNNING;
+                }
+                map.getFlagManager().setFlag("hasTalkedToWalrus");
+                start = true;
+                player.setPlayerState(PlayerState.STANDING);
+                map.getTextbox().setIsActive(false);
+                return ScriptState.COMPLETED;
+            }
+        }));
 
     }
 }

@@ -72,7 +72,6 @@ public abstract class Map {
         this.xMidPoint = ScreenManager.getScreenWidth() / 2;
         this.yMidPoint = (ScreenManager.getScreenHeight() / 2);
         this.playerStartTile = playerStartTile;
-        this.textbox = new Textbox();
     }
 
     // sets up map by reading in the map file to create the tile map
@@ -80,8 +79,6 @@ public abstract class Map {
     // and instantiates a Camera
     public void setupMap() {
         loadMapFile();
-
-        this.loadScripts();
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
         for (EnhancedMapTile enhancedMapTile: this.enhancedMapTiles) {
@@ -93,7 +90,10 @@ public abstract class Map {
             npc.setMap(this);
         }
 
+        this.loadScripts();
+
         this.camera = new Camera(0, 0, tileset.getScaledSpriteWidth(), tileset.getScaledSpriteHeight(), this);
+        this.textbox = new Textbox(this);
     }
 
     // reads in a map file to create the map's tilemap
@@ -299,55 +299,58 @@ public abstract class Map {
     }
 
 
-    public ArrayList<MapTile> getSurroundingMapTiles(Player player) {
-        ArrayList<MapTile> surroundingMapTiles = new ArrayList<>();
+    public ArrayList<MapEntity> getSurroundingMapEntities(Player player) {
+        ArrayList<MapEntity> surroundingMapEntities = new ArrayList<>();
+
+        // gets surrounding tiles
         Point playerCurrentTile = getTileIndexByPosition((int)player.getX(), (int)player.getY());
         System.out.println(playerCurrentTile);
         for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
             for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
                 MapTile mapTile = getMapTile(j, i);
                 if (mapTile != null && mapTile.getScript() != null) {
-                    surroundingMapTiles.add(mapTile);
+                    surroundingMapEntities.add(mapTile);
                 }
             }
         }
-        System.out.println("surrounding map tiles: " + surroundingMapTiles);
-        return surroundingMapTiles;
+        surroundingMapEntities.addAll(getActiveNPCs());
+        System.out.println("surrounding map entities: " + surroundingMapEntities);
+        return surroundingMapEntities;
     }
 
     public void onInteract(Player player) {
-        ArrayList<MapTile> surroundingMapTiles = getSurroundingMapTiles(player);
-        ArrayList<MapTile> playerTouchingMapTiles = new ArrayList<>();
-        for (MapTile mapTile : surroundingMapTiles) {
+        ArrayList<MapEntity> surroundingMapEntities = getSurroundingMapEntities(player);
+        ArrayList<MapEntity> playerTouchingMapEntities = new ArrayList<>();
+        for (MapEntity mapEntity : surroundingMapEntities) {
             System.out.println(player.getScaledBounds());
-            if (mapTile.intersects(player.getInteractionRange())) {
-                playerTouchingMapTiles.add(mapTile);
+            if (mapEntity.intersects(player.getInteractionRange())) {
+                playerTouchingMapEntities.add(mapEntity);
             }
         }
-        MapTile interactedTile = null;
-        System.out.println("Player touching map tiles: " + playerTouchingMapTiles);
-        if (playerTouchingMapTiles.size() == 0) {
-            interactedTile = null;
+        MapEntity interactedEntity = null;
+        System.out.println("Player touching map entities: " + playerTouchingMapEntities);
+        if (playerTouchingMapEntities.size() == 0) {
+            interactedEntity = null;
         }
-        else if (playerTouchingMapTiles.size() == 1) {
-            interactedTile = playerTouchingMapTiles.get(0);
+        else if (playerTouchingMapEntities.size() == 1) {
+            interactedEntity = playerTouchingMapEntities.get(0);
         }
         else {
-            MapTile currentLargestAreaOverlappedTile = null;
+            MapEntity currentLargestAreaOverlappedTile = null;
             float currentLargestAreaOverlapped = 0;
-            for (MapTile mapTile : playerTouchingMapTiles) {
-                float areaOverlapped = mapTile.getAreaOverlapped(player);
+            for (MapEntity mapEntity : playerTouchingMapEntities) {
+                float areaOverlapped = mapEntity.getAreaOverlapped(player);
                 if (areaOverlapped > currentLargestAreaOverlapped) {
-                    currentLargestAreaOverlappedTile = mapTile;
+                    currentLargestAreaOverlappedTile = mapEntity;
                     currentLargestAreaOverlapped = areaOverlapped;
                 }
             }
-            interactedTile = currentLargestAreaOverlappedTile;
+            interactedEntity = currentLargestAreaOverlappedTile;
         }
-        if (interactedTile == null || interactedTile.getScript() == null) {
+        if (interactedEntity == null || interactedEntity.getScript() == null) {
             return;
         }
-        interactedTile.getScript().setIsActive(true);
+        interactedEntity.getScript().setIsActive(true);
     }
 
 
@@ -434,4 +437,7 @@ public abstract class Map {
     }
 
     public Textbox getTextbox() { return textbox; }
+
+    public int getEndBoundX() { return endBoundX; }
+    public int getEndBoundY() { return endBoundY; }
 }

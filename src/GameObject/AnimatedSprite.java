@@ -2,8 +2,8 @@ package GameObject;
 
 import Engine.GraphicsHandler;
 import Utils.Stopwatch;
-
-import java.awt.*;
+import Utils.Point;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -138,6 +138,7 @@ public class AnimatedSprite implements IntersectableRectangle {
 	public float getScaledX2() { return currentFrame.getScaledX2(); }
 	public float getY2() { return currentFrame.getY2(); }
 	public float getScaledY2() { return currentFrame.getScaledY2(); }
+	public Point getLocation() { return currentFrame.getLocation(); }
 
 	public void setX(float x) {
 		this.x = x;

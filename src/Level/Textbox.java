@@ -12,17 +12,22 @@ import java.util.Queue;
 
 public class Textbox {
     protected boolean isActive;
-    protected int x = 22;
-    protected int y = 460;
+    protected final int x = 22;
+    protected final int bottomY = 460;
+    protected final int topY = 22;
+    protected final int fontX = 35;
+    protected final int fontBottomY = 500;
+    protected final int fontTopY = 62;
     protected final int width = 750;
     protected final int height = 100;
 
     private Queue<String> textQueue = new LinkedList<String>();
     private SpriteFont text = null;
     private KeyLocker keyLocker = new KeyLocker();
+    private Map map;
 
-    public Textbox() {
-
+    public Textbox(Map map) {
+        this.map = map;
     }
 
     public void addText(String text) {
@@ -39,7 +44,16 @@ public class Textbox {
     public void update() {
         if (!textQueue.isEmpty() && keyLocker.isKeyLocked(Key.Z)) {
             String next = textQueue.peek();
-            text = new SpriteFont(next, 35, 500, "Arial", 30, Color.black);
+
+            int fontY;
+            if (map.getCamera().getEndBoundY() < map.getEndBoundY()) {
+                fontY = fontBottomY;
+            }
+            else {
+                fontY = fontTopY;
+            }
+            text = new SpriteFont(next, fontX, fontY, "Arial", 30, Color.black);
+
         }
         if (Keyboard.isKeyDown(Key.Z) && !keyLocker.isKeyLocked(Key.Z)) {
             keyLocker.lockKey(Key.Z);
@@ -52,7 +66,12 @@ public class Textbox {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        graphicsHandler.drawFilledRectangleWithBorder(x, y, width, height, Color.white, Color.black, 2);
+        if (map.getCamera().getEndBoundY() < map.getEndBoundY()) {
+            graphicsHandler.drawFilledRectangleWithBorder(x, bottomY, width, height, Color.white, Color.black, 2);
+        }
+        else {
+            graphicsHandler.drawFilledRectangleWithBorder(x, topY, width, height, Color.white, Color.black, 2);
+        }
         if (text != null) {
             text.drawWithParsedNewLines(graphicsHandler, 10);
         }

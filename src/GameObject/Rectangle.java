@@ -1,8 +1,8 @@
 package GameObject;
 
 import Engine.GraphicsHandler;
-
-import java.awt.*;
+import Utils.Point;
+import java.awt.Color;
 
 // This class represents a rectangle, which at its core is (x, y, width, height)
 // it has some properties, rectangle math methods, and draw logic
@@ -199,4 +199,6 @@ public class Rectangle implements IntersectableRectangle {
 		float height = Math.abs(Math.min(intersectRectangle.getY2(), otherIntersectRectangle.getY2()) - Math.max(intersectRectangle.getY1(), otherIntersectRectangle.getY1()));
 		return width * height;
 	}
+
+	public Point getLocation() { return new Point(Math.round(getX()), Math.round(getY())); }
 }

@@ -87,6 +87,9 @@ public class Camera extends Rectangle {
 
         for (NPC npc : activeNPCs) {
             npc.update(player);
+            if (npc.getScript() != null && npc.getScript().isActive()) {
+                npc.getScript().update(player, map);
+            }
         }
     }
 

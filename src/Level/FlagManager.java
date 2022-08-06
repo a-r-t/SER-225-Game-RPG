@@ -32,4 +32,11 @@ public class FlagManager {
             entry.setValue(false);
         }
     }
+
+    public boolean isFlagSet(String flagName) {
+        if (flags.containsKey(flagName)) {
+            return flags.get(flagName);
+        }
+        return false;
+    }
 }
