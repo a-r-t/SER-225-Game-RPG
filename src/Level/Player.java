@@ -221,7 +221,7 @@ public abstract class Player extends GameObject {
         return new Rectangle(
                 getScaledBounds().getX1() - interactionRange,
                 getScaledBounds().getY1() - interactionRange,
-                getScaledBounds().getWidth() + interactionRange,
-                getScaledBounds().getHeight() + interactionRange);
+                getScaledBounds().getWidth() + (interactionRange * 2),
+                getScaledBounds().getHeight() + (interactionRange * 2));
     }
 }
