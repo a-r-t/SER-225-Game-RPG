@@ -46,7 +46,7 @@ public class Textbox {
             String next = textQueue.peek();
 
             int fontY;
-            if (map.getCamera().getEndBoundY() < map.getEndBoundY()) {
+            if (!map.getCamera().isAtBottomOfMap()) {
                 fontY = fontBottomY;
             }
             else {
@@ -66,7 +66,7 @@ public class Textbox {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        if (map.getCamera().getEndBoundY() < map.getEndBoundY()) {
+        if (!map.getCamera().isAtBottomOfMap()) {
             graphicsHandler.drawFilledRectangleWithBorder(x, bottomY, width, height, Color.white, Color.black, 2);
         }
         else {
