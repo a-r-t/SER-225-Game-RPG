@@ -425,6 +425,10 @@ public abstract class Map {
 
     public void draw(GraphicsHandler graphicsHandler) {
         camera.draw(graphicsHandler);
+    }
+
+    public void draw(Player player, GraphicsHandler graphicsHandler) {
+        camera.draw(player, graphicsHandler);
         if (textbox.isActive()) {
             textbox.draw(graphicsHandler);
         }

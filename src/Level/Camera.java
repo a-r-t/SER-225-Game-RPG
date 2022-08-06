@@ -164,7 +164,11 @@ public class Camera extends Rectangle {
 
     public void draw(GraphicsHandler graphicsHandler) {
         drawMapTiles(graphicsHandler);
-        drawMapEntities(graphicsHandler);
+    }
+
+    public void draw(Player player, GraphicsHandler graphicsHandler) {
+        drawMapTiles(graphicsHandler);
+        drawMapEntities(player, graphicsHandler);
     }
 
     // draws visible map tiles to the screen
@@ -183,23 +187,29 @@ public class Camera extends Rectangle {
     }
 
     // draws active map entities to the screen
-    public void drawMapEntities(GraphicsHandler graphicsHandler) {
-        for (Enemy enemy : activeEnemies) {
-            if (containsDraw(enemy)) {
-                enemy.draw(graphicsHandler);
-            }
-        }
-        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
-            if (containsDraw(enhancedMapTile)) {
-                enhancedMapTile.draw(graphicsHandler);
-            }
-        }
+    public void drawMapEntities(Player player, GraphicsHandler graphicsHandler) {
+//        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
+//            if (containsDraw(enhancedMapTile)) {
+//                enhancedMapTile.draw(graphicsHandler);
+//            }
+//        }
+        ArrayList<NPC> drawAfterPlayer = new ArrayList<>();
         for (NPC npc : activeNPCs) {
             if (containsDraw(npc)) {
-                npc.draw(graphicsHandler);
+                if (npc.getCalibratedScaledBounds().getY() < player.getCalibratedScaledBounds().getY1()  + (player.getCalibratedScaledBounds().getHeight() / 2)) {
+                    npc.draw(graphicsHandler);
+                }
+                else {
+                    drawAfterPlayer.add(npc);
+                }
             }
         }
+        player.draw(graphicsHandler);
+        for (NPC npc : drawAfterPlayer) {
+            npc.draw(graphicsHandler);
+        }
     }
+
 
     // checks if a game object's position falls within the camera's current radius
     public boolean containsUpdate(GameObject gameObject) {

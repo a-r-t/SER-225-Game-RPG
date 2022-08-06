@@ -85,8 +85,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
             case LEVEL_COMPLETED:
             case PLAYER_DEAD:
-                map.draw(graphicsHandler);
-                player.draw(graphicsHandler);
+                map.draw(player, graphicsHandler);
+                //player.draw(graphicsHandler);
                 break;
             case LEVEL_WIN_MESSAGE:
                 levelClearedScreen.draw(graphicsHandler);
