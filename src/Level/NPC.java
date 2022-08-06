@@ -28,7 +28,7 @@ public class NPC extends MapEntity {
         super(image, x, y, startingAnimation);
     }
 
-    public NPC(BufferedImage image, float x, float y, int talkedToTime) {
+    public NPC(BufferedImage image, float x, float y) {
         super(image, x, y);
     }
 

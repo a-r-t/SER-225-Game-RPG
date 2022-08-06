@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Walrus extends NPC {
 
     public Walrus(Point location) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("Walrus.png"), 24, 24), "TAIL_DOWN");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("Walrus.png"), 24, 24), "STAND_LEFT");
     }
 
     public void update(Player player) {
@@ -29,18 +29,20 @@ public class Walrus extends NPC {
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {{
-           put("TAIL_DOWN", new Frame[] {
-                   new FrameBuilder(spriteSheet.getSprite(0, 0), 0)
-                           .withScale(3)
-                           .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                           .build()
-           });
-            put("TAIL_UP", new Frame[] {
-                    new FrameBuilder(spriteSheet.getSprite(1, 0), 0)
+            put("STAND_LEFT", new Frame[] {
+                    new FrameBuilder(spriteSheet.getSprite(0, 0), 0)
                             .withScale(3)
+                            .withBounds(7, 13, 11, 7)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                             .build()
             });
+            put("STAND_RIGHT", new Frame[] {
+                   new FrameBuilder(spriteSheet.getSprite(0, 0), 0)
+                           .withScale(3)
+                           .withBounds(7, 13, 11, 7)
+                           .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                           .build()
+           });
         }};
     }
 
