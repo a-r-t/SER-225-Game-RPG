@@ -186,63 +186,52 @@ public class Dinosaur extends NPC {
                     // talks
                     if (sequence == 0) {
                         start(player, map);
-                        if (!isTextboxQueueEmpty(map)) {
-                            return ScriptState.RUNNING;
+                        if (isTextboxQueueEmpty(map)) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.RUNNING;
                     }
                     // pauses
                     else if (sequence == 1) {
                         start(player, map);
-                        if (!isWaitTimeUp()) {
-                            return ScriptState.RUNNING;
+                        if (isWaitTimeUp()) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.RUNNING;
                     }
                     // talks more
                     else if (sequence == 2) {
                         start(player, map);
-                        if (!isTextboxQueueEmpty(map)) {
-                            return ScriptState.RUNNING;
+                        if (isTextboxQueueEmpty(map)) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.RUNNING;
                     }
                     // walk downwards
                     else if (sequence == 3) {
                         start(player, map);
                         walk(Direction.DOWN, 2);
                         amountMoved += 2;
-                        if (amountMoved < 35) {
-                            return ScriptState.RUNNING;
+                        if (amountMoved == 36) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.RUNNING;
                     }
                     // walk right
                     else if (sequence == 4) {
                         start(player, map);
                         walk(Direction.RIGHT, 2);
                         amountMoved += 2;
-                        if (amountMoved < 196) {
-                            return ScriptState.RUNNING;
+                        if (amountMoved == 196) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.RUNNING;
                     }
                     // walk up
                     else if (sequence == 5) {
                         start(player, map);
                         walk(Direction.UP, 2);
                         amountMoved += 2;
-                        if (amountMoved < 50) {
-                            return ScriptState.RUNNING;
+                        if (amountMoved == 50) {
+                            end(player, map);
                         }
-                        end(player, map);
-                        return ScriptState.COMPLETED;
                     }
+                    return ScriptState.RUNNING;
                 }
                 return ScriptState.COMPLETED;
             }
