@@ -1,5 +1,5 @@
 package Event;
 
 public enum EventType {
-    INTERACT, TRIGGER
+    NONE, INTERACT, TRIGGER
 }

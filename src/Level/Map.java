@@ -3,6 +3,7 @@ package Level;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
+import Event.EventType;
 import Utils.Point;
 
 import java.io.File;
@@ -347,7 +348,7 @@ public abstract class Map {
             }
             interactedEntity = currentLargestAreaOverlappedTile;
         }
-        if (interactedEntity == null || interactedEntity.getScript() == null) {
+        if (interactedEntity == null || interactedEntity.getScript() == null || interactedEntity.getScript().getEventType() != EventType.INTERACT) {
             return;
         }
         interactedEntity.getScript().setIsActive(true);

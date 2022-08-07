@@ -1,6 +1,6 @@
 package Level;
 
-import Event.Event;
+import Event.*;
 
 public class Script {
 
@@ -20,4 +20,11 @@ public class Script {
 
     public boolean isActive() { return isActive; }
     public void setIsActive(boolean isActive) { this.isActive = isActive; }
+
+    public EventType getEventType() {
+        if (event != null) {
+            return event.getEventType();
+        }
+        return EventType.NONE;
+    }
 }
