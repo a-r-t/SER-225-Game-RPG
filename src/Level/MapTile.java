@@ -23,6 +23,29 @@ public class MapTile extends MapEntity {
         this.tileIndex = tileIndex;
     }
 
+    public MapTile(float x, float y, GameObject bottomLayer, GameObject topLayer, TileType tileType) {
+        super(x, y);
+        this.bottomLayer = bottomLayer;
+        this.topLayer = topLayer;
+        this.tileType = tileType;
+    }
+
+    public MapTile(float x, float y, SpriteSheet spriteSheet, TileType tileType) {
+        super(x, y);
+        this.bottomLayer = loadBottomLayer(spriteSheet);
+        this.topLayer = loadTopLayer(spriteSheet);
+        this.tileType = tileType;
+    }
+
+    protected GameObject loadBottomLayer(SpriteSheet spriteSheet) {
+        return null;
+    }
+
+    protected GameObject loadTopLayer(SpriteSheet spriteSheet) {
+        return null;
+    }
+
+    /*
     public MapTile(float x, float y, BufferedImage image, int tileIndex, TileType tileType) {
         super(image, x, y);
         this.tileType = tileType;
@@ -39,6 +62,8 @@ public class MapTile extends MapEntity {
         super(x, y, spriteSheet, startingAnimation);
         this.tileType = tileType;
     }
+
+     */
 //
 //    public MapTile(float x, float y, HashMap<String, Frame[]> animations, TileType tileType) {
 //        super(x, y, animations, "DEFAULT");
@@ -184,4 +209,42 @@ public class MapTile extends MapEntity {
     @Override
     public boolean overlaps(IntersectableRectangle other) { return bottomLayer.overlaps(other); }
 
+    @Override
+    public void initialize() { }
+
+    @Override
+    public void moveX(float dx) {
+        this.x += dx;
+        bottomLayer.moveX(dx);
+    }
+
+    @Override
+    public void moveRight(float dx) {
+        this.x += dx;
+        bottomLayer.moveRight(dx);
+    }
+
+    @Override
+    public void moveLeft(float dx) {
+        this.x -= dx;
+        bottomLayer.moveLeft(dx);
+    }
+
+    @Override
+    public void moveY(float dy) {
+        this.y += dy;
+        bottomLayer.moveY(dy);
+    }
+
+    @Override
+    public void moveDown(float dy) {
+        this.y += dy;
+        bottomLayer.moveDown(dy);
+    }
+
+    @Override
+    public void moveUp(float dy) {
+        this.y -= dy;
+        bottomLayer.moveUp(dy);
+    }
 }

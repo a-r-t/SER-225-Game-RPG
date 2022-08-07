@@ -108,5 +108,4 @@ public class MapEntity extends GameObject {
     public void setIsHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
-
 }

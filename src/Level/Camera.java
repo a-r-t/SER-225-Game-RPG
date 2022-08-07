@@ -134,7 +134,7 @@ public class Camera extends Rectangle {
         for (int i = map.getNPCs().size() - 1; i >= 0; i--) {
             NPC npc = map.getNPCs().get(i);
 
-            if (isMapEntityActive(npc) && !npc.isHidden) {
+            if (isMapEntityActive(npc)) {
                 activeNPCs.add(npc);
                 if (npc.mapEntityStatus == MapEntityStatus.INACTIVE) {
                     npc.setMapEntityStatus(MapEntityStatus.ACTIVE);
@@ -159,7 +159,7 @@ public class Camera extends Rectangle {
             2. OR if the camera determines that it is in its boundary range, it is active
      */
     private boolean isMapEntityActive(MapEntity mapEntity) {
-        return mapEntity.getMapEntityStatus() != MapEntityStatus.REMOVED && (mapEntity.isUpdateOffScreen() || containsUpdate(mapEntity));
+        return mapEntity.getMapEntityStatus() != MapEntityStatus.REMOVED && !mapEntity.isHidden() && (mapEntity.isUpdateOffScreen() || containsUpdate(mapEntity));
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
@@ -198,28 +198,34 @@ public class Camera extends Rectangle {
                 }
             }
         }
+
+        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
+            if (containsDraw(enhancedMapTile) && enhancedMapTile.getTopLayer() != null) {
+                enhancedMapTile.drawTopLayer(graphicsHandler);
+            }
+        }
     }
 
     // draws active map entities to the screen
     public void drawMapEntities(Player player, GraphicsHandler graphicsHandler) {
-//        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
-//            if (containsDraw(enhancedMapTile)) {
-//                enhancedMapTile.draw(graphicsHandler);
-//            }
-//        }
-        ArrayList<NPC> drawAfterPlayer = new ArrayList<>();
+        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
+            if (containsDraw(enhancedMapTile)) {
+                enhancedMapTile.drawBottomLayer(graphicsHandler);
+            }
+        }
+        ArrayList<NPC> drawNpcsAfterPlayer = new ArrayList<>();
         for (NPC npc : activeNPCs) {
             if (containsDraw(npc)) {
                 if (npc.getCalibratedScaledBounds().getY() < player.getCalibratedScaledBounds().getY1()  + (player.getCalibratedScaledBounds().getHeight() / 2)) {
                     npc.draw(graphicsHandler);
                 }
                 else {
-                    drawAfterPlayer.add(npc);
+                    drawNpcsAfterPlayer.add(npc);
                 }
             }
         }
         player.draw(graphicsHandler);
-        for (NPC npc : drawAfterPlayer) {
+        for (NPC npc : drawNpcsAfterPlayer) {
             npc.draw(graphicsHandler);
         }
     }
