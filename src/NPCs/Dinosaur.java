@@ -23,6 +23,9 @@ public class Dinosaur extends NPC {
     }
 
     public void update(Player player) {
+        if (map.getFlagManager().isFlagSet("hasTalkedToDinosaur")) {
+            this.isHidden = true;
+        }
         super.update(player);
     }
 
@@ -164,7 +167,7 @@ public class Dinosaur extends NPC {
                                 .build(location.x, location.y);
 
                         setMapTile(map, 17, 4, mapTile);
-                        setMapEntityStatus(MapEntityStatus.HIDDEN);
+                        setIsHidden(true);
 
                         setFlag(map, "hasTalkedToDinosaur");
                         unlockPlayer(player);

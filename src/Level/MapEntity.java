@@ -16,6 +16,8 @@ public class MapEntity extends GameObject {
     // if true, enemy cannot go out of camera's update range
     protected boolean isUpdateOffScreen = false;
 
+    protected boolean isHidden = false;
+
     protected Script script;
 
     public MapEntity(float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
@@ -97,6 +99,14 @@ public class MapEntity extends GameObject {
 
     protected Script loadScript() {
         return null;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
 }
