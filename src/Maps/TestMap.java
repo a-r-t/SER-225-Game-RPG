@@ -2,7 +2,7 @@ package Maps;
 
 import Level.*;
 import NPCs.Walrus;
-import Scripts.SignEvent;
+import Scripts.SimpleTextEvent;
 import Tilesets.CommonTileset;
 import Utils.Point;
 
@@ -24,17 +24,17 @@ public class TestMap extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
-        npcs.add(new Walrus(getMapTile(4, 28).getLocation().subtractY(40)));
+        npcs.add(new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40)));
         return npcs;
     }
 
     @Override
     public void loadScripts() {
-        getMapTile(21, 19).setScript(new Script(new SignEvent("Cat's house")));
+        getMapTile(21, 19).setScript(new Script(new SimpleTextEvent("Cat's house")));
 
-        getMapTile(7, 26).setScript(new Script(new SignEvent("Walrus's house")));
+        getMapTile(7, 26).setScript(new Script(new SimpleTextEvent("Walrus's house")));
 
-        getMapTile(20, 4).setScript(new Script(new SignEvent("Dino's house")));
+        getMapTile(20, 4).setScript(new Script(new SimpleTextEvent("Dino's house")));
 
         npcs.get(0).setScript(new Script(new InteractEvent() {
             private boolean start = true;
@@ -53,6 +53,7 @@ public class TestMap extends Map {
                     else {
                         map.getTextbox().addText("I sure love doing walrus things!");
                     }
+                    getNPCs().stream().filter(npc -> npc.getId() == 1).findFirst().get().facePlayer(player);
                 }
                 if (!map.getTextbox().isTextQueueEmpty()) {
                     return ScriptState.RUNNING;

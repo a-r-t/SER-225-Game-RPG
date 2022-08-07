@@ -37,6 +37,15 @@ public class Textbox {
         textQueue.add(text);
     }
 
+    public void addText(String[] text) {
+        if (textQueue.isEmpty()) {
+            keyLocker.lockKey(Key.Z);
+        }
+        for (String textItem : text) {
+            textQueue.add(textItem);
+        }
+    }
+
     public boolean isTextQueueEmpty() {
         return textQueue.isEmpty();
     }
