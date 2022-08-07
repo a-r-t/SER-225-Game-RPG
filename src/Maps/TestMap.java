@@ -2,6 +2,7 @@ package Maps;
 
 import Event.*;
 import Level.*;
+import NPCs.Dinosaur;
 import NPCs.Walrus;
 import Scripts.SimpleTextInteractEvent;
 import Tilesets.CommonTileset;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class TestMap extends Map {
 
     public TestMap() {
-        super("test_map.txt", new CommonTileset(), new Point(4, 26));
+        super("test_map.txt", new CommonTileset(), new Point(10, 3));
     }
 
     @Override
@@ -25,7 +26,10 @@ public class TestMap extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
-        npcs.add(new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40)));
+        NPC walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
+        npcs.add(walrus);
+        NPC dinosaur = new Dinosaur(1, getMapTile(13, 4).getLocation());
+        npcs.add(dinosaur);
         return npcs;
     }
 

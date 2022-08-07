@@ -11,7 +11,7 @@ public class FlagManager {
     }
 
     private void loadFlags() {
-        flags.put("hasTalkedToWalrus", false);
+        flags.put("hasTalkedToWalrus", true);
         flags.put("hasTalkedToDinosaur", false);
     }
 

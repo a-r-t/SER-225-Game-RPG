@@ -65,6 +65,7 @@ public class Walrus extends NPC {
             protected void cleanup(Player player, Map map) {
                 unlockPlayer(player);
                 hideTextbox(map);
+                setFlag(map,"hasTalkedToWalrus");
             }
 
             @Override
@@ -73,7 +74,6 @@ public class Walrus extends NPC {
                 if (!isTextboxQueueEmpty(map)) {
                     return ScriptState.RUNNING;
                 }
-                setFlag(map,"hasTalkedToWalrus");
                 end(player, map);
                 return ScriptState.COMPLETED;
             }

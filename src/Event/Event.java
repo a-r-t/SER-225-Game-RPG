@@ -1,10 +1,12 @@
 package Event;
 
 import Level.*;
+import Utils.Stopwatch;
 
 public abstract class Event {
     protected boolean start = true;
     protected EventType eventType;
+    protected Stopwatch stopwatch = new Stopwatch();
 
     public Event(EventType eventType) {
         this.eventType = eventType;
@@ -81,5 +83,18 @@ public abstract class Event {
 
     protected void unsetFlag(Map map, String flagName) {
         map.getFlagManager().unsetFlag(flagName);
+    }
+
+    protected void setWaitTime(int milliseconds) {
+        stopwatch.setWaitTime(milliseconds);
+    }
+
+    protected boolean isWaitTimeUp() {
+        return stopwatch.isTimeUp();
+    }
+
+    protected void setMapTile(Map map, int x, int y, MapTile mapTile) {
+        mapTile.setMap(map);
+        map.setMapTile(x, y, mapTile);
     }
 }

@@ -61,9 +61,11 @@ public abstract class Player extends GameObject {
             super.update();
 
             // move player with respect to map collisions based on how much player needs to move this frame
-            super.moveYHandleCollision(moveAmountY);
-            super.moveXHandleCollision(moveAmountX);
-            applySpecialEffects();
+            if (playerState != PlayerState.INTERACTING) {
+                super.moveYHandleCollision(moveAmountY);
+                super.moveXHandleCollision(moveAmountX);
+                applySpecialEffects();
+            }
             updateLockedKeys();
         }
 

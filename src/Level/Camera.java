@@ -134,7 +134,7 @@ public class Camera extends Rectangle {
         for (int i = map.getNPCs().size() - 1; i >= 0; i--) {
             NPC npc = map.getNPCs().get(i);
 
-            if (isMapEntityActive(npc)) {
+            if (isMapEntityActive(npc) && npc.mapEntityStatus != MapEntityStatus.HIDDEN) {
                 activeNPCs.add(npc);
                 if (npc.mapEntityStatus == MapEntityStatus.INACTIVE) {
                     npc.setMapEntityStatus(MapEntityStatus.ACTIVE);

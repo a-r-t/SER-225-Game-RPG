@@ -8,6 +8,7 @@ import GameObject.ImageEffect;
 import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 import SpriteFont.SpriteFont;
+import Utils.Direction;
 import Utils.Stopwatch;
 
 import java.awt.image.BufferedImage;
@@ -51,14 +52,40 @@ public class NPC extends MapEntity {
     public int getId() { return id; }
 
     public void facePlayer(Player player) {
-        System.out.println("WALRUS: " + (Math.round(getScaledBoundsX2()) - (getScaledBounds().getWidth() / 2)));
-        System.out.println("PLAYER: " + Math.round(player.getScaledBoundsX2()));
-
         if (Math.round(getScaledBoundsX2()) - (getScaledBounds().getWidth() / 2) < Math.round(player.getScaledBoundsX2())) {
             this.currentAnimationName = "STAND_RIGHT";
         }
         else if (Math.round(getScaledBoundsX1()) + (getScaledBounds().getWidth() / 2) > Math.round(player.getScaledBoundsX1())) {
             this.currentAnimationName = "STAND_LEFT";
+        }
+    }
+
+    public void walk(Direction direction, int speed) {
+        if (direction == Direction.RIGHT) {
+            this.currentAnimationName = "WALK_RIGHT";
+        }
+        else if (direction == Direction.LEFT) {
+            this.currentAnimationName = "WALK_LEFT";
+        }
+        else {
+            if (this.currentAnimationName.contains("RIGHT")) {
+                this.currentAnimationName = "WALK_RIGHT";
+            }
+            else {
+                this.currentAnimationName = "WALK_LEFT";
+            }
+        }
+        if (direction == Direction.UP) {
+            moveY(-speed);
+        }
+        else if (direction == Direction.DOWN) {
+            moveY(speed);
+        }
+        else if (direction == Direction.LEFT) {
+            moveX(-speed);
+        }
+        else if (direction == Direction.RIGHT) {
+            moveX(speed);
         }
     }
 
