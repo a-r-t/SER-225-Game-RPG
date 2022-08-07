@@ -128,6 +128,11 @@ public class GameObject extends AnimatedSprite {
 		this.previousY = y;
 	}
 
+	public GameObject(float x, float y) {
+		super(x, y);
+	}
+
+
 	@Override
 	public void update() {
 		// call to animation logic

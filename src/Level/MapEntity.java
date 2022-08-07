@@ -46,6 +46,11 @@ public class MapEntity extends GameObject {
         super(image, x, y, scale, imageEffect, bounds);
     }
 
+    public MapEntity(float x, float y) {
+        super(x, y);
+    }
+
+
     public void initialize() {
         this.x = startPositionX;
         this.y = startPositionY;

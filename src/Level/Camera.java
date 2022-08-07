@@ -163,24 +163,38 @@ public class Camera extends Rectangle {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        drawMapTiles(graphicsHandler);
+        drawMapTilesBottomLayer(graphicsHandler);
+        drawMapTilesTopLayer(graphicsHandler);
     }
 
     public void draw(Player player, GraphicsHandler graphicsHandler) {
-        drawMapTiles(graphicsHandler);
+        drawMapTilesBottomLayer(graphicsHandler);
         drawMapEntities(player, graphicsHandler);
+        drawMapTilesTopLayer(graphicsHandler);
     }
 
     // draws visible map tiles to the screen
     // this is different than "active" map tiles as determined in the update method -- there is no reason to actually draw to screen anything that can't be seen
     // so this does not include the extra range granted by the UPDATE_OFF_SCREEN_RANGE value
-    public void drawMapTiles(GraphicsHandler graphicsHandler) {
+    public void drawMapTilesBottomLayer(GraphicsHandler graphicsHandler) {
         Point tileIndex = getTileIndexByCameraPosition();
         for (int i = tileIndex.y - 1; i <= tileIndex.y + height + 1; i++) {
             for (int j = tileIndex.x - 1; j <= tileIndex.x + width + 1; j++) {
                 MapTile tile = map.getMapTile(j, i);
                 if (tile != null) {
-                    tile.draw(graphicsHandler);
+                    tile.drawBottomLayer(graphicsHandler);
+                }
+            }
+        }
+    }
+
+    public void drawMapTilesTopLayer(GraphicsHandler graphicsHandler) {
+        Point tileIndex = getTileIndexByCameraPosition();
+        for (int i = tileIndex.y - 1; i <= tileIndex.y + height + 1; i++) {
+            for (int j = tileIndex.x - 1; j <= tileIndex.x + width + 1; j++) {
+                MapTile tile = map.getMapTile(j, i);
+                if (tile != null && tile.getTopLayer() != null) {
+                    tile.drawTopLayer(graphicsHandler);
                 }
             }
         }
