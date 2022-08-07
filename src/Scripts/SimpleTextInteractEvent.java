@@ -1,15 +1,19 @@
 package Scripts;
 
+import Event.Event;
+import Event.EventType;
 import Level.*;
 
-public class SimpleTextEvent extends BaseEvent {
+public class SimpleTextInteractEvent extends Event {
     private String[] textItems;
 
-    public SimpleTextEvent(String text) {
+    public SimpleTextInteractEvent(String text) {
+        super(EventType.INTERACT);
         this.textItems = new String[] { text };
     }
 
-    public SimpleTextEvent(String[] text) {
+    public SimpleTextInteractEvent(String[] text) {
+        super(EventType.INTERACT);
         this.textItems = text;
     }
 
@@ -27,7 +31,7 @@ public class SimpleTextEvent extends BaseEvent {
     }
 
     @Override
-    public ScriptState onInteract(Player player, Map map) {
+    public ScriptState execute(Player player, Map map) {
         start(player, map);
         if (!isTextboxDone(map)) {
             return ScriptState.RUNNING;

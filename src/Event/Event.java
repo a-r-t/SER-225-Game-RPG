@@ -1,7 +1,18 @@
-package Level;
+package Event;
 
-public abstract class BaseEvent implements InteractEvent {
+import Level.*;
+
+public abstract class Event {
     protected boolean start = true;
+    protected EventType eventType;
+
+    public Event(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public EventType getEventType() { return eventType; }
+
+    public abstract ScriptState execute(Player player, Map map);
 
     protected void setup(Player player, Map map) {
         lockPlayer(player);
@@ -9,11 +20,6 @@ public abstract class BaseEvent implements InteractEvent {
 
     protected void cleanup(Player player, Map map) {
         unlockPlayer(player);
-    }
-
-    @Override
-    public ScriptState onInteract(Player player, Map map) {
-        return ScriptState.COMPLETED;
     }
 
     protected void start(Player player, Map map) {
@@ -63,5 +69,13 @@ public abstract class BaseEvent implements InteractEvent {
             }
         }
         return null;
+    }
+
+    protected void setFlag(Map map, String flagName) {
+        map.getFlagManager().setFlag(flagName);
+    }
+
+    protected void unsetFlag(Map map, String flagName) {
+        map.getFlagManager().unsetFlag(flagName);
     }
 }

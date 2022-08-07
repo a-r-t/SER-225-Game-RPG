@@ -1,19 +1,18 @@
 package Level;
 
-import Engine.GraphicsHandler;
-import GameObject.Rectangle;
+import Event.Event;
 
 public class Script {
 
-    protected InteractEvent interactEvent;
+    protected Event event;
     protected boolean isActive = false;
 
-    public Script(InteractEvent interactEvent) {
-        this.interactEvent = interactEvent;
+    public Script(Event event) {
+        this.event = event;
     }
 
     public void update(Player player, Map map) {
-        ScriptState scriptState = interactEvent.onInteract(player, map);
+        ScriptState scriptState = event.execute(player, map);
         if (scriptState == ScriptState.COMPLETED) {
             this.isActive = false;
         }
