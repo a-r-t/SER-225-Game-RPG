@@ -33,7 +33,7 @@ public class SimpleTextInteractEvent extends Event {
     @Override
     public ScriptState execute(Player player, Map map) {
         start(player, map);
-        if (!isTextboxDone(map)) {
+        if (!isTextboxQueueEmpty(map)) {
             return ScriptState.RUNNING;
         }
         end(player, map);

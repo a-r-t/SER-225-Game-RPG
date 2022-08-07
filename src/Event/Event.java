@@ -54,7 +54,7 @@ public abstract class Event {
         map.getTextbox().addText(text);
     }
 
-    protected boolean isTextboxDone(Map map) {
+    protected boolean isTextboxQueueEmpty(Map map) {
         return map.getTextbox().isTextQueueEmpty();
     }
 
@@ -69,6 +69,10 @@ public abstract class Event {
             }
         }
         return null;
+    }
+
+    protected boolean isFlagSet(Map map, String flagName) {
+        return map.getFlagManager().isFlagSet(flagName);
     }
 
     protected void setFlag(Map map, String flagName) {

@@ -6,13 +6,11 @@ import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
-import Level.Map;
-import Level.NPC;
-import Level.Player;
+import Level.*;
 import SpriteFont.SpriteFont;
 import Utils.Point;
+import Event.*;
 
-import java.awt.*;
 import java.util.HashMap;
 
 // This class is for the walrus NPC
@@ -43,6 +41,43 @@ public class Walrus extends NPC {
                            .build()
            });
         }};
+    }
+
+    @Override
+    protected Script loadScript() {
+        return new Script(new Event(EventType.INTERACT) {
+            @Override
+            protected void setup(Player player, Map map) {
+                lockPlayer(player);
+                showTextbox(map);
+                if (!isFlagSet(map,"hasTalkedToWalrus")) {
+                    addTextToTextboxQueue(map, "Hi Cat!");
+                    addTextToTextboxQueue(map, "...oh, you lost your ball?");
+                    addTextToTextboxQueue(map, "Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+                }
+                else {
+                    addTextToTextboxQueue(map, "I sure love doing walrus things!");
+                }
+                facePlayer(player);
+            }
+
+            @Override
+            protected void cleanup(Player player, Map map) {
+                unlockPlayer(player);
+                hideTextbox(map);
+            }
+
+            @Override
+            public ScriptState execute(Player player, Map map) {
+                start(player, map);
+                if (!isTextboxQueueEmpty(map)) {
+                    return ScriptState.RUNNING;
+                }
+                setFlag(map,"hasTalkedToWalrus");
+                end(player, map);
+                return ScriptState.COMPLETED;
+            }
+        });
     }
 
     @Override

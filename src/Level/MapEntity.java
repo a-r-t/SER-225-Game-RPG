@@ -20,36 +20,43 @@ public class MapEntity extends GameObject {
 
     public MapEntity(float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
         super(spriteSheet, x, y, startingAnimation);
+        this.script = loadScript();
     }
 
     public MapEntity(float x, float y, HashMap<String, Frame[]> animations, String startingAnimation) {
         super(x, y, animations, startingAnimation);
+        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, String startingAnimation) {
         super(image, x, y, startingAnimation);
+        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y) {
         super(image, x, y);
+        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale) {
         super(image, x, y, scale);
+        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect) {
         super(image, x, y, scale, imageEffect);
+        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect, Rectangle bounds) {
         super(image, x, y, scale, imageEffect, bounds);
+        this.script = loadScript();
     }
 
     public MapEntity(float x, float y) {
         super(x, y);
+        this.script = loadScript();
     }
-
 
     public void initialize() {
         this.x = startPositionX;
@@ -87,5 +94,9 @@ public class MapEntity extends GameObject {
 
     public Script getScript() { return script; }
     public void setScript(Script script) { this.script = script; }
+
+    protected Script loadScript() {
+        return null;
+    }
 
 }
