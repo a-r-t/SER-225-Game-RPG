@@ -1,12 +1,10 @@
 package Level;
 
-import Engine.GraphicsHandler;
 import Engine.Key;
 import Engine.KeyLocker;
 import Engine.Keyboard;
 import GameObject.GameObject;
 import GameObject.SpriteSheet;
-import Utils.AirGroundState;
 import Utils.Direction;
 import GameObject.Rectangle;
 import java.util.ArrayList;
