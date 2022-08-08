@@ -44,43 +44,6 @@ public class Walrus extends NPC {
     }
 
     @Override
-    protected Script loadScript() {
-        return new Script(new Event(EventType.INTERACT) {
-            @Override
-            protected void setup(Player player, Map map) {
-                lockPlayer(player);
-                showTextbox(map);
-                if (!isFlagSet(map,"hasTalkedToWalrus")) {
-                    addTextToTextboxQueue(map, "Hi Cat!");
-                    addTextToTextboxQueue(map, "...oh, you lost your ball?");
-                    addTextToTextboxQueue(map, "Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
-                }
-                else {
-                    addTextToTextboxQueue(map, "I sure love doing walrus things!");
-                }
-                facePlayer(player);
-            }
-
-            @Override
-            protected void cleanup(Player player, Map map) {
-                unlockPlayer(player);
-                hideTextbox(map);
-                setFlag(map,"hasTalkedToWalrus");
-            }
-
-            @Override
-            public ScriptState execute(Player player, Map map) {
-                start(player, map);
-                if (!isTextboxQueueEmpty(map)) {
-                    return ScriptState.RUNNING;
-                }
-                end(player, map);
-                return ScriptState.COMPLETED;
-            }
-        });
-    }
-
-    @Override
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
     }

@@ -11,6 +11,10 @@ public class Script {
         this.event = event;
     }
 
+    public Script() {
+        this.event = loadEvent();
+    }
+
     public void update(Player player, Map map) {
         ScriptState scriptState = event.execute(player, map);
         if (scriptState == ScriptState.COMPLETED) {
@@ -21,10 +25,5 @@ public class Script {
     public boolean isActive() { return isActive; }
     public void setIsActive(boolean isActive) { this.isActive = isActive; }
 
-    public EventType getEventType() {
-        if (event != null) {
-            return event.getEventType();
-        }
-        return EventType.NONE;
-    }
+    protected Event loadEvent() { return null; }
 }

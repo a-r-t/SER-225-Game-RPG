@@ -5,14 +5,9 @@ import Utils.Stopwatch;
 
 public abstract class Event {
     protected boolean start = true;
-    protected EventType eventType;
     protected Stopwatch stopwatch = new Stopwatch();
 
-    public Event(EventType eventType) {
-        this.eventType = eventType;
-    }
-
-    public EventType getEventType() { return eventType; }
+    public Event() { }
 
     public abstract ScriptState execute(Player player, Map map);
 
@@ -91,6 +86,10 @@ public abstract class Event {
 
     protected boolean isWaitTimeUp() {
         return stopwatch.isTimeUp();
+    }
+
+    protected MapTile getMapTile(Map map, int x, int y) {
+        return map.getMapTile(x, y);
     }
 
     protected void setMapTile(Map map, int x, int y, MapTile mapTile) {

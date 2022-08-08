@@ -3,7 +3,6 @@ package Level;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
-import Event.EventType;
 import Utils.Point;
 
 import java.io.File;
@@ -267,6 +266,14 @@ public abstract class Map {
     public ArrayList<NPC> getNPCs() {
         return npcs;
     }
+    public NPC getNPCById(int id) {
+        for (NPC npc : npcs) {
+            if (npc.getId() == id) {
+                return npc;
+            }
+        }
+        return null;
+    }
 
     // returns all active enemies (enemies that are a part of the current update cycle) -- this changes every frame by the Camera class
     public ArrayList<Enemy> getActiveEnemies() {
@@ -309,7 +316,7 @@ public abstract class Map {
         for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
             for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
                 MapTile mapTile = getMapTile(j, i);
-                if (mapTile != null && mapTile.getScript() != null) {
+                if (mapTile != null && mapTile.getInteractScript() != null) {
                     surroundingMapEntities.add(mapTile);
                 }
             }
@@ -348,10 +355,10 @@ public abstract class Map {
             }
             interactedEntity = currentLargestAreaOverlappedTile;
         }
-        if (interactedEntity == null || interactedEntity.getScript() == null || interactedEntity.getScript().getEventType() != EventType.INTERACT) {
+        if (interactedEntity == null || interactedEntity.getInteractScript() == null) {
             return;
         }
-        interactedEntity.getScript().setIsActive(true);
+        interactedEntity.getInteractScript().setIsActive(true);
     }
 
 

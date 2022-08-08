@@ -1,19 +1,16 @@
 package Scripts;
 
 import Event.Event;
-import Event.EventType;
 import Level.*;
 
 public class SimpleTextInteractEvent extends Event {
     private String[] textItems;
 
     public SimpleTextInteractEvent(String text) {
-        super(EventType.INTERACT);
         this.textItems = new String[] { text };
     }
 
     public SimpleTextInteractEvent(String[] text) {
-        super(EventType.INTERACT);
         this.textItems = text;
     }
 

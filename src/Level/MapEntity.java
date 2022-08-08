@@ -18,46 +18,38 @@ public class MapEntity extends GameObject {
 
     protected boolean isHidden = false;
 
-    protected Script script;
+    protected Script interactScript;
 
     public MapEntity(float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
         super(spriteSheet, x, y, startingAnimation);
-        this.script = loadScript();
     }
 
     public MapEntity(float x, float y, HashMap<String, Frame[]> animations, String startingAnimation) {
         super(x, y, animations, startingAnimation);
-        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, String startingAnimation) {
         super(image, x, y, startingAnimation);
-        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y) {
         super(image, x, y);
-        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale) {
         super(image, x, y, scale);
-        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect) {
         super(image, x, y, scale, imageEffect);
-        this.script = loadScript();
     }
 
     public MapEntity(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect, Rectangle bounds) {
         super(image, x, y, scale, imageEffect, bounds);
-        this.script = loadScript();
     }
 
     public MapEntity(float x, float y) {
         super(x, y);
-        this.script = loadScript();
     }
 
     public void initialize() {
@@ -94,8 +86,8 @@ public class MapEntity extends GameObject {
         this.isUpdateOffScreen = isUpdateOffScreen;
     }
 
-    public Script getScript() { return script; }
-    public void setScript(Script script) { this.script = script; }
+    public Script getInteractScript() { return interactScript; }
+    public void setInteractScript(Script interactScript) { this.interactScript = interactScript; }
 
     protected Script loadScript() {
         return null;

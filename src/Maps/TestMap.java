@@ -7,6 +7,9 @@ import Level.*;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
 import Scripts.SimpleTextInteractEvent;
+import Scripts.TestMap.DinoScript;
+import Scripts.TestMap.TreeScript;
+import Scripts.TestMap.WalrusScript;
 import Tilesets.CommonTileset;
 import Utils.Point;
 
@@ -30,55 +33,22 @@ public class TestMap extends Map {
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
         npcs.add(new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40)));
-        npcs.add(new Dinosaur(1, getMapTile(13, 4).getLocation()));
+        npcs.add(new Dinosaur(2, getMapTile(13, 4).getLocation()));
         return npcs;
     }
 
     @Override
     public void loadScripts() {
-        getMapTile(21, 19).setScript(new Script(new SimpleTextInteractEvent("Cat's house")));
+        getMapTile(21, 19).setInteractScript(new Script(new SimpleTextInteractEvent("Cat's house")));
 
-        getMapTile(7, 26).setScript(new Script(new SimpleTextInteractEvent("Walrus's house")));
+        getMapTile(7, 26).setInteractScript(new Script(new SimpleTextInteractEvent("Walrus's house")));
 
-        getMapTile(20, 4).setScript(new Script(new SimpleTextInteractEvent("Dino's house")));
+        getMapTile(20, 4).setInteractScript(new Script(new SimpleTextInteractEvent("Dino's house")));
 
-        getMapTile(2, 6).setScript(new Script(new Event(EventType.INTERACT) {
-            @Override
-            protected void setup(Player player, Map map) {
-                lockPlayer(player);
-                showTextbox(map);
-                addTextToTextboxQueue(map, "...");
-                addTextToTextboxQueue(map, "I found my ball inside of the tree!\nYippee!");
-            }
+        getMapTile(2, 6).setInteractScript(new TreeScript());
 
-            @Override
-            protected void cleanup(Player player, Map map) {
-                setFlag(map, "hasFoundBall");
-                hideTextbox(map);
-                unlockPlayer(player);
-            }
-
-            @Override
-            public ScriptState execute(Player player, Map map) {
-                if (!isFlagSet(map, "hasFoundBall") && isFlagSet(map, "hasTalkedToDinosaur") && isPlayerAtBottomOfTile(player)) {
-                    start(player, map);
-                    if (!isTextboxQueueEmpty(map)) {
-                        return ScriptState.RUNNING;
-                    }
-                    end(player, map);
-                }
-                return ScriptState.COMPLETED;
-            }
-
-            private boolean isPlayerAtBottomOfTile(Player player) {
-                Rectangle mapTileBounds = getMapTile(2, 6).getScaledBounds();
-                return player.getCalibratedScaledBounds().getY1() >= getMapTile(2, 6).getCalibratedScaledBounds().getY2() &&
-                        (player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX2() && player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX2()) ||
-                        (player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX() && player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX1()) ||
-                        (player.getCalibratedScaledBounds().getX1() > getMapTile(2, 6).getCalibratedScaledBounds().getX1() && player.getCalibratedScaledBounds().getX2() < getMapTile(2, 6).getCalibratedScaledBounds().getX2());
-
-            }
-        }));
+        getNPCById(1).setInteractScript(new WalrusScript());
+        getNPCById(2).setInteractScript(new DinoScript());
 
     }
 }
