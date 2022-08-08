@@ -3,14 +3,14 @@ package Scripts;
 import Event.Event;
 import Level.*;
 
-public class SimpleTextInteractEvent extends Event {
+public class SimpleTextInteractScript extends Script {
     private String[] textItems;
 
-    public SimpleTextInteractEvent(String text) {
+    public SimpleTextInteractScript(String text) {
         this.textItems = new String[] { text };
     }
 
-    public SimpleTextInteractEvent(String[] text) {
+    public SimpleTextInteractScript(String[] text) {
         this.textItems = text;
     }
 

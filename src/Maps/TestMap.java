@@ -1,12 +1,10 @@
 package Maps;
 
 import EnhancedMapTiles.Rock;
-import Event.*;
-import GameObject.Rectangle;
 import Level.*;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
-import Scripts.SimpleTextInteractEvent;
+import Scripts.SimpleTextInteractScript;
 import Scripts.TestMap.DinoScript;
 import Scripts.TestMap.TreeScript;
 import Scripts.TestMap.WalrusScript;
@@ -39,11 +37,11 @@ public class TestMap extends Map {
 
     @Override
     public void loadScripts() {
-        getMapTile(21, 19).setInteractScript(new Script(new SimpleTextInteractEvent("Cat's house")));
+        getMapTile(21, 19).setInteractScript(new SimpleTextInteractScript("Cat's house"));
 
-        getMapTile(7, 26).setInteractScript(new Script(new SimpleTextInteractEvent("Walrus's house")));
+        getMapTile(7, 26).setInteractScript(new SimpleTextInteractScript("Walrus's house"));
 
-        getMapTile(20, 4).setInteractScript(new Script(new SimpleTextInteractEvent("Dino's house")));
+        getMapTile(20, 4).setInteractScript(new SimpleTextInteractScript("Dino's house"));
 
         getMapTile(2, 6).setInteractScript(new TreeScript());
 
