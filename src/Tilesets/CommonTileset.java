@@ -40,14 +40,14 @@ public class CommonTileset extends Tileset {
 
         mapTiles.add(signTile);
 
-        // dirt
-        Frame dirtFrame = new FrameBuilder(getSubImage(0, 2), 0)
+        // sand
+        Frame sandFrame = new FrameBuilder(getSubImage(0, 1), 0)
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder dirtTile = new MapTileBuilder(dirtFrame);
+        MapTileBuilder sandTile = new MapTileBuilder(sandFrame);
 
-        mapTiles.add(dirtTile);
+        mapTiles.add(sandTile);
 
         // rock
         Frame rockFrame = new FrameBuilder(getSubImage(3, 1), 0)
@@ -71,7 +71,7 @@ public class CommonTileset extends Tileset {
         mapTiles.add(treeTrunkWithFullHoleTile);
 
         // left end branch
-        Frame leftEndBranchFrame = new FrameBuilder(getSubImage(1, 5), 0)
+        Frame leftEndBranchFrame = new FrameBuilder(getSubImage(2, 4), 0)
                 .withScale(tileScale)
                 .withBounds(0, 6, 16, 4)
                 .build();
@@ -83,7 +83,7 @@ public class CommonTileset extends Tileset {
         mapTiles.add(leftEndBranchTile);
 
         // right end branch
-        Frame rightEndBranchFrame = new FrameBuilder(getSubImage(1, 5), 0)
+        Frame rightEndBranchFrame = new FrameBuilder(getSubImage(2, 4), 0)
                 .withScale(tileScale)
                 .withBounds(0, 6, 16, 4)
                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -139,16 +139,16 @@ public class CommonTileset extends Tileset {
 
         // purple flower
         Frame[] purpleFlowerFrames = new Frame[] {
+                new FrameBuilder(getSubImage(0, 2), 500)
+                        .withScale(tileScale)
+                        .build(),
                 new FrameBuilder(getSubImage(0, 3), 500)
+                        .withScale(tileScale)
+                        .build(),
+                new FrameBuilder(getSubImage(0, 2), 500)
                         .withScale(tileScale)
                         .build(),
                 new FrameBuilder(getSubImage(0, 4), 500)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(0, 3), 500)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(0, 5), 500)
                         .withScale(tileScale)
                         .build()
         };
@@ -169,25 +169,26 @@ public class CommonTileset extends Tileset {
 
         mapTiles.add(middleBranchTile);
 
-        // tree trunk hole top
-        Frame treeTrunkHoleTopFrame = new FrameBuilder(getSubImage(2, 4), 0)
+        // tree trunk bottom
+        Frame treeTrunkBottomFrame = new FrameBuilder(getSubImage(2, 0), 0)
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkHoleTopTile = new MapTileBuilder(treeTrunkHoleTopFrame)
+        MapTileBuilder treeTrunkBottomTile = new MapTileBuilder(treeTrunkBottomFrame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTrunkHoleTopTile);
+        mapTiles.add(treeTrunkBottomTile);
 
-        // tree trunk hole bottom
-        Frame treeTrunkHoleBottomFrame = new FrameBuilder(getSubImage(2, 5), 0)
+        // mushrooms
+        Frame mushroomFrame = new FrameBuilder(getSubImage(2, 1), 0)
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkHoleBottomTile = new MapTileBuilder(treeTrunkHoleBottomFrame)
-                .withTileType(TileType.NOT_PASSABLE);
+        MapTileBuilder mushroomTile = new MapTileBuilder(mushroomFrame)
+                .withTileType(TileType.PASSABLE);
 
-        mapTiles.add(treeTrunkHoleBottomTile);
+        mapTiles.add(mushroomTile);
+
 
         // grey rock
         Frame greyRockFrame = new FrameBuilder(getSubImage(3, 2), 0)
@@ -242,8 +243,9 @@ public class CommonTileset extends Tileset {
         mapTiles.add(leftHouseRoofTile);
 
         // right house roof
-        Frame rightHouseRoofFrame = new FrameBuilder(getSubImage(4, 5), 0)
+        Frame rightHouseRoofFrame = new FrameBuilder(getSubImage(4, 1), 0)
                 .withScale(tileScale)
+                .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                 .build();
 
         MapTileBuilder rightHouseRoofTile = new MapTileBuilder(grassFrame)
@@ -315,16 +317,6 @@ public class CommonTileset extends Tileset {
                 .withTileType(TileType.NOT_PASSABLE);
 
         mapTiles.add(topWaterTile);
-
-        // tree trunk bottom
-        Frame treeTrunkBottomFrame = new FrameBuilder(getSubImage(2, 0), 0)
-                .withScale(tileScale)
-                .build();
-
-        MapTileBuilder treeTrunkBottomTile = new MapTileBuilder(treeTrunkBottomFrame)
-                .withTileType(TileType.NOT_PASSABLE);
-
-        mapTiles.add(treeTrunkBottomTile);
 
 
         return mapTiles;
