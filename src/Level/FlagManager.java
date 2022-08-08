@@ -6,14 +6,12 @@ import java.util.Map.Entry;
 public class FlagManager {
     protected HashMap<String, Boolean> flags = new HashMap<>();
 
-    public FlagManager() {
-        loadFlags();
+    public void addFlag(String flagName) {
+        flags.put(flagName, false);
     }
 
-    private void loadFlags() {
-        flags.put("hasTalkedToWalrus", false);
-        flags.put("hasTalkedToDinosaur", false);
-        flags.put("hasFoundBall", false);
+    public void addFlag(String flagName, boolean startingValue) {
+        flags.put(flagName, startingValue);
     }
 
     public void setFlag(String flagName) {
