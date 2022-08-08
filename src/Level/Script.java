@@ -1,4 +1,5 @@
 package Level;
+import Utils.Direction;
 import Utils.Stopwatch;
 
 public abstract class Script {
@@ -6,6 +7,7 @@ public abstract class Script {
 
     protected boolean start = true;
     protected Stopwatch stopwatch = new Stopwatch();
+    protected MapEntity mapEntity;
     protected Map map;
     protected Player player;
 
@@ -13,6 +15,8 @@ public abstract class Script {
     public void setMap(Map map) { this.map = map; }
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
+    public MapEntity getMapEntity() { return mapEntity; }
+    public void setMapEntity(MapEntity mapEntity) { this.mapEntity = mapEntity; }
 
     protected abstract void setup();
 
@@ -77,6 +81,34 @@ public abstract class Script {
             }
         }
         return null;
+    }
+
+    protected void npcFacePlayer(int npcId) {
+        NPC npc = getNPC(npcId);
+        if (npc != null) {
+            npc.facePlayer(player);
+        }
+    }
+
+    protected void npcWalk(int npcId, Direction direction, float speed) {
+        NPC npc = getNPC(npcId);
+        if (npc != null) {
+            npc.walk(direction, speed);
+        }
+    }
+
+    protected void npcSetAnimation(int npcId, String animationName) {
+        NPC npc = getNPC(npcId);
+        if (npc != null) {
+            npc.setCurrentAnimation(animationName);
+        }
+    }
+
+    protected void npcSetAnimationFrameIndex(int npcId, int frameIndex) {
+        NPC npc = getNPC(npcId);
+        if (npc != null) {
+            npc.setCurrentAnimationFrameIndex(frameIndex);
+        }
     }
 
     protected boolean isFlagSet(String flagName) {

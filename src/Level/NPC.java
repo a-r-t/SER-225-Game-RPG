@@ -60,7 +60,7 @@ public class NPC extends MapEntity {
         }
     }
 
-    public void walk(Direction direction, int speed) {
+    public void walk(Direction direction, float speed) {
         if (direction == Direction.RIGHT) {
             this.currentAnimationName = "WALK_RIGHT";
         }

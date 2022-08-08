@@ -11,6 +11,11 @@ public class DinoScript extends Script {
 
     private int sequence = 0;
     private int amountMoved = 0;
+    private NPC dino;
+
+    public DinoScript() {
+        this.dino = (NPC)mapEntity;
+    }
 
     @Override
     protected void setup() {
@@ -29,7 +34,6 @@ public class DinoScript extends Script {
                 setWaitTime(1000);
             }
             else if (sequence == 2) {
-                NPC dino = getNPC(2);
                 dino.facePlayer(player);
                 showTextbox();
                 addTextToTextboxQueue("Oh, you're still here...");
@@ -39,7 +43,6 @@ public class DinoScript extends Script {
                 addTextToTextboxQueue("Now, if you'll excuse me, I have to go.");
             }
             else if (sequence == 3) {
-                NPC dino = getNPC(2);
                 dino.setCurrentAnimation("STAND_RIGHT");
                 amountMoved = 0;
             }
@@ -47,7 +50,6 @@ public class DinoScript extends Script {
                 amountMoved = 0;
             }
             else if (sequence == 5) {
-                NPC dino = getNPC(2);
                 dino.setCurrentAnimation("STAND_LEFT");
 
                 Frame openDoorFrame = new FrameBuilder(map.getTileset().getSubImage(4, 4), 0)
@@ -103,7 +105,6 @@ public class DinoScript extends Script {
                         .build(location.x, location.y);
 
                 setMapTile(17, 4, mapTile);
-                NPC dino = getNPC(2);
                 dino.setIsHidden(true);
 
                 setFlag("hasTalkedToDinosaur");
@@ -147,7 +148,6 @@ public class DinoScript extends Script {
             // walk downwards
             else if (sequence == 3) {
                 start();
-                NPC dino = getNPC(2);
                 dino.walk(Direction.DOWN, 2);
                 amountMoved += 2;
                 if (amountMoved == 36) {
@@ -157,7 +157,6 @@ public class DinoScript extends Script {
             // walk right
             else if (sequence == 4) {
                 start();
-                NPC dino = getNPC(2);
                 dino.walk(Direction.RIGHT, 2);
                 amountMoved += 2;
                 if (amountMoved == 196) {
@@ -167,7 +166,6 @@ public class DinoScript extends Script {
             // walk up
             else if (sequence == 5) {
                 start();
-                NPC dino = getNPC(2);
                 dino.walk(Direction.UP, 2);
                 amountMoved += 2;
                 if (amountMoved == 50) {

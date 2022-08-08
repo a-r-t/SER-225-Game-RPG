@@ -1,6 +1,5 @@
 package Scripts.TestMap;
 
-import Event.*;
 import GameObject.Rectangle;
 import Level.*;
 
