@@ -16,6 +16,8 @@ public abstract class Player extends GameObject {
     // these should be set in a subclass
     protected float walkSpeed = 0;
     protected int interactionRange = 5;
+    protected Direction currentWalkingXDirection;
+    protected Direction currentWalkingYDirection;
 
     // values used to handle player movement
     protected float moveAmountX, moveAmountY;
@@ -127,22 +129,32 @@ public abstract class Player extends GameObject {
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
             moveAmountX -= walkSpeed;
             facingDirection = Direction.LEFT;
+            currentWalkingXDirection = Direction.LEFT;
         }
 
         // if walk right key is pressed, move player to the right
         else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
             moveAmountX += walkSpeed;
             facingDirection = Direction.RIGHT;
+            currentWalkingXDirection = Direction.RIGHT;
+        }
+        else {
+            currentWalkingXDirection = Direction.NONE;
         }
 
         if (Keyboard.isKeyDown(MOVE_UP_KEY)) {
             moveAmountY -= walkSpeed;
+            currentWalkingYDirection = Direction.UP;
         }
         else if (Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
             moveAmountY += walkSpeed;
+            currentWalkingYDirection = Direction.DOWN;
+        }
+        else {
+            currentWalkingYDirection = Direction.NONE;
         }
 
-        else if (Keyboard.isKeyUp(MOVE_LEFT_KEY) && Keyboard.isKeyUp(MOVE_RIGHT_KEY) && Keyboard.isKeyUp(MOVE_UP_KEY) && Keyboard.isKeyUp(MOVE_DOWN_KEY)) {
+        if (Keyboard.isKeyUp(MOVE_LEFT_KEY) && Keyboard.isKeyUp(MOVE_RIGHT_KEY) && Keyboard.isKeyUp(MOVE_UP_KEY) && Keyboard.isKeyUp(MOVE_DOWN_KEY)) {
             playerState = PlayerState.STANDING;
         }
     }
@@ -226,4 +238,7 @@ public abstract class Player extends GameObject {
                 getScaledBounds().getWidth() + (interactionRange * 2),
                 getScaledBounds().getHeight() + (interactionRange * 2));
     }
+
+    public Direction getCurrentWalkingXDirection() { return currentWalkingXDirection; }
+    public Direction getCurrentWalkingYDirection() { return currentWalkingYDirection; }
 }

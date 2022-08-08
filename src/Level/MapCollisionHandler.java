@@ -18,7 +18,7 @@ public class MapCollisionHandler {
         MapEntity entityCollidedWith = null;
         for (int j = -1; j <= numberOfTilesToCheck + 1; j++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x), Math.round(tileIndex.y + j));
-            if (mapTile != null && hasCollidedWithMapTile(gameObject, mapTile, direction)) {
+            if (mapTile != null && hasCollidedWithMapEntity(gameObject, mapTile, direction)) {
                 entityCollidedWith = mapTile;
                 if (direction == Direction.RIGHT) {
                     float boundsDifference = gameObject.getScaledX2() - gameObject.getScaledBoundsX2();
@@ -32,7 +32,7 @@ public class MapCollisionHandler {
             }
         }
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
-            if (hasCollidedWithMapTile(gameObject, enhancedMapTile, direction)) {
+            if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
                 if (direction == Direction.RIGHT) {
                     float boundsDifference = gameObject.getScaledX2() - gameObject.getScaledBoundsX2();
@@ -47,7 +47,7 @@ public class MapCollisionHandler {
         }
 
         for (NPC npc : map.getActiveNPCs()) {
-            if (hasCollidedWithMapTile(gameObject, npc, direction)) {
+            if (!gameObject.equals(npc) && hasCollidedWithMapEntity(gameObject, npc, direction)) {
                 entityCollidedWith = npc;
                 if (direction == Direction.RIGHT) {
                     float boundsDifference = gameObject.getScaledX2() - gameObject.getScaledBoundsX2();
@@ -75,7 +75,7 @@ public class MapCollisionHandler {
         MapEntity entityCollidedWith = null;
         for (int j = -1; j <= numberOfTilesToCheck + 1; j++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x) + j, Math.round(tileIndex.y));
-            if (mapTile != null && hasCollidedWithMapTile(gameObject, mapTile, direction)) {
+            if (mapTile != null && hasCollidedWithMapEntity(gameObject, mapTile, direction)) {
                 entityCollidedWith = mapTile;
                 if (direction == Direction.DOWN) {
                     float boundsDifference = gameObject.getScaledY2() - gameObject.getScaledBoundsY2();
@@ -89,7 +89,7 @@ public class MapCollisionHandler {
             }
         }
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
-            if (hasCollidedWithMapTile(gameObject, enhancedMapTile, direction)) {
+            if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
                 if (direction == Direction.DOWN) {
                     float boundsDifference = gameObject.getScaledY2() - gameObject.getScaledBoundsY2();
@@ -104,7 +104,7 @@ public class MapCollisionHandler {
         }
 
         for (NPC npc : map.getActiveNPCs()) {
-            if (hasCollidedWithMapTile(gameObject, npc, direction)) {
+            if (!gameObject.equals(npc) && hasCollidedWithMapEntity(gameObject, npc, direction)) {
                 entityCollidedWith = npc;
                 if (direction == Direction.DOWN) {
                     float boundsDifference = gameObject.getScaledY2() - gameObject.getScaledBoundsY2();
@@ -123,7 +123,7 @@ public class MapCollisionHandler {
     }
 
     // based on tile type, perform logic to determine if a collision did occur with an intersecting tile or not
-    private static boolean hasCollidedWithMapTile(GameObject gameObject, MapEntity mapEntity, Direction direction) {
+    private static boolean hasCollidedWithMapEntity(GameObject gameObject, MapEntity mapEntity, Direction direction) {
         if (mapEntity instanceof MapTile) {
             MapTile mapTile = (MapTile)mapEntity;
             switch (mapTile.getTileType()) {
