@@ -6,60 +6,67 @@ import Utils.Stopwatch;
 public abstract class Event {
     protected boolean start = true;
     protected Stopwatch stopwatch = new Stopwatch();
+    protected Map map;
+    protected Player player;
 
     public Event() { }
 
-    public abstract ScriptState execute(Player player, Map map);
+    public Map getMap() { return map; }
+    public void setMap(Map map) { this.map = map; }
+    public Player getPlayer() { return player; }
+    public void setPlayer(Player player) { this.player = player; }
 
-    protected void setup(Player player, Map map) {
-        lockPlayer(player);
+    public abstract ScriptState execute();
+
+    protected void setup() {
+        lockPlayer();
     }
 
-    protected void cleanup(Player player, Map map) {
-        unlockPlayer(player);
+    protected void cleanup() {
+        unlockPlayer();
     }
 
-    protected void start(Player player, Map map) {
+    protected void start() {
         if (start) {
-            setup(player, map);
+            setup();
             start = false;
         }
     }
 
-    protected void end(Player player, Map map) {
-        cleanup(player, map);
+    protected void end() {
+        cleanup();
         start = true;
     }
 
-    protected void lockPlayer(Player player) {
+    protected void lockPlayer() {
         player.setPlayerState(PlayerState.INTERACTING);
     }
 
-    protected void unlockPlayer(Player player) {
+    protected void unlockPlayer() {
         player.setPlayerState(PlayerState.STANDING);
     }
 
-    protected void showTextbox(Map map) {
+    protected void showTextbox() {
         map.getTextbox().setIsActive(true);
     }
 
-    protected void addTextToTextboxQueue(Map map, String text) {
+    protected void addTextToTextboxQueue(String text) {
         map.getTextbox().addText(text);
     }
 
-    protected void addTextToTextboxQueue(Map map, String[] text) {
+    protected void addTextToTextboxQueue(String[] text) {
         map.getTextbox().addText(text);
     }
 
-    protected boolean isTextboxQueueEmpty(Map map) {
+    protected boolean isTextboxQueueEmpty() {
         return map.getTextbox().isTextQueueEmpty();
     }
 
-    protected void hideTextbox(Map map) {
+    protected void hideTextbox() {
         map.getTextbox().setIsActive(false);
     }
 
-    protected NPC getNPC(int npcId, Map map) {
+    protected NPC getNPC(int npcId) {
         for (NPC npc : map.getNPCs()) {
             if (npc.getId() == npcId) {
                 return npc;
@@ -68,15 +75,15 @@ public abstract class Event {
         return null;
     }
 
-    protected boolean isFlagSet(Map map, String flagName) {
+    protected boolean isFlagSet(String flagName) {
         return map.getFlagManager().isFlagSet(flagName);
     }
 
-    protected void setFlag(Map map, String flagName) {
+    protected void setFlag(String flagName) {
         map.getFlagManager().setFlag(flagName);
     }
 
-    protected void unsetFlag(Map map, String flagName) {
+    protected void unsetFlag(String flagName) {
         map.getFlagManager().unsetFlag(flagName);
     }
 
@@ -88,11 +95,11 @@ public abstract class Event {
         return stopwatch.isTimeUp();
     }
 
-    protected MapTile getMapTile(Map map, int x, int y) {
+    protected MapTile getMapTile(int x, int y) {
         return map.getMapTile(x, y);
     }
 
-    protected void setMapTile(Map map, int x, int y, MapTile mapTile) {
+    protected void setMapTile(int x, int y, MapTile mapTile) {
         mapTile.setMap(map);
         map.setMapTile(x, y, mapTile);
     }

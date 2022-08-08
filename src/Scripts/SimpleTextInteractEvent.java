@@ -15,25 +15,25 @@ public class SimpleTextInteractEvent extends Event {
     }
 
     @Override
-    protected void setup(Player player, Map map) {
-        lockPlayer(player);
-        showTextbox(map);
-        addTextToTextboxQueue(map, textItems);
+    protected void setup() {
+        lockPlayer();
+        showTextbox();
+        addTextToTextboxQueue(textItems);
     }
 
     @Override
-    protected void cleanup(Player player, Map map) {
-        unlockPlayer(player);
-        hideTextbox(map);
+    protected void cleanup() {
+        unlockPlayer();
+        hideTextbox();
     }
 
     @Override
-    public ScriptState execute(Player player, Map map) {
-        start(player, map);
-        if (!isTextboxQueueEmpty(map)) {
+    public ScriptState execute() {
+        start();
+        if (!isTextboxQueueEmpty()) {
             return ScriptState.RUNNING;
         }
-        end(player, map);
+        end();
         return ScriptState.COMPLETED;
     }
 }

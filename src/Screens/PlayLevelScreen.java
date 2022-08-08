@@ -4,10 +4,7 @@ import Engine.GraphicsHandler;
 import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
-import Level.FlagManager;
-import Level.Map;
-import Level.Player;
-import Level.PlayerListener;
+import Level.*;
 import Maps.TestMap;
 import Players.Cat;
 import Utils.Stopwatch;
@@ -45,6 +42,26 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.player.addListener(this);
         this.player.setLocation(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
+
+        // setup map scripts
+        for (MapTile mapTile : map.getMapTiles()) {
+            if (mapTile.getInteractScript() != null) {
+                mapTile.getInteractScript().setMap(map);
+                mapTile.getInteractScript().setPlayer(player);
+            }
+        }
+        for (NPC npc : map.getNPCs()) {
+            if (npc.getInteractScript() != null) {
+                npc.getInteractScript().setMap(map);
+                npc.getInteractScript().setPlayer(player);
+            }
+        }
+        for (EnhancedMapTile enhancedMapTile : map.getEnhancedMapTiles()) {
+            if (enhancedMapTile.getInteractScript() != null) {
+                enhancedMapTile.getInteractScript().setMap(map);
+                enhancedMapTile.getInteractScript().setPlayer(player);
+            }
+        }
     }
 
     public void update() {

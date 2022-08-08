@@ -10,38 +10,38 @@ public class TreeScript extends Script {
     public Event loadEvent() {
         return new Event() {
             @Override
-            protected void setup(Player player, Map map) {
-                lockPlayer(player);
-                showTextbox(map);
-                addTextToTextboxQueue(map, "...");
-                addTextToTextboxQueue(map, "I found my ball inside of the tree!\nYippee!");
+            protected void setup() {
+                lockPlayer();
+                showTextbox();
+                addTextToTextboxQueue("...");
+                addTextToTextboxQueue("I found my ball inside of the tree!\nYippee!");
             }
 
             @Override
-            protected void cleanup(Player player, Map map) {
-                setFlag(map, "hasFoundBall");
-                hideTextbox(map);
-                unlockPlayer(player);
+            protected void cleanup() {
+                setFlag("hasFoundBall");
+                hideTextbox();
+                unlockPlayer();
             }
 
             @Override
-            public ScriptState execute(Player player, Map map) {
-                if (!isFlagSet(map, "hasFoundBall") && isFlagSet(map, "hasTalkedToDinosaur") && isPlayerAtBottomOfTile(map, player)) {
-                    start(player, map);
-                    if (!isTextboxQueueEmpty(map)) {
+            public ScriptState execute() {
+                if (!isFlagSet("hasFoundBall") && isFlagSet("hasTalkedToDinosaur") && isPlayerAtBottomOfTile()) {
+                    start();
+                    if (!isTextboxQueueEmpty()) {
                         return ScriptState.RUNNING;
                     }
-                    end(player, map);
+                    end();
                 }
                 return ScriptState.COMPLETED;
             }
 
-            private boolean isPlayerAtBottomOfTile(Map map, Player player) {
-                Rectangle mapTileBounds = getMapTile(map, 2, 6).getScaledBounds();
-                return player.getCalibratedScaledBounds().getY1() >= getMapTile(map, 2, 6).getCalibratedScaledBounds().getY2() &&
-                        (player.getCalibratedScaledBounds().getX1() < getMapTile(map, 2, 6).getCalibratedScaledBounds().getX2() && player.getCalibratedScaledBounds().getX2() > getMapTile(map, 2, 6).getCalibratedScaledBounds().getX2()) ||
-                        (player.getCalibratedScaledBounds().getX2() > getMapTile(map, 2, 6).getCalibratedScaledBounds().getX() && player.getCalibratedScaledBounds().getX1() < getMapTile(map, 2, 6).getCalibratedScaledBounds().getX1()) ||
-                        (player.getCalibratedScaledBounds().getX1() > getMapTile(map, 2, 6).getCalibratedScaledBounds().getX1() && player.getCalibratedScaledBounds().getX2() < getMapTile(map, 2, 6).getCalibratedScaledBounds().getX2());
+            private boolean isPlayerAtBottomOfTile() {
+                Rectangle mapTileBounds = getMapTile(2, 6).getScaledBounds();
+                return player.getCalibratedScaledBounds().getY1() >= getMapTile(2, 6).getCalibratedScaledBounds().getY2() &&
+                        (player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX2() && player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX2()) ||
+                        (player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX() && player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX1()) ||
+                        (player.getCalibratedScaledBounds().getX1() > getMapTile(2, 6).getCalibratedScaledBounds().getX1() && player.getCalibratedScaledBounds().getX2() < getMapTile(2, 6).getCalibratedScaledBounds().getX2());
 
             }
         };

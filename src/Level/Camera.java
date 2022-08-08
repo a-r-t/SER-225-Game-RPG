@@ -60,7 +60,7 @@ public class Camera extends Rectangle {
                     tile.update();
                 }
                 if (tile.getInteractScript() != null && tile.getInteractScript().isActive()) {
-                    tile.getInteractScript().update(player, map);
+                    tile.getInteractScript().update();
                 }
             }
         }
@@ -88,7 +88,7 @@ public class Camera extends Rectangle {
         for (NPC npc : activeNPCs) {
             npc.update(player);
             if (npc.getInteractScript() != null && npc.getInteractScript().isActive()) {
-                npc.getInteractScript().update(player, map);
+                npc.getInteractScript().update();
             }
         }
     }
