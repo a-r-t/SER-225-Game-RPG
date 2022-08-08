@@ -2,6 +2,7 @@ package Maps;
 
 import EnhancedMapTiles.Rock;
 import Event.*;
+import GameObject.Rectangle;
 import Level.*;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class TestMap extends Map {
 
     public TestMap() {
-        super("test_map.txt", new CommonTileset(), new Point(2, 8));
+        super("test_map.txt", new CommonTileset(), new Point(17, 20));
     }
 
     @Override
@@ -41,6 +42,43 @@ public class TestMap extends Map {
 
         getMapTile(20, 4).setScript(new Script(new SimpleTextInteractEvent("Dino's house")));
 
+        getMapTile(2, 6).setScript(new Script(new Event(EventType.INTERACT) {
+            @Override
+            protected void setup(Player player, Map map) {
+                lockPlayer(player);
+                showTextbox(map);
+                addTextToTextboxQueue(map, "...");
+                addTextToTextboxQueue(map, "I found my ball inside of the tree!\nYippee!");
+            }
+
+            @Override
+            protected void cleanup(Player player, Map map) {
+                setFlag(map, "hasFoundBall");
+                hideTextbox(map);
+                unlockPlayer(player);
+            }
+
+            @Override
+            public ScriptState execute(Player player, Map map) {
+                if (!isFlagSet(map, "hasFoundBall") && isFlagSet(map, "hasTalkedToDinosaur") && isPlayerAtBottomOfTile(player)) {
+                    start(player, map);
+                    if (!isTextboxQueueEmpty(map)) {
+                        return ScriptState.RUNNING;
+                    }
+                    end(player, map);
+                }
+                return ScriptState.COMPLETED;
+            }
+
+            private boolean isPlayerAtBottomOfTile(Player player) {
+                Rectangle mapTileBounds = getMapTile(2, 6).getScaledBounds();
+                return player.getCalibratedScaledBounds().getY1() >= getMapTile(2, 6).getCalibratedScaledBounds().getY2() &&
+                        (player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX2() && player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX2()) ||
+                        (player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX() && player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX1()) ||
+                        (player.getCalibratedScaledBounds().getX1() > getMapTile(2, 6).getCalibratedScaledBounds().getX1() && player.getCalibratedScaledBounds().getX2() < getMapTile(2, 6).getCalibratedScaledBounds().getX2());
+
+            }
+        }));
 
     }
 }

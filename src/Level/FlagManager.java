@@ -11,8 +11,9 @@ public class FlagManager {
     }
 
     private void loadFlags() {
-        flags.put("hasTalkedToWalrus", true);
+        flags.put("hasTalkedToWalrus", false);
         flags.put("hasTalkedToDinosaur", false);
+        flags.put("hasFoundBall", false);
     }
 
     public void setFlag(String flagName) {

@@ -88,7 +88,6 @@ public class Dinosaur extends NPC {
                 }
                 else if (isFlagSet(map,"hasTalkedToWalrus") && !isFlagSet(map, "hasTalkedToDinosaur")) {
                     if (sequence == 0) {
-                        facePlayer(player);
                         showTextbox(map);
                         addTextToTextboxQueue(map, "Isn't my garden so lovely?");
                     }
