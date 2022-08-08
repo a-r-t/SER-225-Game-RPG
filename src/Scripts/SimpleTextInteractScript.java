@@ -1,6 +1,5 @@
 package Scripts;
 
-import Event.Event;
 import Level.*;
 
 public class SimpleTextInteractScript extends Script {
