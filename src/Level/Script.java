@@ -2,12 +2,12 @@ package Level;
 import Utils.Direction;
 import Utils.Stopwatch;
 
-public abstract class Script {
+public abstract class Script<T extends MapEntity> {
     protected boolean isActive = false;
 
     protected boolean start = true;
     protected Stopwatch stopwatch = new Stopwatch();
-    protected MapEntity mapEntity;
+    protected T entity;
     protected Map map;
     protected Player player;
 
@@ -15,8 +15,10 @@ public abstract class Script {
     public void setMap(Map map) { this.map = map; }
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
-    public MapEntity getMapEntity() { return mapEntity; }
-    public void setMapEntity(MapEntity mapEntity) { this.mapEntity = mapEntity; }
+    public T getEntity() { return entity; }
+    public void setMapEntity(T entity) {
+        this.entity = entity;
+    }
 
     protected abstract void setup();
 

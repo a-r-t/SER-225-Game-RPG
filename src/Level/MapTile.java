@@ -13,7 +13,6 @@ public class MapTile extends MapEntity {
     protected TileType tileType;
     protected GameObject bottomLayer;
     protected GameObject topLayer;
-    protected Script triggerScript;
     private int tileIndex;
 
     public MapTile(float x, float y, GameObject bottomLayer, GameObject topLayer, int tileIndex, TileType tileType) {
@@ -109,9 +108,6 @@ public class MapTile extends MapEntity {
         return (bottomLayer.getCurrentAnimation().length > 1) ||
                 (topLayer != null && topLayer.getCurrentAnimation().length > 1);
     }
-
-    public Script getInteractScript() { return interactScript; }
-    public void setInteractScript(Script interactScript) { this.interactScript = interactScript; }
 
     // set this game object's map to make it a "part of" the map, allowing calibrated positions and collision handling logic to work
     public void setMap(Map map) {

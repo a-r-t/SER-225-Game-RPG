@@ -62,6 +62,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 enhancedMapTile.getInteractScript().setPlayer(player);
             }
         }
+        for (Trigger trigger : map.getTriggers()) {
+            if (trigger.getTriggerScript() != null) {
+                trigger.getTriggerScript().setMap(map);
+                trigger.getTriggerScript().setPlayer(player);
+            }
+        }
     }
 
     public void update() {

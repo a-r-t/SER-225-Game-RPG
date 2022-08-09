@@ -4,6 +4,7 @@ import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
 import Level.*;
 import Utils.Direction;
+import Utils.ImageUtils;
 import Utils.MathUtils;
 
 import java.awt.*;
@@ -34,6 +35,8 @@ public class GameObject extends AnimatedSprite {
 
 	// the map instance this game object "belongs" to.
 	protected Map map;
+
+	protected boolean affectedByTriggers = false;
 
 	public GameObject(SpriteSheet spriteSheet, float x, float y, String startingAnimation) {
 		super(spriteSheet, x, y, startingAnimation);
@@ -130,6 +133,25 @@ public class GameObject extends AnimatedSprite {
 
 	public GameObject(float x, float y) {
 		super(x, y);
+		this.animations = new HashMap<String, Frame[]>() {{
+			BufferedImage nothing = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+			nothing.setRGB(0, 0, new Color(255, 0, 255).getRGB());
+			nothing = ImageUtils.transformColorToTransparency(nothing, new Color(255, 0, 255));
+			put("DEFAULT", new Frame[]{
+					new FrameBuilder(nothing, 0)
+							.build()
+			});
+		}};
+		this.currentAnimationName = "DEFAULT";
+		updateCurrentFrame();
+		this.startPositionX = x;
+		this.startPositionY = y;
+		this.previousX = x;
+		this.previousY = y;
+	}
+
+	public boolean isAffectedByTriggers() {
+		return affectedByTriggers;
 	}
 
 
@@ -206,8 +228,16 @@ public class GameObject extends AnimatedSprite {
 			}
 		}
 
-		// call this method which a game object subclass can override to listen for collision events and react accordingly
-		onEndCollisionCheckX(hasCollided, direction, entityCollidedWith);
+		if (entityCollidedWith instanceof Trigger) {
+			Trigger trigger = (Trigger)entityCollidedWith;
+			if (trigger.getTriggerScript() != null) {
+				trigger.getTriggerScript().setIsActive(true);
+			}
+		}
+		else {
+			// call this method which a game object subclass can override to listen for collision events and react accordingly
+			onEndCollisionCheckX(hasCollided, direction, entityCollidedWith);
+		}
 
 		// returns the amount actually moved -- this isn't really used by the game, but I have it here for debug purposes
 		return amountMoved + (moveAmountXRemainder * direction.getVelocity());
@@ -256,8 +286,16 @@ public class GameObject extends AnimatedSprite {
 			}
 		}
 
-		// call this method which a game object subclass can override to listen for collision events and react accordingly
-		onEndCollisionCheckY(hasCollided, direction, entityCollidedWith);
+		if (entityCollidedWith instanceof Trigger) {
+			Trigger trigger = (Trigger)entityCollidedWith;
+			if (trigger.getTriggerScript() != null) {
+				trigger.getTriggerScript().setIsActive(true);
+			}
+		}
+		else {
+			// call this method which a game object subclass can override to listen for collision events and react accordingly
+			onEndCollisionCheckY(hasCollided, direction, entityCollidedWith);
+		}
 
 		// returns the amount actually moved -- this isn't really used by the game, but I have it here for debug purposes
 		return amountMoved + (moveAmountYRemainder * direction.getVelocity());

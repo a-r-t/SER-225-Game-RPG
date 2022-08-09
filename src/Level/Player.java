@@ -43,6 +43,7 @@ public abstract class Player extends GameObject {
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
         levelState = LevelState.RUNNING;
+        this.affectedByTriggers = true;
     }
 
     public void update() {

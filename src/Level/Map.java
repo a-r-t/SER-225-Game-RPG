@@ -60,6 +60,7 @@ public abstract class Map {
 
     protected FlagManager flagManager;
     protected Textbox textbox;
+    protected ArrayList<Trigger> triggers;
 
     public Map(String mapFileName, Tileset tileset, Point playerStartTile) {
         this.mapFileName = mapFileName;
@@ -88,6 +89,11 @@ public abstract class Map {
         this.npcs = loadNPCs();
         for (NPC npc: this.npcs) {
             npc.setMap(this);
+        }
+
+        this.triggers = loadTriggers();
+        for (Trigger trigger: this.triggers) {
+            trigger.setMap(this);
         }
 
         this.loadScripts();
@@ -256,6 +262,10 @@ public abstract class Map {
         return new ArrayList<>();
     }
 
+    protected ArrayList<Trigger> loadTriggers() {
+        return new ArrayList<>();
+    }
+
     public Camera getCamera() {
         return camera;
     }
@@ -266,6 +276,8 @@ public abstract class Map {
     public ArrayList<NPC> getNPCs() {
         return npcs;
     }
+    public ArrayList<Trigger> getTriggers() { return triggers; }
+
     public NPC getNPCById(int id) {
         for (NPC npc : npcs) {
             if (npc.getId() == id) {
@@ -273,11 +285,6 @@ public abstract class Map {
             }
         }
         return null;
-    }
-
-    // returns all active enemies (enemies that are a part of the current update cycle) -- this changes every frame by the Camera class
-    public ArrayList<Enemy> getActiveEnemies() {
-        return camera.getActiveEnemies();
     }
 
     // returns all active enhanced map tiles (enhanced map tiles that are a part of the current update cycle) -- this changes every frame by the Camera class
@@ -288,6 +295,10 @@ public abstract class Map {
     // returns all active npcs (npcs that are a part of the current update cycle) -- this changes every frame by the Camera class
     public ArrayList<NPC> getActiveNPCs() {
         return camera.getActiveNPCs();
+    }
+
+    public ArrayList<Trigger> getActiveTriggers() {
+        return camera.getActiveTriggers();
     }
 
     // add an enhanced map tile to the map's list of enhanced map tiles
@@ -321,8 +332,8 @@ public abstract class Map {
                 }
             }
         }
+        // gets active surrounding npcs
         surroundingMapEntities.addAll(getActiveNPCs());
-        System.out.println("surrounding map entities: " + surroundingMapEntities);
         return surroundingMapEntities;
     }
 
@@ -330,7 +341,6 @@ public abstract class Map {
         ArrayList<MapEntity> surroundingMapEntities = getSurroundingMapEntities(player);
         ArrayList<MapEntity> playerTouchingMapEntities = new ArrayList<>();
         for (MapEntity mapEntity : surroundingMapEntities) {
-            System.out.println(player.getScaledBounds());
             if (mapEntity.intersects(player.getInteractionRange())) {
                 playerTouchingMapEntities.add(mapEntity);
             }
@@ -355,10 +365,9 @@ public abstract class Map {
             }
             interactedEntity = currentLargestAreaOverlappedTile;
         }
-        if (interactedEntity == null || interactedEntity.getInteractScript() == null) {
-            return;
+        if (interactedEntity != null && interactedEntity.getInteractScript() != null) {
+            interactedEntity.getInteractScript().setIsActive(true);
         }
-        interactedEntity.getInteractScript().setIsActive(true);
     }
 
 

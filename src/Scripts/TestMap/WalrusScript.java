@@ -1,13 +1,7 @@
 package Scripts.TestMap;
 import Level.*;
 
-public class WalrusScript extends Script {
-
-    private NPC walrus;
-
-    public WalrusScript() {
-        this.walrus = (NPC)mapEntity;
-    }
+public class WalrusScript extends Script<NPC> {
 
     @Override
     protected void setup() {
@@ -21,7 +15,7 @@ public class WalrusScript extends Script {
         else {
             addTextToTextboxQueue( "I sure love doing walrus things!");
         }
-        walrus.facePlayer(player);
+        entity.facePlayer(player);
     }
 
     @Override

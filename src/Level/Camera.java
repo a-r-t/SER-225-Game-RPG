@@ -23,9 +23,9 @@ public class Camera extends Rectangle {
     private int leftoverSpaceX, leftoverSpaceY;
 
     // current map entities that are to be included in this frame's update/draw cycle
-    private ArrayList<Enemy> activeEnemies = new ArrayList<>();
     private ArrayList<EnhancedMapTile> activeEnhancedMapTiles = new ArrayList<>();
     private ArrayList<NPC> activeNPCs = new ArrayList<>();
+    private ArrayList<Trigger> activeTriggers = new ArrayList<>();
 
     // determines how many tiles off screen an entity can be before it will be deemed inactive and not included in the update/draw cycles until it comes back in range
     private final int UPDATE_OFF_SCREEN_RANGE = 4;
@@ -80,6 +80,7 @@ public class Camera extends Rectangle {
     public void updateMapEntities(Player player) {
         activeEnhancedMapTiles = loadActiveEnhancedMapTiles();
         activeNPCs = loadActiveNPCs();
+        activeTriggers = loadActiveTriggers();
 
         for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
             enhancedMapTile.update(player);
@@ -89,6 +90,12 @@ public class Camera extends Rectangle {
             npc.update(player);
             if (npc.getInteractScript() != null && npc.getInteractScript().isActive()) {
                 npc.getInteractScript().update();
+            }
+        }
+
+        for (Trigger trigger : activeTriggers) {
+            if (trigger.getTriggerScript() != null && trigger.getTriggerScript().isActive()) {
+                trigger.getTriggerScript().update();
             }
         }
     }
@@ -149,6 +156,28 @@ public class Camera extends Rectangle {
             }
         }
         return activeNPCs;
+    }
+
+    private ArrayList<Trigger> loadActiveTriggers() {
+        ArrayList<Trigger> activeTriggers = new ArrayList<>();
+        for (int i = map.getTriggers().size() - 1; i >= 0; i--) {
+            Trigger trigger = map.getTriggers().get(i);
+
+            if (isMapEntityActive(trigger)) {
+                activeTriggers.add(trigger);
+                if (trigger.mapEntityStatus == MapEntityStatus.INACTIVE) {
+                    trigger.setMapEntityStatus(MapEntityStatus.ACTIVE);
+                }
+            } else if (trigger.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
+                trigger.setMapEntityStatus(MapEntityStatus.INACTIVE);
+                if (trigger.isRespawnable()) {
+                    trigger.initialize();
+                }
+            } else if (trigger.getMapEntityStatus() == MapEntityStatus.REMOVED) {
+                map.getTriggers().remove(i);
+            }
+        }
+        return activeTriggers;
     }
 
     /*
@@ -246,16 +275,16 @@ public class Camera extends Rectangle {
                 getY1() - tileHeight <  gameObject.getY() + gameObject.getScaledHeight() && getEndBoundY() + tileHeight >  gameObject.getY();
     }
 
-    public ArrayList<Enemy> getActiveEnemies() {
-        return activeEnemies;
-    }
-
     public ArrayList<EnhancedMapTile> getActiveEnhancedMapTiles() {
         return activeEnhancedMapTiles;
     }
 
     public ArrayList<NPC> getActiveNPCs() {
         return activeNPCs;
+    }
+
+    public ArrayList<Trigger> getActiveTriggers() {
+        return activeTriggers;
     }
 
     // gets end bound X position of the camera (start position is always 0)

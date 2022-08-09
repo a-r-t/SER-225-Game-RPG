@@ -36,6 +36,14 @@ public class TestMap extends Map {
     }
 
     @Override
+    public ArrayList<Trigger> loadTriggers() {
+        ArrayList<Trigger> triggers = new ArrayList<>();
+        triggers.add(new Trigger(0, 0, 100, 100, new SimpleTextInteractScript("Yo")));
+        return triggers;
+
+    }
+
+    @Override
     public void loadScripts() {
         getMapTile(21, 19).setInteractScript(new SimpleTextInteractScript("Cat's house"));
 
@@ -47,7 +55,6 @@ public class TestMap extends Map {
 
         getNPCById(1).setInteractScript(new WalrusScript());
         getNPCById(2).setInteractScript(new DinoScript());
-
     }
 }
 
