@@ -257,6 +257,16 @@ public class Camera extends Rectangle {
         for (NPC npc : drawNpcsAfterPlayer) {
             npc.draw(graphicsHandler);
         }
+
+        // Uncomment this to see triggers drawn on screen
+        // helps for placing them in the correct spot/debugging
+        /*
+        for (Trigger trigger : activeTriggers) {
+            if (containsDraw(trigger)) {
+                trigger.draw(graphicsHandler);
+            }
+        }
+        */
     }
 
 
@@ -269,7 +279,7 @@ public class Camera extends Rectangle {
     }
 
     // checks if a game object's position falls within the camera's current radius
-    // this does not include the extra range granted by the UDPATE_OFF_SCREEN_RANGE value, because there is no point to drawing graphics that can't be seen
+    // this does not include the extra range granted by the UPDATE_OFF_SCREEN_RANGE value, because there is no point to drawing graphics that can't be seen
     public boolean containsDraw(GameObject gameObject) {
         return getX1() - tileWidth < gameObject.getX() + gameObject.getScaledWidth() && getEndBoundX() + tileWidth > gameObject.getX() &&
                 getY1() - tileHeight <  gameObject.getY() + gameObject.getScaledHeight() && getEndBoundY() + tileHeight >  gameObject.getY();

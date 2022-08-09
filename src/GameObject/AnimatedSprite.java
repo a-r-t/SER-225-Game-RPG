@@ -66,9 +66,7 @@ public class AnimatedSprite implements IntersectableRectangle {
     public AnimatedSprite(float x, float y) {
         this.x = x;
         this.y = y;
-        this.animations = new HashMap<>();
-        this.currentAnimationName = "";
-    }
+	}
 
 	public void update() {
 		// if animation name has been changed (previous no longer equals current), setup for the new animation and start using it

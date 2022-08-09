@@ -27,6 +27,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public void initialize() {
         // setup state
         flagManager = new FlagManager();
+        flagManager.addFlag("hasLostBall", false);
         flagManager.addFlag("hasTalkedToWalrus", false);
         flagManager.addFlag("hasTalkedToDinosaur", false);
         flagManager.addFlag("hasFoundBall", false);

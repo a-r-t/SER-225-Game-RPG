@@ -208,7 +208,9 @@ public class GameObject extends AnimatedSprite {
 			if (collisionCheckResult.getAdjustedLocation() != null) {
 				hasCollided = true;
 				entityCollidedWith = collisionCheckResult.getEntityCollidedWith();
-				setX(collisionCheckResult.getAdjustedLocation());
+				if (!(entityCollidedWith instanceof Trigger)) {
+					setX(collisionCheckResult.getAdjustedLocation());
+				}
 				break;
 			}
 			amountMoved = (i + 1) * direction.getVelocity();
@@ -224,11 +226,13 @@ public class GameObject extends AnimatedSprite {
 			if (collisionCheckResult.getAdjustedLocation() != null) {
 				hasCollided = true;
 				entityCollidedWith = collisionCheckResult.getEntityCollidedWith();
-				setX(collisionCheckResult.getAdjustedLocation());
+				if (!(entityCollidedWith instanceof Trigger)) {
+					setX(collisionCheckResult.getAdjustedLocation());
+				}
 			}
 		}
 
-		if (entityCollidedWith instanceof Trigger) {
+		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
 				trigger.getTriggerScript().setIsActive(true);
@@ -266,7 +270,9 @@ public class GameObject extends AnimatedSprite {
 			if (collisionCheckResult.getAdjustedLocation() != null) {
 				hasCollided = true;
 				entityCollidedWith = collisionCheckResult.getEntityCollidedWith();
-				setY(collisionCheckResult.getAdjustedLocation());
+				if (!(entityCollidedWith instanceof Trigger)) {
+					setY(collisionCheckResult.getAdjustedLocation());
+				}
 				break;
 			}
 			amountMoved = (i + 1) * direction.getVelocity();
@@ -282,11 +288,13 @@ public class GameObject extends AnimatedSprite {
 			if (collisionCheckResult.getAdjustedLocation() != null) {
 				hasCollided = true;
 				entityCollidedWith = collisionCheckResult.getEntityCollidedWith();
-				setY(collisionCheckResult.getAdjustedLocation());
+				if (!(entityCollidedWith instanceof Trigger)) {
+					setY(collisionCheckResult.getAdjustedLocation());
+				}
 			}
 		}
 
-		if (entityCollidedWith instanceof Trigger) {
+		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
 				trigger.getTriggerScript().setIsActive(true);

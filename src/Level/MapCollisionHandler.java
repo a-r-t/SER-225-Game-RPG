@@ -63,7 +63,7 @@ public class MapCollisionHandler {
 
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
-                if (!gameObject.equals(trigger) && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
+                if (!gameObject.equals(trigger) && trigger.isActive() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
                     entityCollidedWith = trigger;
                     if (direction == Direction.RIGHT) {
                         float boundsDifference = gameObject.getScaledX2() - gameObject.getScaledBoundsX2();
@@ -137,7 +137,7 @@ public class MapCollisionHandler {
 
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
-                if (!gameObject.equals(trigger) && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
+                if (!gameObject.equals(trigger) && trigger.isActive() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
                     entityCollidedWith = trigger;
                     if (direction == Direction.DOWN) {
                         float boundsDifference = gameObject.getScaledY2() - gameObject.getScaledBoundsY2();

@@ -249,8 +249,7 @@ public abstract class Map {
     }
 
     // list of enemies defined to be a part of the map, should be overridden in a subclass
-    protected void loadScripts() {
-    }
+    protected void loadScripts() { }
 
     // list of enhanced map tiles defined to be a part of the map, should be overridden in a subclass
     protected ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
@@ -323,7 +322,6 @@ public abstract class Map {
 
         // gets surrounding tiles
         Point playerCurrentTile = getTileIndexByPosition((int)player.getX(), (int)player.getY());
-        System.out.println(playerCurrentTile);
         for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
             for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
                 MapTile mapTile = getMapTile(j, i);
