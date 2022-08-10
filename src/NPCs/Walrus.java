@@ -9,7 +9,6 @@ import GameObject.SpriteSheet;
 import Level.*;
 import SpriteFont.SpriteFont;
 import Utils.Point;
-import Event.*;
 
 import java.util.HashMap;
 

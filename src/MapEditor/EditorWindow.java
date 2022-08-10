@@ -10,7 +10,7 @@ public class EditorWindow {
         editorWindow = new JFrame("Map Editor");
         editorMainPanel = new EditorMainPanel(editorWindow);
         editorWindow.setContentPane(editorMainPanel);
-        editorWindow.setResizable(false);
+        editorWindow.setResizable(true);
         editorWindow.setSize(800, 600);
         editorWindow.setLocationRelativeTo(null);
         editorWindow.setVisible(true);
