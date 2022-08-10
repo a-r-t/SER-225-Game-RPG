@@ -13,26 +13,29 @@ public class MapBuilder extends JPanel {
     private JLabel mapWidthLabel;
     private JLabel mapHeightLabel;
     private JLabel hoveredTileIndexLabel;
+    private JLabel hoveredTileTypeLabel;
 
     public MapBuilder(SelectedTileIndexHolder controlPanelHolder) {
         setBackground(Colors.CORNFLOWER_BLUE);
         setLocation(205, 5);
-        setSize(585, 562);
+        // setSize(585, 562);
         setLayout(new BorderLayout());
 
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(null);
+        labelPanel.setPreferredSize(new Dimension(200, 30));
+        labelPanel.setBackground(Colors.CORNFLOWER_BLUE);
         mapWidthLabel = new JLabel("Width: ");
         mapWidthLabel.setSize(70, 20);
-        mapWidthLabel.setLocation(2, 544);
+        mapWidthLabel.setLocation(2, 5);
         labelPanel.add(mapWidthLabel);
         mapHeightLabel = new JLabel("Height: ");
         mapHeightLabel.setSize(70, 20);
-        mapHeightLabel.setLocation(76, 544);
+        mapHeightLabel.setLocation(76, 5);
         labelPanel.add(mapHeightLabel);
         hoveredTileIndexLabel = new JLabel("X: , Y:");
         hoveredTileIndexLabel.setSize(140, 20);
-        hoveredTileIndexLabel.setLocation(152, 544);
+        hoveredTileIndexLabel.setLocation(152, 5);
         labelPanel.add(hoveredTileIndexLabel);
         add(labelPanel, BorderLayout.SOUTH);
 
@@ -57,4 +60,6 @@ public class MapBuilder extends JPanel {
         mapWidthLabel.setText("Width: " + map.getWidth());
         mapHeightLabel.setText("Height: " + map.getHeight());
     }
+
+    public TileBuilder getTileBuilder() { return tileBuilder; }
 }

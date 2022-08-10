@@ -17,4 +17,7 @@ public class EditorMainPanel extends JPanel {
         mapBuilder.setMap(editorControlPanel.getSelectedMap());;
         add(editorControlPanel, BorderLayout.WEST);
     }
+
+    public EditorControlPanel getEditorControlPanel() { return editorControlPanel; }
+    public MapBuilder getMapBuilder() { return mapBuilder; }
 }

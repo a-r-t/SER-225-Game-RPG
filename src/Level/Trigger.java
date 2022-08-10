@@ -44,4 +44,12 @@ public class Trigger extends MapEntity {
     public void draw(GraphicsHandler graphicsHandler) {
         drawBounds(graphicsHandler, Color.red);
     }
+
+    public void draw(GraphicsHandler graphicsHandler, Color color) {
+        Rectangle scaledCalibratedBounds = getCalibratedScaledBounds();
+        scaledCalibratedBounds.setColor(color);
+        scaledCalibratedBounds.setBorderColor(Color.black);
+        scaledCalibratedBounds.setBorderThickness(1);
+        scaledCalibratedBounds.draw(graphicsHandler);
+    }
 }
