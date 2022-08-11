@@ -17,7 +17,7 @@ public class TileBuilder extends JPanel {
     private GraphicsHandler graphicsHandler = new GraphicsHandler();
     private JLabel hoveredTileIndexLabel;
     private boolean showNPCs;
-    private boolean showEnchancedMapTiles;
+    private boolean showEnhancedMapTiles;
     private boolean showTriggers;
 
     public TileBuilder(SelectedTileIndexHolder controlPanelHolder, JLabel hoveredTileIndexLabel) {
@@ -74,7 +74,7 @@ public class TileBuilder extends JPanel {
             tile.draw(graphicsHandler);
         }
 
-        if (showEnchancedMapTiles) {
+        if (showEnhancedMapTiles) {
             for (EnhancedMapTile enhancedMapTile : map.getEnhancedMapTiles()) {
                 enhancedMapTile.draw(graphicsHandler);
             }
@@ -166,12 +166,12 @@ public class TileBuilder extends JPanel {
         repaint();
     }
 
-    public boolean getShowEnchancedMapTiles() {
-        return showEnchancedMapTiles;
+    public boolean getShowEnhancedMapTiles() {
+        return showEnhancedMapTiles;
     }
 
-    public void setShowEnchancedMapTiles(boolean showEnchancedMapTiles) {
-        this.showEnchancedMapTiles = showEnchancedMapTiles;
+    public void setShowEnhancedMapTiles(boolean showEnhancedMapTiles) {
+        this.showEnhancedMapTiles = showEnhancedMapTiles;
         repaint();
     }
 

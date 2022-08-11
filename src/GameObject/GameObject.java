@@ -134,11 +134,8 @@ public class GameObject extends AnimatedSprite {
 	public GameObject(float x, float y) {
 		super(x, y);
 		this.animations = new HashMap<String, Frame[]>() {{
-			BufferedImage nothing = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-			nothing.setRGB(0, 0, new Color(255, 0, 255).getRGB());
-			nothing = ImageUtils.transformColorToTransparency(nothing, new Color(255, 0, 255));
 			put("DEFAULT", new Frame[]{
-					new FrameBuilder(nothing, 0)
+					new FrameBuilder(ImageUtils.getEmptyImage(), 0)
 							.build()
 			});
 		}};

@@ -24,7 +24,7 @@ public class MenuBar extends JMenuBar {
         showEnchancedMapTiles.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tileBuilder.setShowEnchancedMapTiles(!tileBuilder.getShowEnchancedMapTiles());
+                tileBuilder.setShowEnhancedMapTiles(!tileBuilder.getShowEnhancedMapTiles());
             }
         });
         options.add(showEnchancedMapTiles);

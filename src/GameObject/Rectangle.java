@@ -102,7 +102,9 @@ public class Rectangle implements IntersectableRectangle {
 	public void moveUp(float dy) {
 		this.y -= dy;
 	}
-	
+
+	public Point getLocation() { return new Point(x, y); }
+
 	public void setLocation(float x, float y) {
         this.x = x;
         this.y = y;
@@ -199,6 +201,4 @@ public class Rectangle implements IntersectableRectangle {
 		float height = Math.abs(Math.min(intersectRectangle.getY2(), otherIntersectRectangle.getY2()) - Math.max(intersectRectangle.getY1(), otherIntersectRectangle.getY1()));
 		return width * height;
 	}
-
-	public Point getLocation() { return new Point(Math.round(getX()), Math.round(getY())); }
 }

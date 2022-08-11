@@ -120,6 +120,9 @@ public class AnimatedSprite implements IntersectableRectangle {
 	// gets the animation that the animated sprite class is currently using
 	public Frame[] getCurrentAnimation() { return animations.get(currentAnimationName); }
 
+	public String getCurrentAnimationName() { return this.currentAnimationName; }
+	public int getCurrentFrameIndex() { return this.currentFrameIndex; }
+
 	public void setCurrentAnimation(String animationName) {
 		this.currentAnimationName = animationName;
 	}

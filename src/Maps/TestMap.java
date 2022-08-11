@@ -15,7 +15,8 @@ import java.util.ArrayList;
 public class TestMap extends Map {
 
     public TestMap() {
-        super("test_map.txt", new CommonTileset(), new Point(17, 20));
+        super("test_map.txt", new CommonTileset());
+        this.playerStartPosition = getMapTile(17, 20).getLocation();
     }
 
     @Override
