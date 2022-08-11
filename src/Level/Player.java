@@ -161,7 +161,7 @@ public abstract class Player extends GameObject {
     // player INTERACTING state logic
     protected void playerInteracting() {
         // sets animation to a STAND animation based on which way player is facing
-        currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+
     }
 
     protected void updateLockedKeys() {

@@ -38,14 +38,14 @@ public class DinoScript extends Script<NPC> {
                 addTextToTextboxQueue("Now, if you'll excuse me, I have to go.");
             }
             else if (sequence == 3) {
-                entity.setCurrentAnimation("STAND_RIGHT");
+                entity.stand(Direction.RIGHT);
                 amountMoved = 0;
             }
             else if (sequence == 4) {
                 amountMoved = 0;
             }
             else if (sequence == 5) {
-                entity.setCurrentAnimation("STAND_LEFT");
+                entity.stand(Direction.LEFT);
 
                 Frame openDoorFrame = new FrameBuilder(map.getTileset().getSubImage(4, 4), 0)
                         .withScale(map.getTileset().getTileScale())

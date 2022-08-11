@@ -123,7 +123,7 @@ public class AnimatedSprite implements IntersectableRectangle {
 	public String getCurrentAnimationName() { return this.currentAnimationName; }
 	public int getCurrentFrameIndex() { return this.currentFrameIndex; }
 
-	public void setCurrentAnimation(String animationName) {
+	public void setCurrentAnimationName(String animationName) {
 		this.currentAnimationName = animationName;
 	}
 

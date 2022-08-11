@@ -50,6 +50,7 @@ public abstract class Script<T extends MapEntity> {
 
     protected void lockPlayer() {
         player.setPlayerState(PlayerState.INTERACTING);
+        player.setCurrentAnimationName(player.getFacingDirection() == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT");
     }
 
     protected void unlockPlayer() {
@@ -102,7 +103,7 @@ public abstract class Script<T extends MapEntity> {
     protected void npcSetAnimation(int npcId, String animationName) {
         NPC npc = getNPC(npcId);
         if (npc != null) {
-            npc.setCurrentAnimation(animationName);
+            npc.setCurrentAnimationName(animationName);
         }
     }
 
