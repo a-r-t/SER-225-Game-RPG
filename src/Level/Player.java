@@ -51,34 +51,21 @@ public abstract class Player extends GameObject {
         moveAmountY = 0;
 
         // if player is currently playing through level (has not won or lost)
-        if (levelState == LevelState.RUNNING) {
-            // update player's state and current actions, which includes things like determining how much it should move each frame and if its walking or jumping
-            do {
-                previousPlayerState = playerState;
-                handlePlayerState();
-            } while (previousPlayerState != playerState);
+        // update player's state and current actions, which includes things like determining how much it should move each frame and if its walking or jumping
+        do {
+            previousPlayerState = playerState;
+            handlePlayerState();
+        } while (previousPlayerState != playerState);
 
-            // update player's animation
-            super.update();
+        // update player's animation
+        super.update();
 
-            // move player with respect to map collisions based on how much player needs to move this frame
-            if (playerState != PlayerState.INTERACTING) {
-                super.moveYHandleCollision(moveAmountY);
-                super.moveXHandleCollision(moveAmountX);
-                applySpecialEffects();
-            }
-            updateLockedKeys();
+        // move player with respect to map collisions based on how much player needs to move this frame
+        if (playerState != PlayerState.INTERACTING) {
+            super.moveYHandleCollision(moveAmountY);
+            super.moveXHandleCollision(moveAmountX);
         }
-
-        // if player has beaten level
-        else if (levelState == LevelState.LEVEL_COMPLETED) {
-            updateLevelCompleted();
-        }
-
-        // if player has lost level
-        else if (levelState == LevelState.PLAYER_DEAD) {
-            updatePlayerDead();
-        }
+        updateLockedKeys();
     }
 
     // based on player's current state, call appropriate player state handling method
@@ -170,11 +157,6 @@ public abstract class Player extends GameObject {
         }
     }
 
-    // anything extra the player should do based on interactions can be handled here
-    protected void applySpecialEffects() {
-
-    }
-
     @Override
     public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
 
@@ -240,4 +222,44 @@ public abstract class Player extends GameObject {
 
     public Direction getCurrentWalkingXDirection() { return currentWalkingXDirection; }
     public Direction getCurrentWalkingYDirection() { return currentWalkingYDirection; }
+
+    public void stand(Direction direction) {
+        facingDirection = direction;
+        if (direction == Direction.RIGHT) {
+            this.currentAnimationName = "STAND_RIGHT";
+        }
+        else if (direction == Direction.LEFT) {
+            this.currentAnimationName = "STAND_LEFT";
+        }
+    }
+
+    public void walk(Direction direction, float speed) {
+        facingDirection = direction;
+        if (direction == Direction.RIGHT) {
+            this.currentAnimationName = "WALK_RIGHT";
+        }
+        else if (direction == Direction.LEFT) {
+            this.currentAnimationName = "WALK_LEFT";
+        }
+        else {
+            if (this.currentAnimationName.contains("RIGHT")) {
+                this.currentAnimationName = "WALK_RIGHT";
+            }
+            else {
+                this.currentAnimationName = "WALK_LEFT";
+            }
+        }
+        if (direction == Direction.UP) {
+            moveY(-speed);
+        }
+        else if (direction == Direction.DOWN) {
+            moveY(speed);
+        }
+        else if (direction == Direction.LEFT) {
+            moveX(-speed);
+        }
+        else if (direction == Direction.RIGHT) {
+            moveX(speed);
+        }
+    }
 }

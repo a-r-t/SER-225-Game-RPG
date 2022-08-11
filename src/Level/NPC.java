@@ -60,6 +60,44 @@ public class NPC extends MapEntity {
         }
     }
 
+    public void stand(Direction direction) {
+        if (direction == Direction.RIGHT) {
+            this.currentAnimationName = "STAND_RIGHT";
+        }
+        else if (direction == Direction.LEFT) {
+            this.currentAnimationName = "STAND_LEFT";
+        }
+    }
+
+    public void walk(Direction direction, float speed) {
+        if (direction == Direction.RIGHT) {
+            this.currentAnimationName = "WALK_RIGHT";
+        }
+        else if (direction == Direction.LEFT) {
+            this.currentAnimationName = "WALK_LEFT";
+        }
+        else {
+            if (this.currentAnimationName.contains("RIGHT")) {
+                this.currentAnimationName = "WALK_RIGHT";
+            }
+            else {
+                this.currentAnimationName = "WALK_LEFT";
+            }
+        }
+        if (direction == Direction.UP) {
+            moveY(-speed);
+        }
+        else if (direction == Direction.DOWN) {
+            moveY(speed);
+        }
+        else if (direction == Direction.LEFT) {
+            moveX(-speed);
+        }
+        else if (direction == Direction.RIGHT) {
+            moveX(speed);
+        }
+    }
+
     public void update(Player player) {
         super.update();
     }
