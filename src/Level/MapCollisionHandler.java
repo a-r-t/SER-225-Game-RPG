@@ -4,8 +4,6 @@ import GameObject.GameObject;
 import Utils.Direction;
 import Utils.Point;
 
-import java.util.ArrayList;
-
 // This class has methods to check if a game object has collided with a map tile
 // it is used by the game object class to determine if a collision occurred
 public class MapCollisionHandler {
@@ -66,7 +64,7 @@ public class MapCollisionHandler {
 
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
-                if (!gameObject.equals(trigger) && trigger.isActive() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
+                if (!gameObject.equals(trigger) && trigger.exists() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
                     entityCollidedWith = trigger;
                     if (direction == Direction.RIGHT) {
                         float boundsDifference = gameObject.getScaledX2() - gameObject.getScaledBoundsX2();
@@ -108,6 +106,7 @@ public class MapCollisionHandler {
                 }
             }
         }
+
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
             if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
@@ -140,7 +139,7 @@ public class MapCollisionHandler {
 
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
-                if (!gameObject.equals(trigger) && trigger.isActive() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
+                if (!gameObject.equals(trigger) && trigger.exists() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
                     entityCollidedWith = trigger;
                     if (direction == Direction.DOWN) {
                         float boundsDifference = gameObject.getScaledY2() - gameObject.getScaledBoundsY2();
@@ -168,9 +167,6 @@ public class MapCollisionHandler {
                     return false;
                 case NOT_PASSABLE:
                     return gameObject.intersects(mapTile);
-                case JUMP_THROUGH_PLATFORM:
-                    return direction == Direction.DOWN && gameObject.intersects(mapTile) &&
-                            Math.round(gameObject.getScaledBoundsY2() - 1) == Math.round(mapTile.getScaledBoundsY1());
                 default:
                     return false;
             }

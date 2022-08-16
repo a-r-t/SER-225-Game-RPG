@@ -10,14 +10,12 @@ import java.util.HashMap;
 public class MapEntity extends GameObject {
     protected MapEntityStatus mapEntityStatus = MapEntityStatus.ACTIVE;
 
-    // if true, if entity goes out of the camera's update range, and then ends up back in range, the entity will "respawn" back to its starting parameters
-    protected boolean isRespawnable = true;
-
     // if true, enemy cannot go out of camera's update range
     protected boolean isUpdateOffScreen = false;
 
     protected boolean isHidden = false;
 
+    protected String existenceFlag;
     protected Script interactScript;
 
     public MapEntity(float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
@@ -52,30 +50,12 @@ public class MapEntity extends GameObject {
         super(x, y);
     }
 
-    public void initialize() {
-        this.x = startPositionX;
-        this.y = startPositionY;
-        this.amountMovedX = 0;
-        this.amountMovedY = 0;
-        this.previousX = startPositionX;
-        this.previousY = startPositionY;
-        updateCurrentFrame();
-    }
-
     public MapEntityStatus getMapEntityStatus() {
         return mapEntityStatus;
     }
 
     public void setMapEntityStatus(MapEntityStatus mapEntityStatus) {
         this.mapEntityStatus = mapEntityStatus;
-    }
-
-    public boolean isRespawnable() {
-        return isRespawnable;
-    }
-
-    public void setIsRespawnable(boolean isRespawnable) {
-        this.isRespawnable = isRespawnable;
     }
 
     public boolean isUpdateOffScreen() {
@@ -102,5 +82,17 @@ public class MapEntity extends GameObject {
 
     public void setIsHidden(boolean isHidden) {
         this.isHidden = isHidden;
+    }
+
+    public boolean exists() {
+        return this.existenceFlag == null || !map.getFlagManager().isFlagSet(this.existenceFlag);
+    }
+
+    public String getExistenceFlag() {
+        return existenceFlag;
+    }
+
+    public void setExistenceFlag(String existenceFlag) {
+        this.existenceFlag = existenceFlag;
     }
 }

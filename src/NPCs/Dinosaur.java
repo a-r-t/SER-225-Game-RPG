@@ -20,26 +20,19 @@ public class Dinosaur extends NPC {
         super(id, location.x, location.y, new SpriteSheet(ImageLoader.load("Dinosaur.png"), 14, 17), "STAND_LEFT");
     }
 
-    public void update(Player player) {
-        if (map.getFlagManager().isFlagSet("hasTalkedToDinosaur")) {
-            this.isHidden = true;
-        }
-        super.update(player);
-    }
-
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {{
             put("STAND_LEFT", new Frame[] {
                     new FrameBuilder(spriteSheet.getSprite(0, 0), 0)
                             .withScale(3)
-                            .withBounds(4, 2, 5, 13)
+                            .withBounds(4, 5, 5, 10)
                             .build()
             });
             put("STAND_RIGHT", new Frame[] {
                    new FrameBuilder(spriteSheet.getSprite(0, 0), 0)
                            .withScale(3)
-                           .withBounds(4, 2, 5, 13)
+                           .withBounds(4, 5, 5, 10)
                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                            .build()
            });
@@ -47,11 +40,11 @@ public class Dinosaur extends NPC {
             put("WALK_LEFT", new Frame[]{
                     new FrameBuilder(spriteSheet.getSprite(1, 0), 200)
                             .withScale(3)
-                            .withBounds(4, 2, 5, 13)
+                            .withBounds(4, 5, 5, 10)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(1, 1), 200)
                             .withScale(3)
-                            .withBounds(4, 2, 5, 13)
+                            .withBounds(4, 5, 5, 10)
                             .build()
             });
 
@@ -59,12 +52,12 @@ public class Dinosaur extends NPC {
                     new FrameBuilder(spriteSheet.getSprite(1, 0), 200)
                             .withScale(3)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4, 2, 5, 13)
+                            .withBounds(4, 5, 5, 10)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(1, 1), 200)
                             .withScale(3)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4, 2, 5, 13)
+                            .withBounds(4, 5, 5, 10)
                             .build()
             });
         }};

@@ -119,9 +119,6 @@ public class Camera extends Rectangle {
                 }
             } else if (enhancedMapTile.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
                 enhancedMapTile.setMapEntityStatus(MapEntityStatus.INACTIVE);
-                if (enhancedMapTile.isRespawnable()) {
-                    enhancedMapTile.initialize();
-                }
             } else if (enhancedMapTile.getMapEntityStatus() == MapEntityStatus.REMOVED) {
                 map.getEnhancedMapTiles().remove(i);
             }
@@ -148,9 +145,6 @@ public class Camera extends Rectangle {
                 }
             } else if (npc.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
                 npc.setMapEntityStatus(MapEntityStatus.INACTIVE);
-                if (npc.isRespawnable()) {
-                    npc.initialize();
-                }
             } else if (npc.getMapEntityStatus() == MapEntityStatus.REMOVED) {
                 map.getNPCs().remove(i);
             }
@@ -170,9 +164,6 @@ public class Camera extends Rectangle {
                 }
             } else if (trigger.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
                 trigger.setMapEntityStatus(MapEntityStatus.INACTIVE);
-                if (trigger.isRespawnable()) {
-                    trigger.initialize();
-                }
             } else if (trigger.getMapEntityStatus() == MapEntityStatus.REMOVED) {
                 map.getTriggers().remove(i);
             }
@@ -188,7 +179,7 @@ public class Camera extends Rectangle {
             2. OR if the camera determines that it is in its boundary range, it is active
      */
     private boolean isMapEntityActive(MapEntity mapEntity) {
-        return mapEntity.getMapEntityStatus() != MapEntityStatus.REMOVED && !mapEntity.isHidden() && (mapEntity.isUpdateOffScreen() || containsUpdate(mapEntity));
+        return mapEntity.getMapEntityStatus() != MapEntityStatus.REMOVED && !mapEntity.isHidden() && mapEntity.exists() && (mapEntity.isUpdateOffScreen() || containsUpdate(mapEntity));
     }
 
     public void draw(GraphicsHandler graphicsHandler) {

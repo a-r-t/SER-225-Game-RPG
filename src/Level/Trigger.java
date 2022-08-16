@@ -7,9 +7,8 @@ import java.awt.*;
 
 public class Trigger extends MapEntity {
     protected Script triggerScript;
-    protected String activeFlag;
 
-    public Trigger(int x, int y, int width, int height, Script triggerScript, String activeFlag) {
+    public Trigger(int x, int y, int width, int height, Script triggerScript) {
         super(x, y);
         this.triggerScript = triggerScript;
         this.setX(x);
@@ -17,16 +16,17 @@ public class Trigger extends MapEntity {
         this.setWidth(width);
         this.setHeight(height);
         this.setBounds(new Rectangle(0, 0, width, height));
-        this.activeFlag = activeFlag;
     }
 
-    public Trigger(float x, float y, int width, int height, String activeFlag) {
+    public Trigger(int x, int y, int width, int height, Script triggerScript, String existenceFlag) {
         super(x, y);
-        this.triggerScript = loadTriggerScript();
+        this.triggerScript = triggerScript;
+        this.setX(x);
+        this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
         this.setBounds(new Rectangle(0, 0, width, height));
-        this.activeFlag = activeFlag;
+        this.existenceFlag = existenceFlag;
     }
 
     protected Script loadTriggerScript() { return null; }
@@ -34,10 +34,6 @@ public class Trigger extends MapEntity {
     public Script getTriggerScript() { return triggerScript; }
     public void setTriggerScript(Script triggerScript) {
         this.triggerScript = triggerScript;
-    }
-
-    public boolean isActive() {
-        return !map.getFlagManager().isFlagSet(this.activeFlag);
     }
 
     @Override

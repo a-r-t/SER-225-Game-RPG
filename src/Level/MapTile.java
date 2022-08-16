@@ -252,9 +252,6 @@ public class MapTile extends MapEntity {
     public boolean overlaps(IntersectableRectangle other) { return bottomLayer.overlaps(other); }
 
     @Override
-    public void initialize() { }
-
-    @Override
     public void moveX(float dx) {
         this.x += dx;
         bottomLayer.moveX(dx);

@@ -29,8 +29,14 @@ public class TestMap extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
-        npcs.add(new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40)));
-        npcs.add(new Dinosaur(2, getMapTile(13, 4).getLocation()));
+
+        Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
+        npcs.add(walrus);
+
+        Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
+        dinosaur.setExistenceFlag("hasTalkedToDinosaur");
+        npcs.add(dinosaur);
+
         return npcs;
     }
 
