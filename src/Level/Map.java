@@ -343,11 +343,7 @@ public abstract class Map {
             }
         }
         MapEntity interactedEntity = null;
-        System.out.println("Player touching map entities: " + playerTouchingMapEntities);
-        if (playerTouchingMapEntities.size() == 0) {
-            interactedEntity = null;
-        }
-        else if (playerTouchingMapEntities.size() == 1) {
+        if (playerTouchingMapEntities.size() == 1) {
             interactedEntity = playerTouchingMapEntities.get(0);
         }
         else {

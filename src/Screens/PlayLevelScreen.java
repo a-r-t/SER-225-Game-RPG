@@ -46,7 +46,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.player.setLocation(playerStartPosition.x, playerStartPosition.y);
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
 
-        // setup map scripts
+        // let pieces of map know which button to listen for as the "interact" button
+        map.getTextbox().setInteractKey(player.getInteractKey());
+
+        // setup map scripts to have references to the map and player
         for (MapTile mapTile : map.getMapTiles()) {
             if (mapTile.getInteractScript() != null) {
                 mapTile.getInteractScript().setMap(map);

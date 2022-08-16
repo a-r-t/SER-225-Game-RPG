@@ -25,6 +25,7 @@ public class Textbox {
     private SpriteFont text = null;
     private KeyLocker keyLocker = new KeyLocker();
     private Map map;
+    private Key interactKey = Key.SPACE;
 
     public Textbox(Map map) {
         this.map = map;
@@ -32,14 +33,14 @@ public class Textbox {
 
     public void addText(String text) {
         if (textQueue.isEmpty()) {
-            keyLocker.lockKey(Key.Z);
+            keyLocker.lockKey(interactKey);
         }
         textQueue.add(text);
     }
 
     public void addText(String[] text) {
         if (textQueue.isEmpty()) {
-            keyLocker.lockKey(Key.Z);
+            keyLocker.lockKey(interactKey);
         }
         for (String textItem : text) {
             textQueue.add(textItem);
@@ -51,7 +52,7 @@ public class Textbox {
     }
 
     public void update() {
-        if (!textQueue.isEmpty() && keyLocker.isKeyLocked(Key.Z)) {
+        if (!textQueue.isEmpty() && keyLocker.isKeyLocked(interactKey)) {
             String next = textQueue.peek();
 
             int fontY;
@@ -64,12 +65,12 @@ public class Textbox {
             text = new SpriteFont(next, fontX, fontY, "Arial", 30, Color.black);
 
         }
-        if (Keyboard.isKeyDown(Key.Z) && !keyLocker.isKeyLocked(Key.Z)) {
-            keyLocker.lockKey(Key.Z);
+        if (Keyboard.isKeyDown(interactKey) && !keyLocker.isKeyLocked(interactKey)) {
+            keyLocker.lockKey(interactKey);
             textQueue.poll();
         }
-        else if (Keyboard.isKeyUp(Key.Z)) {
-            keyLocker.unlockKey(Key.Z);
+        else if (Keyboard.isKeyUp(interactKey)) {
+            keyLocker.unlockKey(interactKey);
         }
 
     }
@@ -92,6 +93,10 @@ public class Textbox {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public void setInteractKey(Key interactKey) {
+        this.interactKey = interactKey;
     }
 
 }

@@ -4,6 +4,8 @@ import GameObject.GameObject;
 import Utils.Direction;
 import Utils.Point;
 
+import java.util.ArrayList;
+
 // This class has methods to check if a game object has collided with a map tile
 // it is used by the game object class to determine if a collision occurred
 public class MapCollisionHandler {
@@ -31,6 +33,7 @@ public class MapCollisionHandler {
                 }
             }
         }
+
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
             if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;

@@ -19,6 +19,7 @@ public abstract class Player extends GameObject {
 
     // values used to handle player movement
     protected float moveAmountX, moveAmountY;
+    protected float lastAmountMovedX, lastAmountMovedY;
 
     // values used to keep track of player's current state
     protected PlayerState playerState;
@@ -35,7 +36,7 @@ public abstract class Player extends GameObject {
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
     protected Key MOVE_UP_KEY = Key.UP;
     protected Key MOVE_DOWN_KEY = Key.DOWN;
-    protected Key INTERACT_KEY = Key.Z;
+    protected Key INTERACT_KEY = Key.SPACE;
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
         super(spriteSheet, x, y, startingAnimationName);
@@ -57,15 +58,18 @@ public abstract class Player extends GameObject {
             handlePlayerState();
         } while (previousPlayerState != playerState);
 
-        // update player's animation
-        super.update();
-
         // move player with respect to map collisions based on how much player needs to move this frame
         if (playerState != PlayerState.INTERACTING) {
-            super.moveYHandleCollision(moveAmountY);
-            super.moveXHandleCollision(moveAmountX);
+            lastAmountMovedY = super.moveYHandleCollision(moveAmountY);
+            lastAmountMovedX = super.moveXHandleCollision(moveAmountX);
         }
+
+        handlePlayerAnimation();
+
         updateLockedKeys();
+
+        // update player's animation
+        super.update();
     }
 
     // based on player's current state, call appropriate player state handling method
@@ -85,11 +89,7 @@ public abstract class Player extends GameObject {
 
     // player STANDING state logic
     protected void playerStanding() {
-        // sets animation to a STAND animation based on which way player is facing
-        currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
-
         if (!keyLocker.isKeyLocked(INTERACT_KEY) && Keyboard.isKeyDown(INTERACT_KEY)) {
-            System.out.println("INTERACT ACTIVATED");
             keyLocker.lockKey(INTERACT_KEY);
             map.onInteract(this);
         }
@@ -102,11 +102,7 @@ public abstract class Player extends GameObject {
 
     // player WALKING state logic
     protected void playerWalking() {
-        // sets animation to a WALK animation based on which way player is facing
-        currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
-
         if (!keyLocker.isKeyLocked(INTERACT_KEY) && Keyboard.isKeyDown(INTERACT_KEY)) {
-            System.out.println("INTERACT ACTIVATED");
             keyLocker.lockKey(INTERACT_KEY);
             map.onInteract(this);
         }
@@ -145,11 +141,8 @@ public abstract class Player extends GameObject {
         }
     }
 
-    // player INTERACTING state logic
-    protected void playerInteracting() {
-        // sets animation to a STAND animation based on which way player is facing
-
-    }
+    // player INTERACTING state logic -- intentionally does nothing so player is locked in place while a script is running
+    protected void playerInteracting() { }
 
     protected void updateLockedKeys() {
         if (Keyboard.isKeyUp(INTERACT_KEY) && playerState != PlayerState.INTERACTING) {
@@ -157,15 +150,26 @@ public abstract class Player extends GameObject {
         }
     }
 
-    @Override
-    public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
-
+    // anything extra the player should do based on interactions can be handled here
+    protected void handlePlayerAnimation() {
+        if (playerState == PlayerState.STANDING) {
+            // sets animation to a STAND animation based on which way player is facing
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+        }
+        else if (playerState == PlayerState.WALKING) {
+            // sets animation to a WALK animation based on which way player is facing
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
+        }
+        else if (playerState == PlayerState.INTERACTING) {
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+        }
     }
 
     @Override
-    public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
+    public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) { }
 
-    }
+    @Override
+    public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) { }
 
     // other entities can call this method to hurt the player
     public void hurtPlayer(MapEntity mapEntity) {
@@ -220,6 +224,8 @@ public abstract class Player extends GameObject {
                 getScaledBounds().getHeight() + (interactionRange * 2));
     }
 
+
+    public Key getInteractKey() { return INTERACT_KEY; }
     public Direction getCurrentWalkingXDirection() { return currentWalkingXDirection; }
     public Direction getCurrentWalkingYDirection() { return currentWalkingYDirection; }
 
