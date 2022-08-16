@@ -3,6 +3,8 @@ package Level;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
+import GameObject.Rectangle;
+import Utils.Direction;
 import Utils.Point;
 
 import java.io.File;
@@ -334,7 +336,7 @@ public abstract class Map {
         return surroundingMapEntities;
     }
 
-    public void onInteract(Player player) {
+    public void entityInteract(Player player) {
         ArrayList<MapEntity> surroundingMapEntities = getSurroundingMapEntities(player);
         ArrayList<MapEntity> playerTouchingMapEntities = new ArrayList<>();
         for (MapEntity mapEntity : surroundingMapEntities) {
@@ -358,10 +360,55 @@ public abstract class Map {
             }
             interactedEntity = currentLargestAreaOverlappedTile;
         }
-        if (interactedEntity != null && interactedEntity.getInteractScript() != null) {
+        if (isInteractedEntityValid(interactedEntity, player)) {
             interactedEntity.getInteractScript().setIsActive(true);
         }
     }
+
+    private boolean isInteractedEntityValid(MapEntity interactedEntity, Player player) {
+        if (interactedEntity == null || interactedEntity.getInteractScript() == null) {
+            return false;
+        }
+
+        System.out.println("PRINTING:");
+        System.out.println("ENTITY: " + interactedEntity.getScaledBounds());
+        System.out.println("PLAYER: " + player.getScaledBounds());
+        System.out.println("END PRINTING:");
+
+        Rectangle playerBounds = player.getScaledBounds();
+        Rectangle entityBounds = interactedEntity.getScaledBounds();
+        if (playerBounds.getY1() >= entityBounds.getY2()) {
+            System.out.println("player is below");
+            Rectangle playerTopBounds = new Rectangle(playerBounds.getX(), playerBounds.getY() - 1, playerBounds.getWidth(), 1);
+            System.out.println("PLAYER TOP BOUNDS: " + playerTopBounds);
+            float areaOverlapped = interactedEntity.getAreaOverlapped(playerTopBounds);
+            System.out.println("AREA OVERLAPPED: " + areaOverlapped);
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 4f), entityBounds.getWidth());
+        }
+        else if (playerBounds.getY2() <= entityBounds.getY1()) {
+            System.out.println("player is above");
+            Rectangle playerBottomBounds = new Rectangle(playerBounds.getX(), playerBounds.getY2() + 1, playerBounds.getWidth(), 1);
+            float areaOverlapped = interactedEntity.getAreaOverlapped(playerBottomBounds);
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 4f), entityBounds.getWidth());
+        }
+        else if (playerBounds.getX1() <= entityBounds.getX2()) {
+            System.out.println("player is to the right");
+            Rectangle playerLeftBounds = new Rectangle(playerBounds.getX() - 1, playerBounds.getY(), 1, playerBounds.getHeight());
+            float areaOverlapped = interactedEntity.getAreaOverlapped(playerLeftBounds);
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 4f), entityBounds.getHeight());
+        }
+        else if (playerBounds.getX2() >= entityBounds.getX()) {
+            System.out.println("player is to the left");
+            Rectangle playerRightBounds = new Rectangle(playerBounds.getX2() + 1, playerBounds.getY(), 1, playerBounds.getHeight());
+            float areaOverlapped = interactedEntity.getAreaOverlapped(playerRightBounds);
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 4f), entityBounds.getHeight());
+        }
+
+        return false;
+
+
+    }
+
 
 
     public void update(Player player) {

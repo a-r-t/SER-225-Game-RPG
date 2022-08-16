@@ -362,14 +362,9 @@ public class GameObject extends AnimatedSprite {
 					currentFrame.getScaledWidth(),
 					currentFrame.getScaledHeight(),
 					currentFrame.getImageEffect());
-//			if (this instanceof Cat) {
-//				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
-//
-//			}
-//			else if (this instanceof MapTile) {
-//				drawBounds(graphicsHandler, new Color(0, 255, 0, 100));
-//			}
-
+			if (this instanceof Player) {
+				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
+			}
 		} else {
 			super.draw(graphicsHandler);
 		}

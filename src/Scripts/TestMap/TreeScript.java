@@ -22,7 +22,7 @@ public class TreeScript extends Script {
 
     @Override
     public ScriptState execute() {
-        if (!isFlagSet("hasFoundBall") && isFlagSet("hasTalkedToDinosaur") && isPlayerAtBottomOfTile()) {
+        if (!isFlagSet("hasFoundBall") && isFlagSet("hasTalkedToDinosaur") && isPlayerBelowEntity()) {
             start();
             if (!isTextboxQueueEmpty()) {
                 return ScriptState.RUNNING;
@@ -30,15 +30,6 @@ public class TreeScript extends Script {
             end();
         }
         return ScriptState.COMPLETED;
-    }
-
-    private boolean isPlayerAtBottomOfTile() {
-        Rectangle mapTileBounds = getMapTile(2, 6).getScaledBounds();
-        return player.getCalibratedScaledBounds().getY1() >= getMapTile(2, 6).getCalibratedScaledBounds().getY2() &&
-                (player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX2() && player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX2()) ||
-                (player.getCalibratedScaledBounds().getX2() > getMapTile(2, 6).getCalibratedScaledBounds().getX() && player.getCalibratedScaledBounds().getX1() < getMapTile(2, 6).getCalibratedScaledBounds().getX1()) ||
-                (player.getCalibratedScaledBounds().getX1() > getMapTile(2, 6).getCalibratedScaledBounds().getX1() && player.getCalibratedScaledBounds().getX2() < getMapTile(2, 6).getCalibratedScaledBounds().getX2());
-
     }
 }
 

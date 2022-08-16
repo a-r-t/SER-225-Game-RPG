@@ -1,4 +1,5 @@
 package Level;
+import GameObject.Rectangle;
 import Utils.Direction;
 import Utils.Stopwatch;
 
@@ -141,5 +142,10 @@ public abstract class Script<T extends MapEntity> {
     protected void setMapTile(int x, int y, MapTile mapTile) {
         mapTile.setMap(map);
         map.setMapTile(x, y, mapTile);
+    }
+
+    protected boolean isPlayerBelowEntity() {
+        Rectangle entityBounds = entity.getCalibratedScaledBounds();
+        return player.getCalibratedScaledBounds().getY1() >= entityBounds.getY2();
     }
 }
