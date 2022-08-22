@@ -48,12 +48,12 @@ public class Camera extends Rectangle {
     }
 
     public void update(Player player) {
-        updateMapTiles(player);
+        updateMapTiles();
         updateMapEntities(player);
     }
 
     // update each map tile if it is animated in order to keep animations consistent
-    private void updateMapTiles(Player player) {
+    private void updateMapTiles() {
         for (MapTile tile : map.getMapTiles()) {
             if (tile != null) {
                 if (tile.isAnimated()) {
