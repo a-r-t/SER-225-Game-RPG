@@ -12,9 +12,6 @@ public class MapCollisionHandler {
         int numberOfTilesToCheck = Math.max(gameObject.getBounds().getHeight() / map.getTileset().getScaledSpriteHeight(), 1);
         float edgeBoundX = direction == Direction.LEFT ? gameObject.getBounds().getX1() : gameObject.getBounds().getX2();
         Point tileIndex = map.getTileIndexByPosition(edgeBoundX, gameObject.getBounds().getY1());
-        if (direction == Direction.LEFT) {
-            tileIndex = tileIndex.subtractX(1);
-        }
         MapEntity entityCollidedWith = null;
         for (int j = -1; j <= numberOfTilesToCheck + 1; j++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x), Math.round(tileIndex.y + j));
@@ -87,9 +84,6 @@ public class MapCollisionHandler {
         int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(), 1);
         float edgeBoundY = direction == Direction.UP ? gameObject.getBounds().getY() : gameObject.getBounds().getY2();
         Point tileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX1(), edgeBoundY);
-        if (direction == Direction.UP) {
-            tileIndex = tileIndex.subtractY(1);
-        }
         MapEntity entityCollidedWith = null;
         for (int j = -1; j <= numberOfTilesToCheck + 1; j++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x) + j, Math.round(tileIndex.y));

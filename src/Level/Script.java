@@ -145,7 +145,7 @@ public abstract class Script<T extends MapEntity> {
     }
 
     protected boolean isPlayerBelowEntity() {
-        Rectangle entityBounds = entity.getCalibratedScaledBounds();
-        return player.getCalibratedScaledBounds().getY1() >= entityBounds.getY2();
+        Rectangle entityBounds = entity.getCalibratedBounds();
+        return player.getCalibratedBounds().getY1() >= entityBounds.getY2();
     }
 }

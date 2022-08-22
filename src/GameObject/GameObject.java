@@ -333,14 +333,14 @@ public class GameObject extends AnimatedSprite {
 	}
 
 	// gets scaled bounds taking into account map camera position
-	public Rectangle getCalibratedScaledBounds() {
+	public Rectangle getCalibratedBounds() {
 		if (map != null) {
-			Rectangle scaledBounds = getBounds();
+			Rectangle bounds = getBounds();
 			return new Rectangle(
-					Math.round(scaledBounds.getX1()) - Math.round(map.getCamera().getX()),
-					Math.round(scaledBounds.getY1()) - Math.round(map.getCamera().getY()),
-					Math.round(scaledBounds.getWidth()),
-					Math.round(scaledBounds.getHeight())
+					Math.round(bounds.getX1()) - Math.round(map.getCamera().getX()),
+					Math.round(bounds.getY1()) - Math.round(map.getCamera().getY()),
+					Math.round(bounds.getWidth()),
+					Math.round(bounds.getHeight())
 			);
 		} else {
 			return getBounds();
@@ -373,7 +373,7 @@ public class GameObject extends AnimatedSprite {
 	@Override
 	public void drawBounds(GraphicsHandler graphicsHandler, Color color) {
 		if (map != null) {
-			Rectangle scaledCalibratedBounds = getCalibratedScaledBounds();
+			Rectangle scaledCalibratedBounds = getCalibratedBounds();
 			scaledCalibratedBounds.setColor(color);
 			scaledCalibratedBounds.draw(graphicsHandler);
 		} else {

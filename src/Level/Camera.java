@@ -236,7 +236,7 @@ public class Camera extends Rectangle {
         ArrayList<NPC> drawNpcsAfterPlayer = new ArrayList<>();
         for (NPC npc : activeNPCs) {
             if (containsDraw(npc)) {
-                if (npc.getCalibratedScaledBounds().getY() < player.getCalibratedScaledBounds().getY1()  + (player.getCalibratedScaledBounds().getHeight() / 2)) {
+                if (npc.getCalibratedBounds().getY() < player.getCalibratedBounds().getY1()  + (player.getCalibratedBounds().getHeight() / 2)) {
                     npc.draw(graphicsHandler);
                 }
                 else {
