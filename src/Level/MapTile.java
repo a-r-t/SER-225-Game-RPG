@@ -4,9 +4,6 @@ import Engine.GraphicsHandler;
 import GameObject.*;
 import Utils.Point;
 
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-
 // Represents a map tile in a Map's tile map
 public class MapTile extends MapEntity {
     // this determines a tile's properties, like if it's passable or not
@@ -163,32 +160,26 @@ public class MapTile extends MapEntity {
     public float getX2() { return bottomLayer.getX2(); }
 
     @Override
-    public float getScaledX2() { return bottomLayer.getScaledX2(); }
-
-    @Override
     public float getY2() { return bottomLayer.getY2(); }
 
     @Override
-    public float getScaledY2() { return bottomLayer.getScaledY2(); }
-
-    @Override
-    public float getScaledBoundsX1() {
-        return bottomLayer.getScaledBoundsX1();
+    public float getBoundsX1() {
+        return bottomLayer.getBoundsX1();
     }
 
     @Override
-    public float getScaledBoundsX2() {
-        return bottomLayer.getScaledBoundsX2();
+    public float getBoundsX2() {
+        return bottomLayer.getBoundsX2();
     }
 
     @Override
-    public float getScaledBoundsY1() {
-        return bottomLayer.getScaledBoundsY1();
+    public float getBoundsY1() {
+        return bottomLayer.getBoundsY1();
     }
 
     @Override
-    public float getScaledBoundsY2() {
-        return bottomLayer.getScaledBoundsY2();
+    public float getBoundsY2() {
+        return bottomLayer.getBoundsY2();
     }
 
     @Override
@@ -202,18 +193,18 @@ public class MapTile extends MapEntity {
     }
 
     @Override
-    public int getScaledWidth() {
-        return bottomLayer.getScaledWidth();
+    public int getWidth() {
+        return bottomLayer.getWidth();
     }
 
     @Override
-    public int getScaledHeight() {
-        return bottomLayer.getScaledHeight();
+    public int getHeight() {
+        return bottomLayer.getHeight();
     }
 
     @Override
-    public Rectangle getScaledBounds() {
-        return bottomLayer.getScaledBounds();
+    public Rectangle getBounds() {
+        return bottomLayer.getBounds();
     }
 
     @Override

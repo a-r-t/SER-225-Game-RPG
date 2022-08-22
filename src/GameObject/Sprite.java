@@ -52,44 +52,24 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
         this.imageEffect = imageEffect;
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(getBoundsX1(), getBoundsY1(), bounds.getWidth(), bounds.getHeight(), scale);
-    }
-
     public float getBoundsX1() {
-        return x + bounds.getX1();
+        return x + (bounds.getX1() * scale);
     }
 
     public float getBoundsX2() {
-        return x + bounds.getX2();
+        return getBoundsX1() + bounds.getWidth();
     }
 
     public float getBoundsY1() {
-        return y + bounds.getY1();
+        return y + (bounds.getY1() * scale);
     }
 
     public float getBoundsY2() {
-        return y + bounds.getY2();
+        return getBoundsY1() + bounds.getHeight();
     }
 
-    public float getScaledBoundsX1() {
-        return getX() + (bounds.getX1() * scale);
-    }
-
-    public float getScaledBoundsX2() {
-        return getScaledBoundsX1() + bounds.getScaledWidth();
-    }
-
-    public float getScaledBoundsY1() {
-        return getY() + (bounds.getY1() * scale);
-    }
-
-    public float getScaledBoundsY2() {
-        return getScaledBoundsY1() + bounds.getScaledHeight();
-    }
-
-    public Rectangle getScaledBounds() {
-        return new Rectangle(getScaledBoundsX1(), getScaledBoundsY1(), bounds.getScaledWidth(), bounds.getScaledHeight());
+    public Rectangle getBounds() {
+        return new Rectangle(getBoundsX1(), getBoundsY1(), bounds.getWidth(), bounds.getHeight());
     }
 
     public void setBounds(Rectangle bounds) {
@@ -101,7 +81,7 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
     }
 
     public Rectangle getIntersectRectangle() {
-        return getScaledBounds();
+        return getBounds();
     }
 
     @Override
@@ -111,17 +91,17 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
 	
 	@Override
 	public void draw(GraphicsHandler graphicsHandler) {
-		graphicsHandler.drawImage(image, Math.round(getX()), Math.round(getY()), getScaledWidth(), getScaledHeight(), imageEffect);
+		graphicsHandler.drawImage(image, Math.round(getX()), Math.round(getY()), getWidth(), getHeight(), imageEffect);
 	}
 
 	public void drawBounds(GraphicsHandler graphicsHandler, Color color) {
-        Rectangle scaledBounds = getScaledBounds();
+        Rectangle scaledBounds = getBounds();
         scaledBounds.setColor(color);
         scaledBounds.draw(graphicsHandler);
     }
 
     @Override
     public String toString() {
-        return String.format("Sprite: x=%s y=%s width=%s height=%s bounds=(%s, %s, %s, %s)", getX(), getY(), getScaledWidth(), getScaledHeight(), getScaledBoundsX1(), getScaledBoundsY1(), getScaledBounds().getWidth(), getScaledBounds().getHeight());
+        return String.format("Sprite: x=%s y=%s width=%s height=%s bounds=(%s, %s, %s, %s)", getX(), getY(), getWidth(), getHeight(), getBoundsX1(), getBoundsY1(), getBounds().getWidth(), getBounds().getHeight());
     }
 }

@@ -6,6 +6,7 @@ import Engine.ImageLoader;
 import Engine.Key;
 import GameObject.Frame;
 import GameObject.ImageEffect;
+import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 import Level.Player;
 

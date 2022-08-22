@@ -13,6 +13,7 @@ public class FrameBuilder {
     private Rectangle bounds;
     private float scale;
     private ImageEffect imageEffect;
+    private Rectangle entityDefinition;
 
     public FrameBuilder(BufferedImage image, int delay) {
         this.image = image;
@@ -31,6 +32,16 @@ public class FrameBuilder {
 
     public FrameBuilder withBounds(float x, float y, int width, int height) {
         this.bounds = new Rectangle(Math.round(x), Math.round(y), width, height);
+        return this;
+    }
+
+    public FrameBuilder withEntityDefinition(Rectangle entityDefinition) {
+        this.entityDefinition = entityDefinition;
+        return this;
+    }
+
+    public FrameBuilder withEntityDefinition(float x, float y, int width, int height) {
+        this.entityDefinition = new Rectangle(Math.round(x), Math.round(y), width, height);
         return this;
     }
 

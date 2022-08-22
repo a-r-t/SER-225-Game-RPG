@@ -218,12 +218,11 @@ public abstract class Player extends GameObject {
 
     public Rectangle getInteractionRange() {
         return new Rectangle(
-                getScaledBounds().getX1() - interactionRange,
-                getScaledBounds().getY1() - interactionRange,
-                getScaledBounds().getWidth() + (interactionRange * 2),
-                getScaledBounds().getHeight() + (interactionRange * 2));
+                getBounds().getX1() - interactionRange,
+                getBounds().getY1() - interactionRange,
+                getBounds().getWidth() + (interactionRange * 2),
+                getBounds().getHeight() + (interactionRange * 2));
     }
-
 
     public Key getInteractKey() { return INTERACT_KEY; }
     public Direction getCurrentWalkingXDirection() { return currentWalkingXDirection; }

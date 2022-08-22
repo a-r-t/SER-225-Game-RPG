@@ -1,15 +1,11 @@
 package Level;
 
 import Engine.GraphicsHandler;
-import Engine.Key;
-import Engine.Keyboard;
 import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.Rectangle;
 import GameObject.SpriteSheet;
-import SpriteFont.SpriteFont;
 import Utils.Direction;
-import Utils.Stopwatch;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -52,10 +48,10 @@ public class NPC extends MapEntity {
     public int getId() { return id; }
 
     public void facePlayer(Player player) {
-        if (Math.round(getScaledBoundsX2()) - (getScaledBounds().getWidth() / 2) < Math.round(player.getScaledBoundsX2())) {
+        if (Math.round(getBoundsX2()) - (getBounds().getWidth() / 2) < Math.round(player.getBoundsX2())) {
             this.currentAnimationName = "STAND_RIGHT";
         }
-        else if (Math.round(getScaledBoundsX1()) + (getScaledBounds().getWidth() / 2) > Math.round(player.getScaledBoundsX1())) {
+        else if (Math.round(getBoundsX1()) + (getBounds().getWidth() / 2) > Math.round(player.getBoundsX1())) {
             this.currentAnimationName = "STAND_LEFT";
         }
     }

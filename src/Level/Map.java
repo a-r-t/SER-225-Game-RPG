@@ -4,7 +4,6 @@ import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
 import GameObject.Rectangle;
-import Utils.Direction;
 import Utils.Point;
 
 import java.io.File;
@@ -370,38 +369,27 @@ public abstract class Map {
             return false;
         }
 
-        System.out.println("PRINTING:");
-        System.out.println("ENTITY: " + interactedEntity.getScaledBounds());
-        System.out.println("PLAYER: " + player.getScaledBounds());
-        System.out.println("END PRINTING:");
-
-        Rectangle playerBounds = player.getScaledBounds();
-        Rectangle entityBounds = interactedEntity.getScaledBounds();
+        Rectangle playerBounds = player.getBounds();
+        Rectangle entityBounds = interactedEntity.getBounds();
         if (playerBounds.getY1() >= entityBounds.getY2()) {
-            System.out.println("player is below");
             Rectangle playerTopBounds = new Rectangle(playerBounds.getX(), playerBounds.getY() - 1, playerBounds.getWidth(), 1);
-            System.out.println("PLAYER TOP BOUNDS: " + playerTopBounds);
             float areaOverlapped = interactedEntity.getAreaOverlapped(playerTopBounds);
-            System.out.println("AREA OVERLAPPED: " + areaOverlapped);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 4f), entityBounds.getWidth());
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 3f), entityBounds.getWidth());
         }
         else if (playerBounds.getY2() <= entityBounds.getY1()) {
-            System.out.println("player is above");
             Rectangle playerBottomBounds = new Rectangle(playerBounds.getX(), playerBounds.getY2() + 1, playerBounds.getWidth(), 1);
             float areaOverlapped = interactedEntity.getAreaOverlapped(playerBottomBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 4f), entityBounds.getWidth());
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 3f), entityBounds.getWidth());
         }
-        else if (playerBounds.getX1() <= entityBounds.getX2()) {
-            System.out.println("player is to the right");
+        else if (playerBounds.getX1() >= entityBounds.getX2()) {
             Rectangle playerLeftBounds = new Rectangle(playerBounds.getX() - 1, playerBounds.getY(), 1, playerBounds.getHeight());
             float areaOverlapped = interactedEntity.getAreaOverlapped(playerLeftBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 4f), entityBounds.getHeight());
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 3f), entityBounds.getHeight());
         }
-        else if (playerBounds.getX2() >= entityBounds.getX()) {
-            System.out.println("player is to the left");
+        else if (playerBounds.getX2() <= entityBounds.getX()) {
             Rectangle playerRightBounds = new Rectangle(playerBounds.getX2() + 1, playerBounds.getY(), 1, playerBounds.getHeight());
             float areaOverlapped = interactedEntity.getAreaOverlapped(playerRightBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 4f), entityBounds.getHeight());
+            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 3f), entityBounds.getHeight());
         }
 
         return false;

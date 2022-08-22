@@ -144,9 +144,7 @@ public class AnimatedSprite implements IntersectableRectangle {
 	public float getX1() { return currentFrame.getX1(); }
 	public float getY1() { return currentFrame.getY1(); }
 	public float getX2() { return currentFrame.getX2(); }
-	public float getScaledX2() { return currentFrame.getScaledX2(); }
 	public float getY2() { return currentFrame.getY2(); }
-	public float getScaledY2() { return currentFrame.getScaledY2(); }
 	public Point getLocation() { return currentFrame.getLocation(); }
 
 	public void setX(float x) {
@@ -201,63 +199,37 @@ public class AnimatedSprite implements IntersectableRectangle {
 		currentFrame.setScale(scale);
 	}
 
-	public int getWidth() {
-		return currentFrame.getWidth();
-	}
-	public int getHeight() {
-		return currentFrame.getHeight();
-	}
 	public void setWidth(int width) {
 		currentFrame.setWidth(width);
 	}
 	public void setHeight(int height) {
 		currentFrame.setHeight(height);
 	}
-	public int getScaledWidth() {
-		return currentFrame.getScaledWidth();
+	public int getWidth() {
+		return currentFrame.getWidth();
 	}
-	public int getScaledHeight() {
-		return currentFrame.getScaledHeight();
+	public int getHeight() {
+		return currentFrame.getHeight();
 	}
 
 	public Rectangle getBounds() {
 		return currentFrame.getBounds();
 	}
 
-	public Rectangle getScaledBounds() {
-		return currentFrame.getScaledBounds();
-	}
-
     public float getBoundsX1() {
         return currentFrame.getBoundsX1();
-    }
-
-    public float getScaledBoundsX1() {
-        return currentFrame.getScaledBoundsX1();
     }
 
     public float getBoundsX2() {
         return currentFrame.getBoundsX2();
     }
 
-    public float getScaledBoundsX2() {
-        return currentFrame.getScaledBoundsX2();
-    }
-
     public float getBoundsY1() {
         return currentFrame.getBoundsY1();
     }
 
-    public float getScaledBoundsY1() {
-        return currentFrame.getScaledBoundsY1();
-    }
-
     public float getBoundsY2() {
         return currentFrame.getBoundsY2();
-    }
-
-    public float getScaledBoundsY2() {
-        return currentFrame.getScaledBoundsY2();
     }
 
 	public void setBounds(Rectangle bounds) {
@@ -279,6 +251,6 @@ public class AnimatedSprite implements IntersectableRectangle {
 
 	@Override
 	public String toString() {
-		return String.format("Current Sprite: x=%s y=%s width=%s height=%s bounds=(%s, %s, %s, %s)", x, y, getScaledWidth(), getScaledHeight(), getScaledBoundsX1(), getScaledBoundsY1(), getScaledBounds().getWidth(), getScaledBounds().getHeight());
+		return String.format("Current Sprite: x=%s y=%s width=%s height=%s bounds=(%s, %s, %s, %s)", x, y, getWidth(), getHeight(), getBoundsX1(), getBoundsY1(), getBounds().getWidth(), getBounds().getHeight());
 	}
 }

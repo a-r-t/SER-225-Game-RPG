@@ -1,8 +1,6 @@
 package EnhancedMapTiles;
 
-import Builders.FrameBuilder;
 import Engine.ImageLoader;
-import GameObject.Frame;
 import GameObject.GameObject;
 import GameObject.SpriteSheet;
 import Level.EnhancedMapTile;
@@ -11,8 +9,6 @@ import Level.PlayerState;
 import Level.TileType;
 import Utils.Direction;
 import Utils.Point;
-
-import java.util.HashMap;
 
 // This class is for the end level gold box tile
 // when the player touches it, it will tell the player that the level has been completed
@@ -49,31 +45,31 @@ public class Rock extends EnhancedMapTile {
     }
 
     private boolean canMoveLeft(Player player) {
-        return player.getScaledBoundsX1() <= getScaledBoundsX2() && player.getScaledBoundsX2() > getScaledBoundsX2() && canMoveX(player);
+        return player.getBoundsX1() <= getBoundsX2() && player.getBoundsX2() > getBoundsX2() && canMoveX(player);
     }
 
     private boolean canMoveRight(Player player) {
-        return player.getScaledBoundsX2() >= getScaledBoundsX1() && player.getScaledBoundsX1() < getScaledBoundsX1() && canMoveX(player);
+        return player.getBoundsX2() >= getBoundsX1() && player.getBoundsX1() < getBoundsX1() && canMoveX(player);
     }
 
     private boolean canMoveX(Player player) {
-        return (player.getScaledBoundsY1() < getScaledBoundsY2() && player.getScaledBoundsY2() >= getScaledBoundsY2()) ||
-                (player.getScaledBoundsY2() > getScaledBoundsY1() && player.getScaledBoundsY1() <= getScaledBoundsY1()) ||
-                (player.getScaledBoundsY2() < getScaledBoundsY2() && player.getScaledBoundsY1() > getScaledBoundsY1());
+        return (player.getBoundsY1() < getBoundsY2() && player.getBoundsY2() >= getBoundsY2()) ||
+                (player.getBoundsY2() > getBoundsY1() && player.getBoundsY1() <= getBoundsY1()) ||
+                (player.getBoundsY2() < getBoundsY2() && player.getBoundsY1() > getBoundsY1());
     }
 
     private boolean canMoveUp(Player player) {
-        return player.getScaledBoundsY1() <= getScaledBoundsY2() && player.getScaledBoundsY2() > getScaledBoundsY2() && canMoveY(player);
+        return player.getBoundsY1() <= getBoundsY2() && player.getBoundsY2() > getBoundsY2() && canMoveY(player);
     }
 
     private boolean canMoveDown(Player player) {
-        return player.getScaledBoundsY2() >= getScaledBoundsY1() && player.getScaledBoundsY1() < getScaledBoundsY1() && canMoveY(player);
+        return player.getBoundsY2() >= getBoundsY1() && player.getBoundsY1() < getBoundsY1() && canMoveY(player);
     }
 
     private boolean canMoveY(Player player) {
-        return (player.getScaledBoundsX1() < getScaledBoundsX2() && player.getScaledBoundsX2() >= getScaledBoundsX2()) ||
-                (player.getScaledBoundsX2() > getScaledBoundsX1() && player.getScaledBoundsX1() <= getScaledBoundsX1()) ||
-                (player.getScaledBoundsX2() < getScaledBoundsX2() && player.getScaledBoundsX1() > getScaledBoundsX1());
+        return (player.getBoundsX1() < getBoundsX2() && player.getBoundsX2() >= getBoundsX2()) ||
+                (player.getBoundsX2() > getBoundsX1() && player.getBoundsX1() <= getBoundsX1()) ||
+                (player.getBoundsX2() < getBoundsX2() && player.getBoundsX1() > getBoundsX1());
     }
 
     @Override
