@@ -1,5 +1,8 @@
 package Scripts.TestMap;
-import Level.*;
+
+import Level.NPC;
+import Level.Script;
+import Level.ScriptState;
 
 // script for talking to walrus npc
 public class WalrusScript extends Script<NPC> {

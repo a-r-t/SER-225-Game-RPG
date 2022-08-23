@@ -1,6 +1,7 @@
 package Scripts;
 
-import Level.*;
+import Level.Script;
+import Level.ScriptState;
 
 // Reusable simple interact script
 // Just shows text upon interacting with the associated entity

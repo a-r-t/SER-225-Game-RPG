@@ -1,13 +1,10 @@
 package Builders;
 
-import GameObject.AnimatedSprite;
 import GameObject.Frame;
 import GameObject.GameObject;
 import Level.MapTile;
 import Level.TileType;
 
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.HashMap;
 
 // Builder class to instantiate a MapTile class

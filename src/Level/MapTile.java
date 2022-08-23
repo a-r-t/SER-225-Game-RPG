@@ -1,7 +1,10 @@
 package Level;
 
 import Engine.GraphicsHandler;
-import GameObject.*;
+import GameObject.GameObject;
+import GameObject.IntersectableRectangle;
+import GameObject.Rectangle;
+import GameObject.SpriteSheet;
 import Utils.Point;
 
 // Represents a map tile in a Map's tile map

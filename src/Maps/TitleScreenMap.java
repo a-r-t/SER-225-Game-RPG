@@ -5,12 +5,8 @@ import Engine.ImageLoader;
 import GameObject.ImageEffect;
 import GameObject.Sprite;
 import Level.Map;
-import Level.PlayerState;
-import Players.Cat;
 import Tilesets.CommonTileset;
 import Utils.Colors;
-import Utils.Direction;
-import Utils.ImageUtils;
 import Utils.Point;
 
 // Represents the map that is used as a background for the main menu and credits menu screen

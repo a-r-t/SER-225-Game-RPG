@@ -1,6 +1,7 @@
 package Scripts.TestMap;
 
-import Level.*;
+import Level.Script;
+import Level.ScriptState;
 
 // script for talking to tree with hole in it
 public class TreeScript extends Script {

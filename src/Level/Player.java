@@ -4,9 +4,10 @@ import Engine.Key;
 import Engine.KeyLocker;
 import Engine.Keyboard;
 import GameObject.GameObject;
+import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 import Utils.Direction;
-import GameObject.Rectangle;
+
 import java.util.ArrayList;
 
 public abstract class Player extends GameObject {

@@ -1,11 +1,8 @@
 package Level;
 
-import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
-import GameObject.*;
-
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
+import GameObject.GameObject;
+import GameObject.SpriteSheet;
 
 // This class is a base class for all enhanced map tiles in the game -- all enhanced map tiles should extend from it
 public class EnhancedMapTile extends MapTile {

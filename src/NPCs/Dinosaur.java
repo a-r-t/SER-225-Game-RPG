@@ -1,14 +1,12 @@
 package NPCs;
 
 import Builders.FrameBuilder;
-import Builders.MapTileBuilder;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
-import Level.*;
-import Utils.Direction;
+import Level.NPC;
 import Utils.Point;
 
 import java.util.HashMap;

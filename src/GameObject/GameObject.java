@@ -1,6 +1,5 @@
 package GameObject;
 
-import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
 import Level.*;
 import Utils.Direction;
@@ -8,7 +7,6 @@ import Utils.ImageUtils;
 import Utils.MathUtils;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 /*

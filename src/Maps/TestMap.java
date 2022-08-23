@@ -1,13 +1,18 @@
 package Maps;
 
 import EnhancedMapTiles.Rock;
-import Level.*;
+import Level.EnhancedMapTile;
+import Level.Map;
+import Level.NPC;
+import Level.Trigger;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
 import Scripts.SimpleTextInteractScript;
-import Scripts.TestMap.*;
+import Scripts.TestMap.DinoScript;
+import Scripts.TestMap.LostBallScript;
+import Scripts.TestMap.TreeScript;
+import Scripts.TestMap.WalrusScript;
 import Tilesets.CommonTileset;
-import Utils.Point;
 
 import java.util.ArrayList;
 

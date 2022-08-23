@@ -1,11 +1,10 @@
 package GameObject;
 
-import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
-import Utils.Stopwatch;
 import Utils.Point;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import Utils.Stopwatch;
+
+import java.awt.*;
 import java.util.HashMap;
 
 /*

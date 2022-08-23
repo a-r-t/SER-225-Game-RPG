@@ -2,8 +2,8 @@ package EnhancedMapTiles;
 
 import Builders.FrameBuilder;
 import Engine.ImageLoader;
-import GameObject.GameObject;
 import GameObject.Frame;
+import GameObject.GameObject;
 import GameObject.SpriteSheet;
 import Level.EnhancedMapTile;
 import Level.Player;
