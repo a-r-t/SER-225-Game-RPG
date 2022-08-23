@@ -1,7 +1,9 @@
 package EnhancedMapTiles;
 
+import Builders.FrameBuilder;
 import Engine.ImageLoader;
 import GameObject.GameObject;
+import GameObject.Frame;
 import GameObject.SpriteSheet;
 import Level.EnhancedMapTile;
 import Level.Player;
@@ -74,6 +76,9 @@ public class Rock extends EnhancedMapTile {
 
     @Override
     protected GameObject loadBottomLayer(SpriteSheet spriteSheet) {
-        return new GameObject(spriteSheet.getSubImage(0, 0), x, y, 3);
+        Frame frame = new FrameBuilder(spriteSheet.getSubImage(0, 0), 0)
+                .withScale(3)
+                .build();
+        return new GameObject(x, y, frame);
     }
 }

@@ -14,21 +14,21 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
     protected ImageEffect imageEffect;
 
     public Sprite (BufferedImage image) {
-        super(0, 0, image.getWidth(), image.getHeight(), 1);
+        super(0, 0, image.getWidth(), image.getHeight());
         this.image = image;
-        this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight(), scale);
+        this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight());
         this.imageEffect = ImageEffect.NONE;
     }
 
-    public Sprite (BufferedImage image, float scale, ImageEffect imageEffect) {
-        super(0, 0, image.getWidth(), image.getHeight(), scale);
+    public Sprite (BufferedImage image, float x, float y) {
+        super(x, y, image.getWidth(), image.getHeight());
         this.image = image;
         this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight(), scale);
-        this.imageEffect = imageEffect;
+        this.imageEffect = ImageEffect.NONE;;
     }
 
-    public Sprite(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect) {
-        super(x, y, image.getWidth(), image.getHeight(), scale);
+    public Sprite(BufferedImage image, float x, float y, ImageEffect imageEffect) {
+        super(x, y, image.getWidth(), image.getHeight());
         this.image = image;
         this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight(), scale);
         this.imageEffect = imageEffect;
@@ -70,6 +70,10 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
 
     public Rectangle getBounds() {
         return new Rectangle(getBoundsX1(), getBoundsY1(), bounds.getWidth(), bounds.getHeight());
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     public void setBounds(Rectangle bounds) {

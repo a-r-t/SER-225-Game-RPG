@@ -1,5 +1,6 @@
 package GameObject;
 
+import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
 import Utils.Stopwatch;
 import Utils.Point;
@@ -54,18 +55,24 @@ public class AnimatedSprite implements IntersectableRectangle {
         updateCurrentFrame();
     }
 
-	public AnimatedSprite(BufferedImage image, float x, float y, String startingAnimationName) {
+	public AnimatedSprite(float x, float y, Frame[] frames) {
 		this.x = x;
 		this.y = y;
-		SpriteSheet spriteSheet = new SpriteSheet(image, image.getWidth(), image.getHeight());
-        this.animations = loadAnimations(spriteSheet);
-        this.currentAnimationName = startingAnimationName;
+		this.animations = new HashMap<String, Frame[]>() {{
+			put("DEFAULT", frames);
+		}};
+		this.currentAnimationName = "DEFAULT";
 		updateCurrentFrame();
 	}
 
-    public AnimatedSprite(float x, float y) {
+    public AnimatedSprite(float x, float y, Frame frame) {
         this.x = x;
         this.y = y;
+		this.animations = new HashMap<String, Frame[]>() {{
+			put("DEFAULT", new Frame[] { frame });
+		}};
+		this.currentAnimationName = "DEFAULT";
+		updateCurrentFrame();
 	}
 
 	public void update() {

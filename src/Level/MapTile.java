@@ -8,11 +8,16 @@ import Utils.Point;
 public class MapTile extends MapEntity {
     // this determines a tile's properties, like if it's passable or not
     protected TileType tileType;
+
+    // bottom layer of tile
     protected GameObject bottomLayer;
+
+    // top layer of tile ("pasted on top of" bottom layer, covers player)
     protected GameObject topLayer;
+
     private int tileIndex;
 
-    public MapTile(float x, float y, GameObject bottomLayer, GameObject topLayer, int tileIndex, TileType tileType) {
+    public MapTile(float x, float y, GameObject bottomLayer, GameObject topLayer, TileType tileType, int tileIndex) {
         super(x, y);
         this.bottomLayer = bottomLayer;
         this.topLayer = topLayer;
@@ -42,51 +47,6 @@ public class MapTile extends MapEntity {
         return null;
     }
 
-    /*
-    public MapTile(float x, float y, BufferedImage image, int tileIndex, TileType tileType) {
-        super(image, x, y);
-        this.tileType = tileType;
-        this.tileIndex = tileIndex;
-    }
-
-    public MapTile(float x, float y, HashMap<String, Frame[]> animations, int tileIndex, TileType tileType) {
-        super(x, y, animations, "DEFAULT");
-        this.tileType = tileType;
-        this.tileIndex = tileIndex;
-    }
-//
-    public MapTile(float x, float y, SpriteSheet spriteSheet, String startingAnimation, TileType tileType) {
-        super(x, y, spriteSheet, startingAnimation);
-        this.tileType = tileType;
-    }
-
-     */
-//
-//    public MapTile(float x, float y, HashMap<String, Frame[]> animations, TileType tileType) {
-//        super(x, y, animations, "DEFAULT");
-//        this.tileType = tileType;
-//    }
-//
-//    public MapTile(BufferedImage image, float x, float y, TileType tileType) {
-//        super(image, x, y, "DEFAULT");
-//        this.tileType = tileType;
-//    }
-//
-//    public MapTile(BufferedImage image, float x, float y, float scale, TileType tileType) {
-//        super(image, x, y, scale);
-//        this.tileType = tileType;
-//    }
-//
-//    public MapTile(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect, TileType tileType) {
-//        super(image, x, y, scale, imageEffect);
-//        this.tileType = tileType;
-//    }
-//
-//    public MapTile(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect, Rectangle bounds, TileType tileType) {
-//        super(image, x, y, scale, imageEffect, bounds);
-//        this.tileType = tileType;
-//    }
-
     public TileType getTileType() {
         return tileType;
     }
@@ -101,12 +61,14 @@ public class MapTile extends MapEntity {
     public GameObject getTopLayer() { return topLayer; }
     public void setTopLayer(GameObject topLayer) { this.topLayer = topLayer; }
 
+    // determines if tile is animated or not
     public boolean isAnimated() {
         return (bottomLayer.getCurrentAnimation().length > 1) ||
                 (topLayer != null && topLayer.getCurrentAnimation().length > 1);
     }
 
     // set this game object's map to make it a "part of" the map, allowing calibrated positions and collision handling logic to work
+    // note that both the bottom layer and the top layer need the map reference
     public void setMap(Map map) {
         this.map = map;
         this.bottomLayer.setMap(map);
@@ -232,17 +194,6 @@ public class MapTile extends MapEntity {
     }
 
     @Override
-    public boolean intersects(IntersectableRectangle other) {
-        return bottomLayer.intersects(other);
-    }
-
-    @Override
-    public float getAreaOverlapped(IntersectableRectangle other) { return bottomLayer.getAreaOverlapped(other); }
-
-    @Override
-    public boolean overlaps(IntersectableRectangle other) { return bottomLayer.overlaps(other); }
-
-    @Override
     public void moveX(float dx) {
         this.x += dx;
         bottomLayer.moveX(dx);
@@ -295,4 +246,15 @@ public class MapTile extends MapEntity {
             topLayer.moveUp(dy);
         }
     }
+
+    @Override
+    public boolean intersects(IntersectableRectangle other) {
+        return bottomLayer.intersects(other);
+    }
+
+    @Override
+    public boolean overlaps(IntersectableRectangle other) { return bottomLayer.overlaps(other); }
+
+    @Override
+    public float getAreaOverlapped(IntersectableRectangle other) { return bottomLayer.getAreaOverlapped(other); }
 }

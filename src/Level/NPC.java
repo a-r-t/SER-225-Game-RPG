@@ -24,25 +24,19 @@ public class NPC extends MapEntity {
         this.id = id;
     }
 
-    public NPC(int id, BufferedImage image, float x, float y, String startingAnimation) {
-        super(image, x, y, startingAnimation);
+    public NPC(int id, float x, float y, Frame[] frames) {
+        super(x, y, frames);
         this.id = id;
     }
 
-    public NPC(BufferedImage image, float x, float y) {
-        super(image, x, y);
+    public NPC(int id, float x, float y, Frame frame) {
+        super(x, y, frame);
+        this.id = id;
     }
 
-    public NPC(BufferedImage image, float x, float y, float scale) {
-        super(image, x, y, scale);
-    }
-
-    public NPC(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect) {
-        super(image, x, y, scale, imageEffect);
-    }
-
-    public NPC(BufferedImage image, float x, float y, float scale, ImageEffect imageEffect, Rectangle bounds) {
-        super(image, x, y, scale, imageEffect, bounds);
+    public NPC(int id, float x, float y) {
+        super(x, y);
+        this.id = id;
     }
 
     public int getId() { return id; }

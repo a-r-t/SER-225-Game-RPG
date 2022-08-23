@@ -10,6 +10,10 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+// Represents the game's textbox
+// will display the text it is given to its textQueue
+// each String in the textQueue will be displayed in the textbox, and hitting the interact key will cycle between additional Strings in the queue
+// use the newline character in a String in the textQueue to break the text up into a second line if needed
 public class Textbox {
     protected boolean isActive;
     protected final int x = 22;
@@ -47,14 +51,19 @@ public class Textbox {
         }
     }
 
+    // returns whether the textQueue is out of items to display or not
+    // useful for scripts to know when to complete
     public boolean isTextQueueEmpty() {
         return textQueue.isEmpty();
     }
 
     public void update() {
+        // if textQueue has more text to display and the interact key button was pressed previously, display new text
         if (!textQueue.isEmpty() && keyLocker.isKeyLocked(interactKey)) {
             String next = textQueue.peek();
 
+            // if camera is at bottom of screen, text is drawn at top of screen instead of the bottom like usual
+            // to prevent it from covering the player
             int fontY;
             if (!map.getCamera().isAtBottomOfMap()) {
                 fontY = fontBottomY;
@@ -65,6 +74,7 @@ public class Textbox {
             text = new SpriteFont(next, fontX, fontY, "Arial", 30, Color.black);
 
         }
+        // if interact key is pressed, remove the current text from the queue to prepare for the next text item to be displayed
         if (Keyboard.isKeyDown(interactKey) && !keyLocker.isKeyLocked(interactKey)) {
             keyLocker.lockKey(interactKey);
             textQueue.poll();
@@ -76,6 +86,8 @@ public class Textbox {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
+        // if camera is at bottom of screen, textbox is drawn at top of screen instead of the bottom like usual
+        // to prevent it from covering the player
         if (!map.getCamera().isAtBottomOfMap()) {
             graphicsHandler.drawFilledRectangleWithBorder(x, bottomY, width, height, Color.white, Color.black, 2);
         }

@@ -60,7 +60,11 @@ public class MapTileBuilder {
         HashMap<String, Frame[]> animationsCopy = new HashMap<>();
         for (String key : animations.keySet()) {
             Frame[] frames = animations.get(key);
-            animationsCopy.put(key, Arrays.stream(frames).map(frame -> frame.copy()).toArray(size -> new Frame[size]));
+            Frame[] framesCopy = new Frame[frames.length];
+            for (int i = 0; i < framesCopy.length; i++) {
+                framesCopy[i] = frames[i].copy();
+            }
+            animationsCopy.put(key, framesCopy);
         }
         return animationsCopy;
     }
@@ -72,6 +76,6 @@ public class MapTileBuilder {
             topLayerAnimation = new GameObject(x, y, cloneAnimations(topLayer), "DEFAULT");
         }
 
-        return new MapTile(x, y, bottomLayerAnimation, topLayerAnimation, tileIndex, tileType);
+        return new MapTile(x, y, bottomLayerAnimation, topLayerAnimation, tileType, tileIndex);
     }
 }
