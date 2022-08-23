@@ -52,27 +52,19 @@ public class Camera extends Rectangle {
         updateMapEntities(player);
     }
 
-    // update each map tile if it is animated in order to keep animations consistent
     private void updateMapTiles() {
         for (MapTile tile : map.getMapTiles()) {
             if (tile != null) {
+                // update each map tile if it is animated in order to keep animations consistent
                 if (tile.isAnimated()) {
                     tile.update();
                 }
+                // update map tile interact script if exists and active
                 if (tile.getInteractScript() != null && tile.getInteractScript().isActive()) {
                     tile.getInteractScript().update();
                 }
             }
         }
-//        Point tileIndex = getTileIndexByCameraPosition();
-//        for (int i = tileIndex.y - UPDATE_OFF_SCREEN_RANGE; i <= tileIndex.y + height + UPDATE_OFF_SCREEN_RANGE; i++) {
-//            for (int j = tileIndex.x - UPDATE_OFF_SCREEN_RANGE; j <= tileIndex.x + width + UPDATE_OFF_SCREEN_RANGE; j++) {
-//                MapTile tile = map.getMapTile(j, i);
-//                if (tile != null) {
-//                    tile.update();
-//                }
-//            }
-//        }
     }
 
     // update map entities currently a part of the update/draw cycle
@@ -174,7 +166,8 @@ public class Camera extends Rectangle {
     /*
         determines if map entity (enemy, enhanced map tile, or npc) is active by the camera's standards
         1. if entity's status is REMOVED, it is not active, no questions asked
-        2. if entity's status is not REMOVED, then there's additional checks that take place:
+        2. if an entity is hidden, it is not active
+        3. if entity's status is not REMOVED and the entity is not hidden, then there's additional checks that take place:
             1. if entity's isUpdateOffScreen attribute is true, it is active
             2. OR if the camera determines that it is in its boundary range, it is active
      */
@@ -193,7 +186,7 @@ public class Camera extends Rectangle {
         drawMapTilesTopLayer(graphicsHandler);
     }
 
-    // draws visible map tiles to the screen
+    // draws the bottom layer of visible map tiles to the screen
     // this is different than "active" map tiles as determined in the update method -- there is no reason to actually draw to screen anything that can't be seen
     // so this does not include the extra range granted by the UPDATE_OFF_SCREEN_RANGE value
     public void drawMapTilesBottomLayer(GraphicsHandler graphicsHandler) {
@@ -206,8 +199,15 @@ public class Camera extends Rectangle {
                 }
             }
         }
+
+        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
+            if (containsDraw(enhancedMapTile)) {
+                enhancedMapTile.drawBottomLayer(graphicsHandler);
+            }
+        }
     }
 
+    // draws the top layer of visible map tiles to the screen where applicable
     public void drawMapTilesTopLayer(GraphicsHandler graphicsHandler) {
         Point tileIndex = getTileIndexByCameraPosition();
         for (int i = tileIndex.y - 1; i <= tileIndex.y + height + 1; i++) {
@@ -228,15 +228,14 @@ public class Camera extends Rectangle {
 
     // draws active map entities to the screen
     public void drawMapEntities(Player player, GraphicsHandler graphicsHandler) {
-        for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
-            if (containsDraw(enhancedMapTile)) {
-                enhancedMapTile.drawBottomLayer(graphicsHandler);
-            }
-        }
         ArrayList<NPC> drawNpcsAfterPlayer = new ArrayList<>();
+
+        // goes through each active npc and determines if it should be drawn at this time based on their location relative to the player
+        // if drawn here, npc will later be "overlapped" by player
+        // if drawn later, npc will "cover" player
         for (NPC npc : activeNPCs) {
             if (containsDraw(npc)) {
-                if (npc.getCalibratedBounds().getY() < player.getCalibratedBounds().getY1()  + (player.getCalibratedBounds().getHeight() / 2)) {
+                if (npc.getBounds().getY() < player.getBounds().getY1()  + (player.getBounds().getHeight() / 2f)) {
                     npc.draw(graphicsHandler);
                 }
                 else {
@@ -244,7 +243,11 @@ public class Camera extends Rectangle {
                 }
             }
         }
+
+        // player is drawn to screen
         player.draw(graphicsHandler);
+
+        // npcs determined to be drawn after player from the above step are drawn here
         for (NPC npc : drawNpcsAfterPlayer) {
             npc.draw(graphicsHandler);
         }

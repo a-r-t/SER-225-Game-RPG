@@ -219,6 +219,7 @@ public class GameObject extends AnimatedSprite {
 		// it starts by moving the game object by that decimal amount
 		// it then does one more check for a collision in the case that this added decimal amount was enough to change the rounding and move the game object to the next pixel over
 		// if a collision occurs from this move, the player is moved back to right in front of the "solid" map tile's position
+		// if a collision occurs with a trigger and entity is affected by triggers, the trigger is activated
 		if (!hasCollided) {
 			moveX(moveAmountXRemainder * direction.getVelocity());
 			MapCollisionCheckResult collisionCheckResult = MapCollisionHandler.getAdjustedPositionAfterCollisionCheckX(this, map, direction);
@@ -281,6 +282,7 @@ public class GameObject extends AnimatedSprite {
 		// it starts by moving the game object by that decimal amount
 		// it then does one more check for a collision in the case that this added decimal amount was enough to change the rounding and move the game object to the next pixel over
 		// if a collision occurs from this move, the player is moved back to right in front of the "solid" map tile's position
+		// if a collision occurs with a trigger and entity is affected by triggers, the trigger is activated
 		if (!hasCollided) {
 			moveY(moveAmountYRemainder * direction.getVelocity());
 			MapCollisionCheckResult collisionCheckResult = MapCollisionHandler.getAdjustedPositionAfterCollisionCheckY(this, map, direction);
@@ -332,7 +334,7 @@ public class GameObject extends AnimatedSprite {
 		}
 	}
 
-	// gets scaled bounds taking into account map camera position
+	// gets bounds taking into account map camera position
 	public Rectangle getCalibratedBounds() {
 		if (map != null) {
 			Rectangle bounds = getBounds();
@@ -362,9 +364,13 @@ public class GameObject extends AnimatedSprite {
 					currentFrame.getWidth(),
 					currentFrame.getHeight(),
 					currentFrame.getImageEffect());
-//			if (this instanceof Player) {
-//				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
-//			}
+
+			// Uncomment this to draw player's bounds to screen -- useful for debugging
+			/*
+			if (this instanceof Player) {
+				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
+			}
+			*/
 		} else {
 			super.draw(graphicsHandler);
 		}
