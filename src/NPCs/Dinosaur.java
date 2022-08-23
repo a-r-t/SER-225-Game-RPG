@@ -13,7 +13,7 @@ import Utils.Point;
 
 import java.util.HashMap;
 
-// This class is for the walrus NPC
+// This class is for the dinosaur NPC
 public class Dinosaur extends NPC {
 
     public Dinosaur(int id, Point location) {

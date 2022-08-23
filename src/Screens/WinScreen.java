@@ -5,7 +5,7 @@ import SpriteFont.SpriteFont;
 
 import java.awt.*;
 
-// This class is for the level cleared screen
+// This class is for the win level screen
 public class WinScreen extends Screen {
     protected SpriteFont winMessage;
     protected SpriteFont instructions;

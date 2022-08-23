@@ -1,8 +1,8 @@
 package Scripts.TestMap;
 
-import GameObject.Rectangle;
 import Level.*;
 
+// script for talking to tree with hole in it
 public class TreeScript extends Script {
 
     @Override

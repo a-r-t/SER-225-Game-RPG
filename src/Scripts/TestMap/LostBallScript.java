@@ -3,6 +3,7 @@ package Scripts.TestMap;
 import Level.Script;
 import Level.ScriptState;
 
+// trigger script at beginning of game to set that heavy emotional plot
 public class LostBallScript extends Script {
     @Override
     protected void setup() {

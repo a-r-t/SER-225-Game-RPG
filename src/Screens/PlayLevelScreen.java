@@ -89,6 +89,7 @@ public class PlayLevelScreen extends Screen {
                 break;
         }
 
+        // if flag is set at any point during gameplay, game is "won"
         if (map.getFlagManager().isFlagSet("hasFoundBall")) {
             playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
         }

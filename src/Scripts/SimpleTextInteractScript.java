@@ -2,6 +2,8 @@ package Scripts;
 
 import Level.*;
 
+// Reusable simple interact script
+// Just shows text upon interacting with the associated entity
 public class SimpleTextInteractScript extends Script {
     private String[] textItems;
 
@@ -28,11 +30,18 @@ public class SimpleTextInteractScript extends Script {
 
     @Override
     public ScriptState execute() {
+        // call setup code
         start();
+
+        // while textbox is not finished displaying all text, script keeps running
         if (!isTextboxQueueEmpty()) {
             return ScriptState.RUNNING;
         }
+
+        // call cleanup code
         end();
+
+        // script ends
         return ScriptState.COMPLETED;
     }
 }

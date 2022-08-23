@@ -6,11 +6,8 @@ import Engine.ImageLoader;
 import Engine.Key;
 import GameObject.Frame;
 import GameObject.ImageEffect;
-import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 import Level.Player;
-
-import java.awt.*;
 import java.util.HashMap;
 
 // This is the class for the Cat player character
@@ -20,10 +17,6 @@ public class Cat extends Player {
     public Cat(float x, float y) {
         super(new SpriteSheet(ImageLoader.load("Cat.png"), 24, 24), x, y, "STAND_RIGHT");
         walkSpeed = 2.3f;
-        MOVE_LEFT_KEY = Key.LEFT;
-        MOVE_RIGHT_KEY = Key.RIGHT;
-        MOVE_UP_KEY = Key.UP;
-        MOVE_DOWN_KEY = Key.DOWN;
     }
 
     public void update() {
