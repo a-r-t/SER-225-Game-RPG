@@ -7,6 +7,7 @@ import Game.ScreenCoordinator;
 import Level.*;
 import Maps.TestMap;
 import Players.Cat;
+import Utils.Direction;
 import Utils.Point;
 
 // This class is for when the platformer game is actually being played
@@ -41,6 +42,7 @@ public class PlayLevelScreen extends Screen {
         Point playerStartPosition = map.getPlayerStartPosition();
         this.player.setLocation(playerStartPosition.x, playerStartPosition.y);
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
+        this.player.setFacingDirection(Direction.LEFT);
 
         // let pieces of map know which button to listen for as the "interact" button
         map.getTextbox().setInteractKey(player.getInteractKey());
