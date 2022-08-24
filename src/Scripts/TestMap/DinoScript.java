@@ -49,6 +49,7 @@ public class DinoScript extends Script<NPC> {
             else if (sequence == 5) {
                 entity.stand(Direction.LEFT);
 
+                // change door to the open door map tile
                 Frame openDoorFrame = new FrameBuilder(map.getTileset().getSubImage(4, 4), 0)
                         .withScale(map.getTileset().getTileScale())
                         .build();
@@ -92,6 +93,7 @@ public class DinoScript extends Script<NPC> {
             else if (sequence == 5) {
                 sequence++;
 
+                // change door back to the closed door map tile
                 Frame doorFrame = new FrameBuilder(map.getTileset().getSubImage(4, 3), 0)
                         .withScale(map.getTileset().getTileScale())
                         .build();
@@ -102,8 +104,8 @@ public class DinoScript extends Script<NPC> {
                         .build(location.x, location.y);
 
                 setMapTile(17, 4, mapTile);
-                entity.setIsHidden(true);
 
+                entity.setIsHidden(true);
                 setFlag("hasTalkedToDinosaur");
                 unlockPlayer();
             }

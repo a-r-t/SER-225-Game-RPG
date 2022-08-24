@@ -16,7 +16,10 @@ public class MapEntity extends GameObject {
 
     protected boolean isHidden = false;
 
+    // if given an existence flag, and that flag gets set, the entity will no longer exist until the flag is unset
     protected String existenceFlag;
+
+    // script that executes when entity is interacted with by the player
     protected Script interactScript;
 
     public MapEntity(float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
