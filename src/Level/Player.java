@@ -17,6 +17,8 @@ public abstract class Player extends GameObject {
     protected int interactionRange = 5;
     protected Direction currentWalkingXDirection;
     protected Direction currentWalkingYDirection;
+    protected Direction lastWalkingXDirection;
+    protected Direction lastWalkingYDirection;
 
     // values used to handle player movement
     protected float moveAmountX, moveAmountY;
@@ -27,6 +29,7 @@ public abstract class Player extends GameObject {
     protected PlayerState previousPlayerState;
     protected Direction facingDirection;
     protected LevelState levelState;
+    protected Direction lastMovementDirection;
 
     // classes that listen to player events can be added to this list
     protected ArrayList<PlayerListener> listeners = new ArrayList<>();
@@ -113,6 +116,7 @@ public abstract class Player extends GameObject {
             moveAmountX -= walkSpeed;
             facingDirection = Direction.LEFT;
             currentWalkingXDirection = Direction.LEFT;
+            lastWalkingXDirection = Direction.LEFT;
         }
 
         // if walk right key is pressed, move player to the right
@@ -120,6 +124,7 @@ public abstract class Player extends GameObject {
             moveAmountX += walkSpeed;
             facingDirection = Direction.RIGHT;
             currentWalkingXDirection = Direction.RIGHT;
+            lastWalkingXDirection = Direction.RIGHT;
         }
         else {
             currentWalkingXDirection = Direction.NONE;
@@ -128,13 +133,23 @@ public abstract class Player extends GameObject {
         if (Keyboard.isKeyDown(MOVE_UP_KEY)) {
             moveAmountY -= walkSpeed;
             currentWalkingYDirection = Direction.UP;
+            lastWalkingYDirection = Direction.UP;
         }
         else if (Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
             moveAmountY += walkSpeed;
             currentWalkingYDirection = Direction.DOWN;
+            lastWalkingYDirection = Direction.DOWN;
         }
         else {
             currentWalkingYDirection = Direction.NONE;
+        }
+
+        if ((currentWalkingXDirection == Direction.RIGHT || currentWalkingXDirection == Direction.LEFT) && currentWalkingYDirection == Direction.NONE) {
+            lastWalkingYDirection = Direction.NONE;
+        }
+
+        if ((currentWalkingYDirection == Direction.UP || currentWalkingYDirection == Direction.DOWN) && currentWalkingXDirection == Direction.NONE) {
+            lastWalkingXDirection = Direction.NONE;
         }
 
         if (Keyboard.isKeyUp(MOVE_LEFT_KEY) && Keyboard.isKeyUp(MOVE_RIGHT_KEY) && Keyboard.isKeyUp(MOVE_UP_KEY) && Keyboard.isKeyUp(MOVE_DOWN_KEY)) {
@@ -228,6 +243,8 @@ public abstract class Player extends GameObject {
     public Key getInteractKey() { return INTERACT_KEY; }
     public Direction getCurrentWalkingXDirection() { return currentWalkingXDirection; }
     public Direction getCurrentWalkingYDirection() { return currentWalkingYDirection; }
+    public Direction getLastWalkingXDirection() { return lastWalkingXDirection; }
+    public Direction getLastWalkingYDirection() { return lastWalkingYDirection; }
 
     public void stand(Direction direction) {
         facingDirection = direction;

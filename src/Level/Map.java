@@ -4,6 +4,7 @@ import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
 import GameObject.Rectangle;
+import Utils.Direction;
 import Utils.Point;
 
 import java.io.File;
@@ -55,13 +56,21 @@ public abstract class Map {
     // lists to hold map entities that are a part of the map
     protected ArrayList<EnhancedMapTile> enhancedMapTiles;
     protected ArrayList<NPC> npcs;
+    protected ArrayList<Trigger> triggers;
+
+    protected Script activeInteractScript;
 
     // if set to false, camera will not move as player moves
     protected boolean adjustCamera = true;
 
+    // map tiles in map that are animated
+    protected ArrayList<MapTile> animatedMapTiles;
+
+    // flag manager instance to keep track of flags set while map is loaded
     protected FlagManager flagManager;
+
+    // map's textbox instance
     protected Textbox textbox;
-    protected ArrayList<Trigger> triggers;
 
     public Map(String mapFileName, Tileset tileset) {
         this.mapFileName = mapFileName;
@@ -80,6 +89,8 @@ public abstract class Map {
     // loads in enemies, enhanced map tiles, and npcs
     // and instantiates a Camera
     public void setupMap() {
+        animatedMapTiles = new ArrayList<>();
+
         loadMapFile();
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
@@ -140,6 +151,10 @@ public abstract class Map {
                 MapTile tile = tileset.getTile(tileIndex).build(xLocation, yLocation);
                 tile.setMap(this);
                 setMapTile(j, i, tile);
+
+                if (tile.isAnimated()) {
+                    animatedMapTiles.add(tile);
+                }
             }
         }
 
@@ -217,7 +232,14 @@ public abstract class Map {
 
     // set specific map tile from tile map to a new map tile
     public void setMapTile(int x, int y, MapTile tile) {
-        mapTiles[getConvertedIndex(x, y)] = tile;
+        if (isInBounds(x, y)) {
+            MapTile oldMapTile = getMapTile(x, y);
+            animatedMapTiles.remove(oldMapTile);
+            mapTiles[getConvertedIndex(x, y)] = tile;
+            if (tile.isAnimated()) {
+                animatedMapTiles.add(tile);
+            }
+        }
     }
 
     // returns a tile based on a position in the map
@@ -272,10 +294,24 @@ public abstract class Map {
     public ArrayList<EnhancedMapTile> getEnhancedMapTiles() {
         return enhancedMapTiles;
     }
+
     public ArrayList<NPC> getNPCs() {
         return npcs;
     }
     public ArrayList<Trigger> getTriggers() { return triggers; }
+
+    public ArrayList<MapTile> getAnimatedMapTiles() {
+        return animatedMapTiles;
+    }
+
+    public Script getActiveInteractScript() {
+        return activeInteractScript;
+    }
+
+    // this method is only used to set activeInteractScript back to null after the script is finished running
+    public void setActiveInteractScript(Script script) {
+        activeInteractScript = script;
+    }
 
     public NPC getNPCById(int id) {
         for (NPC npc : npcs) {
@@ -321,7 +357,7 @@ public abstract class Map {
         ArrayList<MapEntity> surroundingMapEntities = new ArrayList<>();
 
         // gets surrounding tiles
-        Point playerCurrentTile = getTileIndexByPosition((int)player.getX(), (int)player.getY());
+        Point playerCurrentTile = getTileIndexByPosition((int)player.getBoundsX1(), (int)player.getBoundsY1());
         for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
             for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
                 MapTile mapTile = getMapTile(j, i);
@@ -332,6 +368,7 @@ public abstract class Map {
         }
         // gets active surrounding npcs
         surroundingMapEntities.addAll(getActiveNPCs());
+        surroundingMapEntities.addAll(getActiveEnhancedMapTiles());
         return surroundingMapEntities;
     }
 
@@ -339,38 +376,69 @@ public abstract class Map {
         ArrayList<MapEntity> surroundingMapEntities = getSurroundingMapEntities(player);
         ArrayList<MapEntity> playerTouchingMapEntities = new ArrayList<>();
         for (MapEntity mapEntity : surroundingMapEntities) {
-            if (mapEntity.intersects(player.getInteractionRange())) {
+            if (mapEntity.getInteractScript() != null && mapEntity.intersects(player.getInteractionRange())) {
                 playerTouchingMapEntities.add(mapEntity);
             }
         }
         MapEntity interactedEntity = null;
         if (playerTouchingMapEntities.size() == 1) {
-            interactedEntity = playerTouchingMapEntities.get(0);
+            if (isInteractedEntityValid(playerTouchingMapEntities.get(0), player)) {
+                interactedEntity = playerTouchingMapEntities.get(0);
+            }
         }
-        else {
-            MapEntity currentLargestAreaOverlappedTile = null;
+        else if (playerTouchingMapEntities.size() > 1) {
+            MapEntity currentLargestAreaOverlappedEntity = null;
             float currentLargestAreaOverlapped = 0;
             for (MapEntity mapEntity : playerTouchingMapEntities) {
-                float areaOverlapped = mapEntity.getAreaOverlapped(player);
-                if (areaOverlapped > currentLargestAreaOverlapped) {
-                    currentLargestAreaOverlappedTile = mapEntity;
-                    currentLargestAreaOverlapped = areaOverlapped;
+                if (isInteractedEntityValid(mapEntity, player)) {
+                    float areaOverlapped = mapEntity.getAreaOverlapped(player.getInteractionRange());
+                    if (areaOverlapped > currentLargestAreaOverlapped) {
+                        currentLargestAreaOverlappedEntity = mapEntity;
+                        currentLargestAreaOverlapped = areaOverlapped;
+                    }
                 }
             }
-            interactedEntity = currentLargestAreaOverlappedTile;
+            interactedEntity = currentLargestAreaOverlappedEntity;
         }
-        if (isInteractedEntityValid(interactedEntity, player)) {
+        if (interactedEntity != null) {
             interactedEntity.getInteractScript().setIsActive(true);
+            activeInteractScript = interactedEntity.getInteractScript();
         }
     }
 
     private boolean isInteractedEntityValid(MapEntity interactedEntity, Player player) {
-        if (interactedEntity == null || interactedEntity.getInteractScript() == null) {
+        Rectangle playerBounds = player.getBounds();
+        Rectangle entityBounds = interactedEntity.getBounds();
+        boolean xDirValid = true;
+        boolean yDirValid = true;
+        if (player.getLastWalkingXDirection() == Direction.LEFT && playerBounds.getX1() < entityBounds.getX2()) {
+            xDirValid = false;
+        }
+
+        else if (player.getLastWalkingXDirection() == Direction.RIGHT && playerBounds.getX2() > entityBounds.getX1()) {
+            xDirValid = false;
+        }
+
+        else if (player.getLastWalkingXDirection() == Direction.NONE) {
+            xDirValid = false;
+        }
+
+        if (player.getLastWalkingYDirection() == Direction.UP && playerBounds.getY1() < entityBounds.getY2()) {
+            yDirValid = false;
+        }
+
+        else if (player.getLastWalkingYDirection() == Direction.DOWN && playerBounds.getY2() > entityBounds.getY1()) {
+            yDirValid = false;
+        }
+
+        else if (player.getLastWalkingYDirection() == Direction.NONE) {
+            yDirValid = false;
+        }
+
+        if (!xDirValid && !yDirValid) {
             return false;
         }
 
-        Rectangle playerBounds = player.getBounds();
-        Rectangle entityBounds = interactedEntity.getBounds();
         if (playerBounds.getY1() >= entityBounds.getY2()) {
             Rectangle playerTopBounds = new Rectangle(playerBounds.getX(), playerBounds.getY() - 1, playerBounds.getWidth(), 1);
             float areaOverlapped = interactedEntity.getAreaOverlapped(playerTopBounds);

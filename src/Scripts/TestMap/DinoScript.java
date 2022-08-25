@@ -81,7 +81,6 @@ public class DinoScript extends Script<NPC> {
             }
             else if (sequence == 2) {
                 hideTextbox();
-                unlockPlayer();
                 sequence++;
             }
             else if (sequence == 3) {

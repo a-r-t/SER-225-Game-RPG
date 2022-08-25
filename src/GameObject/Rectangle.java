@@ -179,7 +179,7 @@ public class Rectangle implements IntersectableRectangle {
 	public float getAreaOverlapped(IntersectableRectangle other) {
 		Rectangle intersectRectangle = getIntersectRectangle();
 		Rectangle otherIntersectRectangle = other.getIntersectRectangle();
-		if (!intersects(other)) {
+		if (!overlaps(other)) {
 			return 0;
 		}
 		float width = Math.abs(Math.min(intersectRectangle.getX2(), otherIntersectRectangle.getX2()) - Math.max(intersectRectangle.getX1(), otherIntersectRectangle.getX1()));

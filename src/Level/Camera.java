@@ -50,20 +50,13 @@ public class Camera extends Rectangle {
     public void update(Player player) {
         updateMapTiles();
         updateMapEntities(player);
+        updateScripts();
     }
 
     private void updateMapTiles() {
-        for (MapTile tile : map.getMapTiles()) {
-            if (tile != null) {
-                // update each map tile if it is animated in order to keep animations consistent
-                if (tile.isAnimated()) {
-                    tile.update();
-                }
-                // update map tile interact script if exists and active
-                if (tile.getInteractScript() != null && tile.getInteractScript().isActive()) {
-                    tile.getInteractScript().update();
-                }
-            }
+        for (MapTile tile : map.getAnimatedMapTiles()) {
+            // update each animated map tile in order to keep animations consistent
+            tile.update();
         }
     }
 
@@ -72,7 +65,6 @@ public class Camera extends Rectangle {
     public void updateMapEntities(Player player) {
         activeEnhancedMapTiles = loadActiveEnhancedMapTiles();
         activeNPCs = loadActiveNPCs();
-        activeTriggers = loadActiveTriggers();
 
         for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
             enhancedMapTile.update(player);
@@ -80,11 +72,19 @@ public class Camera extends Rectangle {
 
         for (NPC npc : activeNPCs) {
             npc.update(player);
-            if (npc.getInteractScript() != null && npc.getInteractScript().isActive()) {
-                npc.getInteractScript().update();
-            }
+        }
+    }
+
+    // updates any currently running script
+    // only one script should be able to be running (active) at a time
+    private void updateScripts() {
+        // if there is an active interact script, update the script
+        if (map.getActiveInteractScript() != null) {
+            map.getActiveInteractScript().update();
         }
 
+        // if there is an active trigger, update the script
+        activeTriggers = loadActiveTriggers();
         for (Trigger trigger : activeTriggers) {
             if (trigger.getTriggerScript() != null && trigger.getTriggerScript().isActive()) {
                 trigger.getTriggerScript().update();
