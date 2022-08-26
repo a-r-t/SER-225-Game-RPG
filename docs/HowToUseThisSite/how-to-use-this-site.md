@@ -25,7 +25,7 @@ Click a link from the sidebar on the left of this site to be taken to its respec
 
 The [Game Engine](../GameEngine/game-engine.md) section contains documents that detail the game engine code (how the game loop cycle works, etc.).
 
-The [Game Code Details](../GameCodeDetails/game-code-details.md) section contains documents that detail the game logic code (map, player, enemies, etc).
+The [Game Code Details](../GameCodeDetails/game-code-details.md) section contains documents that detail the game logic code (map, player, entities, etc).
 
 Other pages should be self-explanatory.
 
