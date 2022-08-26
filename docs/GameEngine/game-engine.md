@@ -27,9 +27,9 @@ Most game developers do not write their own game engine, and instead use an exis
 create their desired game, such as [Unity](https://unity.com/) or [Unreal Engine](https://www.unrealengine.com/en-US/). Many larger game companies
 have written their own game engines, which is then used to create many different games, such as the famous [Source](https://en.wikipedia.org/wiki/Source_(game_engine)) game engine created by [Valve](https://www.valvesoftware.com/en/).
 
-For this game, the engine was created from scratch using components from the Java Swing library (really just the JPanel) and everything else was
+For this game, the engine is created from scratch using components from the Java Swing library (really just the JPanel) and everything else was
 done using vanilla Java. While the engine itself is not "specific" to the platformer game genre, several other components were included
-that fit nicely with platformer game logic.
+that fit nicely with RPG game logic.
 
 ## Overview of this game engine
 

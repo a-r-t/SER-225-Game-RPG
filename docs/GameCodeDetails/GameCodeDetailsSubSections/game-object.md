@@ -25,7 +25,7 @@ together which ultimately build up to the `GameObject` class containing all nece
 which makes it quick and easy to use without requiring the code logic used to be rewritten again and again.
 
 In this game, the `GameObject` class is subclassed by every map entity, which includes the [player](./player.md), 
-and any subclasses of `MapEntity` which include [enemies](./MapSubSections/enemies.md), [npcs](./MapSubSections/npcs.md), and [map tiles](/GameDetails/Map/MapTilesAndTilesets) (as well as [enhanced map tiles](./MapSubSections/enhanced-map-tiles.md), which derive from the `MapTile` class).
+and any subclasses of `MapEntity` which include [npcs](./MapSubSections/npcs.md), [triggers](./MapSubSections/triggers.md), and [map tiles](/GameDetails/Map/MapTilesAndTilesets) (as well as [enhanced map tiles](./MapSubSections/enhanced-map-tiles.md), which derive from the `MapTile` class).
 That means that all of these subclasses (and their subclasses) include all functionality of the `GameObject` class under the hood.
 
 ## Features of the GameObject class
@@ -56,12 +56,13 @@ The `Rectangle` class is the "base", which is a means to implement the `x`, `y`,
 
 The `Sprite` class extends the `Rectangle` class. The `Sprite` class adds functionality for "attaching" an image.
 It also optionally allows for defining a bounding box `bounds`, which is a `Rectangle` used in collision detection -- often times when working with collision detection,
-only a part of a sprite's image should be able to be "touched". An example of this can be seen in nearly any video game. If you look at the following Megaman sprites, the bounding box where collisions can be detected on the player in the game [Megaman 2](https://www.youtube.com/watch?v=vuJ8Qr-3_zg) is much smaller than Megaman himself:
+only a part of a sprite's image should be able to be "touched". An example of this can be seen in nearly any video game. 
+If you look at the following Megaman sprites, the bounding box where collisions can be detected on the player in the game [Megaman 2](https://www.youtube.com/watch?v=vuJ8Qr-3_zg) is much smaller than Megaman himself:
 
 ![megaman-bounds.png](../../assets/images/megaman-bounds.png)
 
 When working with 2D games, it's common to leave off limbs like in the above picture and only have the core body be able to be
-detected for collision. Otherwise weird graphical oddities can happen, and the player can end up feeling too "big" and clunky.
+detected for collision. Otherwise, weird graphical oddities can happen, and the player can end up feeling too "big" and clunky.
 
 ### AnimatedSprite class
 
@@ -102,8 +103,7 @@ More details on the `GameObject` class's collision detection and handling can be
 Finally, `GameObject` adds two methods `getCalibratedXLocation` and `getCalibratedYLocation` which are used in the `draw` cycle
 to properly draw the `GameObject` to the screen in the correct location with account to how much the map's camera has moved. `GameObject` class instances should
 utilize these methods in their `draw` methods to ensure other graphics are drawn relative to them and still maintain proper draw location
-integrity. The `Walrus` class does this when drawing its speech bubble when talked to, which ensures as the camera moves the speech bubble
-graphics will remain in the correct spot relative to the walrus game object's location and the camera's location.
+integrity.
 
 Note that if no `Map` class instance is passed in a `GameObject` class using the `setMap` method, the `GameObject` will draw itself
 at its exact location on the screen rather than accounting for the map camera moving. This can be desired behavior for certain graphics,

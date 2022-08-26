@@ -47,8 +47,8 @@ The `ImageEffect` enum contains all the image effects that can be applied to an 
 Something important to keep in mind is that the order that graphics are drawn to the JPanel matters, because each graphic
 is "pasted" on over whatever was there beforehand.
 
-For an in game example, the map tiles (light blue sky, tree, etc) in the below image are drawn BEFORE the cat image to ensure
-that the map tiles do not cover up the cat. This also ensures that every time the cat moves, the map tiles
-continue to stay behind it.
+For an in game example, the grass map tiles in the below image are drawn BEFORE the cat image to ensure
+that the grass does not cover up the cat. This also ensures that every time the cat moves, the grass map tiles
+continue to stay behind.
 
 ![game-screen-3.png](../../assets/images/game-screen-3.png)

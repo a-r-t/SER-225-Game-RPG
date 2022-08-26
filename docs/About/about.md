@@ -28,14 +28,13 @@ I worked on this game throughout August in 2022 to prepare it to be used for the
 
 # The "other" game
 
-This game wasn't the first I created for SER225. Originally, I created
-
-Prior to the Fall 2022 semester starting, while planning for the course, I impulsively out of nowhere
-made a duplicate of this game, and wanted to see if I could transform this platformer game into an RPG (role-playing game)
+This game wasn't the first I created for the SER225 course. Originally, I created a platformer game,
+which was used for several iterations of the course starting in the Fall 2020 semester. I became
+the instructor of SER225 for the Fall 2022 semester, so I decided to give the platformer game some much needed
+TLC. I then impulsively for some reason wanted to see if I could transform the platformer game into an RPG game
 while changing as little as possible. 
 
-Surprisingly...things started working out, and then I got super into it, and
-then...well now there's two games. It ended up being a lot more work than I had initially intended,
-but going into the semester having two game options to make the experience even better for my students was well worth it.
+Surprisingly, things started working out, and then I got super into it. This game is the final result.
+It ended up being a lot more work than I had initially intended, but going into the semester having two game options to make the experience even better for my students was well worth it.
 
-The "other" game's GitHub repo can be found [here](), and its documentation website [here]().
+The other game's GitHub repo can be found [here](https://github.com/a-r-t/SER-225-Game), and its documentation website [here](https://a-r-t.github.io/SER-225-Game/).
