@@ -6,9 +6,6 @@ nav_order: 1
 permalink: /GameEngine/GameLoop
 ---
 
-# Navigation Structure
-{: .no_toc }
-
 ## Table of contents
 {: .no_toc .text-delta }
 
@@ -54,7 +51,7 @@ by the game loop while an instance of that class is active.
 ## What code belongs in the draw cycle?
 Any code that is explicitly rendering ("painting") a graphic (usually an image) to the JPanel belongs in the `draw` section.
 Each iteration of the game loop will force the game to "repaint" itself, meaning all graphics on the screen are updated (even if they haven't moved
-since the previous cycle). This means that any changes to the "flagManager" of the graphics (such as if a new image needs to be rendered or
+since the previous cycle). This means that any changes to the "state" of the graphics (such as if a new image needs to be rendered or
 an existing image has moved) are immediately updated on screen.
 
 Anywhere in the codebase you see a `draw` method, and you will see it in nearly every class, it is where graphics are being

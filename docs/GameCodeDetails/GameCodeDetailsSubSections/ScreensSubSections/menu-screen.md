@@ -7,9 +7,6 @@ grand_parent: Game Code Details
 permalink: /GameCodeDetails/Screens/MenuScreen
 ---
 
-# Navigation Structure
-{: .no_toc }
-
 ## Table of contents
 {: .no_toc .text-delta }
 
@@ -20,16 +17,16 @@ permalink: /GameCodeDetails/Screens/MenuScreen
 
 # Menu Screen
 
-The screen handles the logic and graphics related to the menu that is loaded upon the game starting up.
+The menu screen handles the logic and graphics related to the main menu that is loaded upon the game starting up.
 
 ![menu-screen.png](../../../assets/images/menu-screen.png)
 
-The class file for it is `MenuScreen.java` which can be found in the `Screens` package.
+The class file for it is `MenuScreen.java`, which can be found in the `Screens` package.
 
 ## Functionality
 
-The menu screen's only real job is to allow the player to select between its two options "Play Game" and "Credits".
-Upon selecting an option, `MenuScreen` will change `ScreenCoordinator's` game flagManager which will force it to load the appropriate screen based
+The menu screen's only real job is to allow the player to select between its two options: "Play Game" and "Credits".
+Upon selecting an option, `MenuScreen` will change `ScreenCoordinator's` game state which will force it to load the appropriate screen based
 on the option selected.
 
 ```java
@@ -51,29 +48,29 @@ if (Keyboard.isKeyDown(Key.DOWN) && keyTimer.isTimeUp()) {
 
 The `MenuScreen` class's update cycle mainly checks if the user has pressed the down or up keys and if so will move the little blue square from one
 option to the other and make it clear which option is currently being "hovered" over. Pressing the space bar will select the option and is the trigger
-that leads to `ScreenCoordinator's` game flagManager being changed.
+that leads to `ScreenCoordinator's` game state being changed.
 
 ```java
 // if space is pressed, item is selected
 if (!keyLocker.isKeyLocked(Key.SPACE) && Keyboard.isKeyDown(Key.SPACE)) {
     menuItemSelected = currentMenuItemHovered;
     
-    // if first menu item is selected "PLAY GAME", set ScreenCoordinator game flagManager to LEVEL
+    // if first menu item is selected "PLAY GAME", set ScreenCoordinator game state to LEVEL
     if (menuItemSelected == 0) {
         screenCoordinator.setGameState(GameState.LEVEL);
 
-    // if secpmd menu item is selected "CREDITS, set ScreenCoordinator game flagManager to CREDITS
+    // if second menu item is selected "CREDITS, set ScreenCoordinator game state to CREDITS
     } else if (menuItemSelected == 1) {
         screenCoordinator.setGameState(GameState.CREDITS);
     }
 }
 ```
 
-Additionally, a `Timer` is used (from the `Utils` package) to specify how long in between key presses of the up and down key are allowed. Since key presses
+Additionally, a `Timer` is used (from the `Utils` package) to limit time between key presses. Since key presses
 are so sensitive (every 10ms the `update` cycle is run), pressing the down key or up key just one time would move the selection MANY different times, since
-the next `update` cycle would come so fast it would still think the key was held down as the player did not have any time to release the key yet. To prevent this,
+the next `update` cycle would come so fast it would still think the key was held down as the user did not have any time to release the key yet. To prevent this,
 the `keyTimer` variable is used to force 200ms to go by before either the up or down key can be detected again after it has already been pressed, which feels a lot more
-natural for the common key press. The milliseconds for the `keyTimer` to wait is set in the screen's `initialize` method. The above code already showed how the `keyTimer` integrates
+natural. The milliseconds for the `keyTimer` to wait is set in the screen's `initialize` method. The above code already showed how the `keyTimer` integrates
 with the checks for the up or down keys being pressed, but here is a snippet of it again just to illustrate its functionality:
 
 ```java
@@ -101,6 +98,6 @@ The menu item text ("Play Game" and "Credits") use the `SpriteFont` class and ar
 
 ## How to add a new menu item
 
-Honestly, this class was not made the best; it was neglected because the vast majority of my development time went into the actual platformer game. The menu works fine,
+Honestly, this class was not designed all that well; it was neglected because the vast majority of my development time went into the actual platformer game. The menu works fine,
 but it is not as modular as it could be. Regardless, adding a new menu item is easy, but it will be a bit tedious to space everything out correctly, add
 the necessary logic checks for when that menu item is selected, and getting the little blue square graphic to move to the correct spot on hover.
