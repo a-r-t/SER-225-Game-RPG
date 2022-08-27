@@ -28,7 +28,6 @@ public abstract class Player extends GameObject {
     protected PlayerState playerState;
     protected PlayerState previousPlayerState;
     protected Direction facingDirection;
-    protected LevelState levelState;
     protected Direction lastMovementDirection;
 
     // classes that listen to player events can be added to this list
@@ -47,7 +46,6 @@ public abstract class Player extends GameObject {
         facingDirection = Direction.RIGHT;
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
-        levelState = LevelState.RUNNING;
         this.affectedByTriggers = true;
     }
 
@@ -194,22 +192,6 @@ public abstract class Player extends GameObject {
 
     }
 
-    // other entities can call this to tell the player they beat a level
-    public void completeLevel() {
-        levelState = LevelState.LEVEL_COMPLETED;
-    }
-
-    // if player has beaten level, this will be the update cycle
-    public void updateLevelCompleted() {
-        // if player is not on ground, player should fall until it touches the ground
-
-    }
-
-    // if player has died, this will be the update cycle
-    public void updatePlayerDead() {
-
-    }
-
     public PlayerState getPlayerState() {
         return playerState;
     }
@@ -224,10 +206,6 @@ public abstract class Player extends GameObject {
 
     public void setFacingDirection(Direction facingDirection) {
         this.facingDirection = facingDirection;
-    }
-
-    public void setLevelState(LevelState levelState) {
-        this.levelState = levelState;
     }
 
     public void addListener(PlayerListener listener) {

@@ -29,9 +29,12 @@ and each entity needs to react accordingly to the collision. All map entities in
 which thankfully lessens a lot of the complexity that other shapes would introduce. Rectangles are the easiest shape to work with by far due to
 "rectangle math" being relatively simple and it works out very nicely in a 2D space where only the x and y axis exist.
 
-Also, collision detection is always the hardest part about creating a game, and anyone will tell you that writing your own collision detection is the WORST when it comes to platformers. This is especially true when it comes to 3D games -- it is difficult, complex math can be involved, and tiny errors randomly creep up just when you finally think you've gotten everything down pact.
-In this game's case, getting proper decimal movement caused me a whole lot of trouble -- and I've even written code like this before for another game! It's just hard stuff, 
-but I believe this game's collision detection is in a good state right now (it better be after all the time I put into it). I know it doesn't sound difficult, but trust me...there's a lot of problems that rear their ugly heads when you work on implementing it.
+Also, collision detection is always the hardest part about creating a game, and anyone will tell you that writing your own collision detection is the WORST when it comes to platformers.
+This is especially true when it comes to 3D games -- it is difficult, complex math can be involved, and tiny errors randomly creep up just when you finally think you've gotten everything down pact.
+Luckily, with 2D games, things are a lot simpler, but still can be a real painpoint.
+In this game's case, getting proper decimal movement caused me a whole lot of trouble -- and I've even written code like this before for another game!
+It's just hard stuff, but I believe this game's collision detection is in a good state right now (it better be after all the time I put into it).
+I know it doesn't sound difficult, but trust me...there's a lot of problems that rear their ugly heads when you work on implementing it.
 
 ## Player collision detection with Map Tiles
 
@@ -83,8 +86,6 @@ is key to have a smoothly running game! After determining which tiles could poss
 The `hasCollidedWithMapEntity` method is very simple compared to the monstrous other two adjust position methods. It determines
 if the tile a player intersects with is considered a "collision" or not. This is 100% based on the tile's tile type. A tile type of `NOT_PASSABLE`
 would return true to there being a collision if the player intersects with it. `PASSABLE` tiles cannot be collided with and would always return false.
-`JUMP_THROUGH_PLATFORM` tiles have a bit of a more complex check, because for a collision to occur the player has to be moving downwards and their
-bottom hurtbox has to be overlapping the jump through platform's top hurtbox.
 
 ```java
 // based on tile type, perform logic to determine if a collision did occur with an intersecting tile or not
@@ -96,9 +97,6 @@ private static boolean hasCollidedWithMapEntity(GameObject gameObject, MapEntity
                 return false;
             case NOT_PASSABLE:
                 return gameObject.intersects(mapTile);
-            case JUMP_THROUGH_PLATFORM:
-                return direction == Direction.DOWN && gameObject.intersects(mapTile) &&
-                        Math.round(gameObject.getBoundsY2() - 1) == Math.round(mapTile.getBoundsY1());
             default:
                 return false;
         }
@@ -119,81 +117,38 @@ are treated like regular map tiles in terms of collision detection. So for examp
 the game's green horizontal moving platform would also be checked against for possible collisions during this area of the code.
 
 Although standard collision detection on enhanced map tiles is done here, `EnhancedMapTile` classes can run their own
-`update` logic to do other actions when intersecting with a player. For example, the green horizontal moving platform's class carries out
-its own logic upon determining that the player is standing on it in order to move the player along with it.
+`update` logic to do other actions when intersecting with a player. For example, the `Rock` class carries out
+its own logic upon determining that the player walked into it, so it can move itself to make it appear like it is being pushed.
 
-![player-on-moving-platform.gif](../../../assets/images/player-on-moving-platform.gif)
-
-## Player collision detection with Enemies
-
-The `Player` actually does not seek out collision detection with enemies -- instead each `Enemy` class will seek out a collision
-detection aganist the player. This allows an `Enemy` to specify to the `Player` class what to do upon being touched. For example,
-the enemies in the game (coming from the generic `Enemy` class) call the `Player` class's `hurtPlayer` method upon touching the player,
-and the `Player` can then determine how it "hurts" itself (as of now, the player dies and it's a game over).
-
-
+![pushing-rock.gif](../../../assets/images/pushing-rock.gif)
 
 ## Player collision detection with NPCs
 
-Just like with enemies, the `NPC` detects when it touches the player, which is how it determines the player is in radius and 
-is able to be talked to.
+Each NPC has its own defined bounds, which acts as their "hurtbox".
+This makes collision detection very easy -- the player is not allowed to walk through an NPC's bounds.
 
-## Enemy collision detection with the Map
+## Player collision detection with Triggers
 
-Enemies often follow collision detection rules, and are free to use the same `GameObject` methods `moveXHandleCollision` and `moveYHandleCollision`
-to abide by tile type rules.
+If a player walks on top of a trigger, the player will be stopped in its tracks and the trigger script will be set to active
+and begin executing.
 
 ## Player class reacting to a collision
 
 The `GameObject` method provides two methods that are intended to be overridden by a subclass: `onEndCollisionCheckX` and `onEndCollisionCheckY`.
 After a collision check has occurred, the collision methods will let the `Player` class (or any other `GameObject` subclass like the `Enemy` class that moves
-while checking for collisions) know if a collision occurred and what direction the collision happend from (left, right, up, or down).
+while checking for collisions) know if a collision occurred and what direction the collision happened from (left, right, up, or down).
 
-The `Player` class uses the `onEndCollisionCheckY` method to determine its `airGroundState` -- if a the player collides
-with a map tile downwards, it means that the player has landed on the ground and is no longer in the air. This causes
-the player to set its `airGroundState` to `GROUND` and transition out of the `JUMPING` state. Additionally, the reverse is true -- if the player is not colliding
-with a map tile downwards, it means the player is in the air, which causes its `airGroundState` to be set to `AIR`. The method also
-stops the player from jumping upwards if it collides with a map tile upwards.
+At the moment, these aren't being used in the `Player` class (or any other entity), but they can be really useful for other future features.. 
+Here's how they would be used
 
 ```java
 @Override
 public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
-    // if player collides with a map tile below it, it is now on the ground
-    // if player does not collide with a map tile below, it is in air
-    if (direction == Direction.DOWN) {
-        if (hasCollided) {
-            momentumY = 0;
-            airGroundState = AirGroundState.GROUND;
-        } else {
-            playerState = PlayerState.JUMPING;
-            airGroundState = AirGroundState.AIR;
-        }
-    }
-
-    // if player collides with map tile upwards, it means it was jumping and then hit into a ceiling -- immediately stop upwards jump velocity
-    else if (direction == Direction.UP) {
-        if (hasCollided) {
-            jumpForce = 0;
-        }
-    }
-}
-```
-
-The `BugEnemy` class also uses this feature. For example, it uses the `onEndCollisionCheckX` to determine if a collision occurred on the x axis, and if so it turns itself
-around and walks in the other direction.
-
-```java
-@Override
-public void onEndCollisionCheckX(boolean hasCollided, Direction direction,  MapEntity entityCollidedWith) {
-    // if bug has collided into something while walking forward,
-    // it turns around (changes facing direction)
+    // if player collides with something
     if (hasCollided) {
-        if (direction == Direction.RIGHT) {
-            facingDirection = Direction.LEFT;
-            currentAnimationName = "WALK_LEFT";
-        } else {
-            facingDirection = Direction.RIGHT;
-            currentAnimationName = "WALK_RIGHT";
+        // if player collided with something below it
+        if (direction == Direction.DOWN) {
+            // ... do something here
         }
     }
 }
@@ -208,7 +163,7 @@ if (hasCollided && entityCollidedWith instanceof MapTile) {
 }
 ```
 
-The above also works with enhanced map tiles:
+The above also works with enhanced map tiles, NPCs, etc.:
 
 ```java
 if (hasCollided && entityCollidedWith instanceof EnhancedMapTile) {

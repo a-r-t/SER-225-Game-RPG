@@ -23,8 +23,8 @@ which animation/frames the player should switch to (e.g. player will switch to t
 The `PlayerState` enum in the `Level` package define the following states that the player can be in:
 - **STANDING** -- player is standing still
 - **WALKING** -- player is walking
-- **JUMPING** -- player is jumping (or falling)
-- **CROUCHING** -- player is crouching
+- **WALKING** -- player is walking
+- **INTERACTING** -- player is currently interacting with an entity
 
 ## Player Standing State
 
@@ -37,68 +37,44 @@ the simple logic for the `STANDING` state, which looks like this:
 ```java
 // player STANDING state logic
 protected void playerStanding() {
-    // if walk left or walk right key is pressed, player enters WALKING state
-    if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
+    if (!keyLocker.isKeyLocked(INTERACT_KEY) && Keyboard.isKeyDown(INTERACT_KEY)) {
+        keyLocker.lockKey(INTERACT_KEY);
+        map.entityInteract(this);
+    }
+
+    // if a walk key is pressed, player enters WALKING state
+    if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY) || Keyboard.isKeyDown(MOVE_UP_KEY) || Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
         playerState = PlayerState.WALKING;
-    }
-
-    // if jump key is pressed, player enters JUMPING state
-    else if (Keyboard.isKeyDown(JUMP_KEY) && !keyLocker.isKeyLocked(JUMP_KEY)) {
-        keyLocker.lockKey(JUMP_KEY);
-        playerState = PlayerState.JUMPING;
-    }
-
-    // if crouch key is pressed, player enters CROUCHING state
-    else if (Keyboard.isKeyDown(CROUCH_KEY)) {
-        playerState = PlayerState.CROUCHING;
     }
 }
 ```
 
-It really just checks for key presses and if so sets the player to a new state. Not much else to do when you're standing still.
+It really just checks for arrow key presses to determine if the player should enter the `WALKING` state, 
+and also checks if the interact key is pressed in order to tell the map that the player has attempted to interact with an entity.
 
-While standing, the player uses either the `STAND_RIGHT` or `STAND_LEFT` animation..
+While standing, the player uses either the `STAND_RIGHT` or `STAND_LEFT` animation.
 
 ### Player Walking State
 
 ![player-walking.gif](../../../assets/images/player-walking.gif)
 
-If the player is on the ground and either the right or left arrow key is pressed, the player will enter its `WALKING` state,
-where it will move either to the left or to the right by a set number of pixels. If no keys are pressed while in this state, the player will stop moving and go
+If the player is on the ground and either, right, left, up, or down arrow key is pressed, the player will enter its `WALKING` state,
+where it will move in a direction by a set number of pixels based on which key was pressed. If no keys are pressed while in this state, the player will stop moving and go
 back into its `STANDING` state. How fast the player walks is determined by the `walkSpeed` instance variable. The `playerWalking` method
-contains the logic for the `WALKING` state. The player will change the direction it's facing based on which arrow key is pressed.
+contains the logic for the `WALKING` state. The player will change the direction it's facing if the left or right arrow key is pressed.
 
 While walking, the player uses either the `WALK_RIGHT` or `WALK_LEFT` animation.
 
-### Player Jumping State
+### Player Interacting State
 
-![player-jumping.gif](../../../assets/images/player-jumping.gif)
+![player-standing.PNG](../../../assets/images/player-standing.PNG)
 
-This state's logic is a bit more complicated from the others.
-If the player is on the ground and presses the up arrow key, the player will enter its `JUMPING` state. The player's `airGroundState` will
-be changed to `AIR`, and the player will start rising until gravity catches up, at which point the player will fall downwards until it
-hits the ground again. Upon reaching the ground, the player's `airGroundState` will be changed back to `GROUND` and the player will transition
-into either a standing or walking state. While in the air in the `JUMPING` state, the player can move left and right, but will not change
-the direction it is facing. The player is still considered in `JUMPING` state while it is falling downwards, and if the player runs off the edge
-of a cliff and ends up in the air, that is also considered `JUMPING` state -- basically if the player is in the air, it is put in
-`JUMPING` state. I probably should have made a separate falling state but...eh it's not really needed.
+If the player is in `STANDING` or `WALKING` state and hits the interact key (space), it will reach out to a method in the `map` class's `entityInteract` method
+to check if the player has successfully interacted with an entity that has an interact script. If the player successfully interacted with an entity,
+the entity's interact script will be executed. Often times, the entity's interact script will want the player to be "frozen" in place while the script is executing,
+so that the player can't just walk away before the event has completed. The `INTERACTING` state is for this purpose -- there is no logic in the `playerInteracting` method,
+meaning the player will be unable to do anything -- can't move, can't interact with other entities, etc.
 
-The player's jumping physics are all determined through instance variable values (`gravity`, `jumpHeight`, `jumpDegrade`, `terminalVelocityY`, and `momentumYIncrease`)
-which alter how high the player jumps, how fast the player falls, and what the peak of the jump looks like in terms of motion. Changing these values can drastically change how the player jumps. The `Cat` player subclass has its values set to that when it jumps, it will rise up quickly to its peak, wait a bit, and then slowly begin to pick up falling speed. Typically in platforming games, the goal is to NOT match real life physics, but instead make physics that are actually fun for the player. A player "in control" of their player character's jump is essential to making a successful platformer game.
-
-The actual jump algorithm doesn't do all that much. When up is pressed, the user's y velocity is decreased (moving upwards) by the value of `jumpHeight`
-each frame. Also, `jumpHeight` is lowered slightly by `jumpDegrade` each frame, until eventually no more upwards y velocity is applied to the player.
-When this happens, the user starts to fall as gravity takes over. Each frame, gravity is always added to the player (just like in real life,
-gravity is always in effect!). Also, each frame the user's momentum downwards is slightly increased by the value of `momentumYIncrease`. This gives off the effect
-that the player is falling faster over time, until its fall speed reaches the value of `terminalVelocityY`, at which point it can no longer increase in fall speed.
-Once the player touches the ground, the jump/fall ends.
-
-While rising upwards (jumping), the player uses either the `JUMP_RIGHT` or `JUMP_LEFT` animation. While falling downwards,
-the player uses either the `FALL_RIGHT` or `FALL_LEFT` animation.
-
-### Player Crouching State
-
-![player-crouching.gif](../../../assets/images/player-crouching.gif)
-
-If the player is on the ground and presses the down arrow key, the player will enter its `CROUCHING` state. Basically, the player goes
-lower to the ground to shrink its hurtbox, but that's all it does. Currently, the player cannot walk out of `CROUCHING` state, but they can jump out of it.
+It is a script's job to lock the player by setting its player state to `INTERACTING`. It is also a script's job to unlock the player when it is ready (typically after the script has completed) by setting the player's state back to something else (like `STANDING`).
+The `Script` class's methods `lockPlayer` and `unlockPlayer` will handle doing this locking and unlocking of the player.
+Read more about scripts [here](./scripts.md).
