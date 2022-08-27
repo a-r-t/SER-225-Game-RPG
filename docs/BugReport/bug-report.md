@@ -23,10 +23,9 @@ There are definitely more bugs than what is listed here...they just haven't been
 
 ## Map boundaries have no collisions
 
-The player can walk off the edge of the map and will fall to their death with no way of getting back into the level. I uh...
-kept meaning to fix this from day 1 and kept forgetting about it. 
+The player can walk off the edge of the map.
 
-![player-falling-off-map.gif](../assets/images/player-falling-off-map.gif)
+![player-walking-off-map.gif](../assets/images/player-walking-off-map.gif)
 
 It's hard to tell in the gif, but after running offscreen over the edge of the last tile in the map, there is no collision
 stopping the player from falling.
@@ -75,5 +74,5 @@ and then press the right while holding the left key down still, the let key does
 continue moving left. This is not ideal. For a more natural feel in a game that moves a player with keyboard input,
 it's generally best to have both keys able to continually override each other.
 
-This is not an arrow key specific thing -- this happens because the left key if statement check comes before the right key check,
-so the right key is able to override the left key, but not vice versa. Solving this will require updating the player walking logic to allow the left and right arrow keys to override one another.
+This is not an arrow key specific thing -- this happens because of the order in which the if statement is checking which key is currently being pressed.
+Solving this will require updating the player walking logic to allow the movement keys to override one another.

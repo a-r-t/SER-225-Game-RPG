@@ -31,7 +31,7 @@ was the same one used by the game developers to actually make the game -- it was
 for a game I really liked. If you're curious, [here](https://www.youtube.com/watch?v=haRt2Z8-7-A) is a video of the Speedy Eggbert map editor being used.
 
 While this game's map editor is limited compared to commercial map editors for other video games you may have seen/used, it is still very useful for designing
-a map and being able to see what you are doing as you go. It is current only usable for placing map tiles -- other entities like enemies must be created and added through code.
+a map and being able to see what you are doing as you go. It is current only usable for placing map tiles -- other entities like NPCs must be created and added through code.
 
 To run this game's map editor, the `main` method in the `MapEditor` class must be run. Remember this is a separate program
 from the actual game code, although both make use of the same classes in this project. You can have both the map editor and the game

@@ -42,7 +42,7 @@ they are just a rectangle with a script attached.
 
 ## Adding a trigger to a map
 
-In a map subclass's `loadTriggers` method, triggers can be defined and added to the map's enemy list. For example, in `TestMap`,
+In a map subclass's `loadTriggers` method, triggers can be defined and added to the map's trigger list. For example, in `TestMap`,
 a couple of triggers are added:
 
 ```java

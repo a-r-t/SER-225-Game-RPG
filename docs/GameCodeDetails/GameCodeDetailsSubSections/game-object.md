@@ -96,7 +96,7 @@ to separate out where animations are defined from other game logic.
 The `GameObject` class extends from the `AnimatedSprite` class. The `GameObject` is to be given an instance
 of the current `Map` being used through its `setMap` method after creation in order for it to provide important functionality to entities such as move methods that handle map tile collisions (`moveXHandleCollision` and `moveYHandleCollision`) and special `draw` logic to convert "map coordinates" to "screen coordinates" to ensure entities are painted to the screen in the correct location.
 
-The `GameObject` class has some sneaky constructor crafting in order to allow it to be instantiated both as an animated sprite (nearly every entity uses this such as the `Player` and enemies like `BugEnemy`) or just as one sole sprite (which is done in the `HorizontalMovingPlatform` class).
+The `GameObject` class has some sneaky constructor crafting in order to allow it to be instantiated both as an animated sprite (nearly every entity uses this such as the `Player` and NPCs like `Walrus`) or just as one sole sprite (which is done in the `HorizontalMovingPlatform` class).
 
 More details on the `GameObject` class's collision detection and handling can be found [here](./PlayerSubSections/collision-detection.md).
 

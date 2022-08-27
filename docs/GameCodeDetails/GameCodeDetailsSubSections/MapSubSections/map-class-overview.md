@@ -32,7 +32,7 @@ From there, the map does several setup steps to get all of its resources in orde
 1. Read in map file (read more about the map file [here](./map-file.md)) 
 1. Create map tiles and place them in the appropriate locations (process detailed [here](./map-tiles-and-tilesets.md))
 1. Setup enhanced map tiles (read more about enhanced map tiles [here](./enhanced-map-tiles.md))
-1. Setup NPCs (read more about enemies [here](./npcs.md))
+1. Setup NPCs (read more about NPCs [here](./npcs.md))
 1. Setup triggers (read more about Triggers [here](./triggers.md))
 1. Setup camera which handles what parts of the map are shown on the screen at any given time (read more about the camera [here](./map-camera.md))
 
@@ -94,6 +94,6 @@ public ArrayList<NPC> loadNPCs() {
 ```
 
 This adds two NPCs to the map -- the [walrus](./npcs.md#walrus) (`Walrus` class) and the [dinosaur](./npcs.md#dinosaur) (`Dinosaur` class).
-The `getMapTile` `Map` method is used to make it easier to place the enemy on a specific tile index in the map by
+The `getMapTile` `Map` method is used to make it easier to place the NPC on a specific tile index in the map by
 getting the tile at that index's location. The other setters, like `setExistenceFlag` and `setInteractScript` are map entity attributes
 set up here in order to make the NPCs behave a specific way, and are covered in more detail in both the [scripts](./scripts.md) and [NPCs](./npcs.md) pages.

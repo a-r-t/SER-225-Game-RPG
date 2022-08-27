@@ -477,3 +477,41 @@ the player to do specified actions.
 If you want to see an example of one of these methods being used, your best bet is to look at the current scripts in the game
 in the `Scripts` package to see how they are used. Each of these methods only has one job.
 
+## Loading scripts on to entities in a map
+
+This is the job of a map subclass. For example, the `TestMap` class loads scripts on to the required entities.
+In its `loadNPCs` method, it attaches scripts on to the `Walrus` and `Dinosaur` NPC using their `setInteractScript` methods:
+
+```java
+@Override
+public ArrayList<NPC> loadNPCs() {
+    ArrayList<NPC> npcs = new ArrayList<>();
+
+    Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
+    walrus.setInteractScript(new WalrusScript());
+    npcs.add(walrus);
+
+    Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
+    dinosaur.setExistenceFlag("hasTalkedToDinosaur");
+    dinosaur.setInteractScript(new DinoScript());
+    npcs.add(dinosaur);
+
+    return npcs;
+}
+```
+
+There is a `loadScripts` method as well where scripts can be attached on to entities. This is useful for attaching scripts on to map tiles,
+as there's not really another place for that to be done.
+
+```java
+@Override
+public void loadScripts() {
+    getMapTile(21, 19).setInteractScript(new SimpleTextScript("Cat's house"));
+
+    getMapTile(7, 26).setInteractScript(new SimpleTextScript("Walrus's house"));
+
+    getMapTile(20, 4).setInteractScript(new SimpleTextScript("Dino's house"));
+
+    getMapTile(2, 6).setInteractScript(new TreeScript());
+}
+```

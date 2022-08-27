@@ -20,7 +20,7 @@ permalink: /GameCodeDetails/Player/CollisionDetection
 ## What is collision detection?
 
 Collision detection is the ability for entities in the game, such as the player, to be able to detect "collisions" with other map entities,
-such as map tiles, enemies, etc. This is generally done through checking if two entities "intersect" each other, at which point a collision
+such as map tiles, NPCs, etc. This is generally done through checking if two entities "intersect" each other, at which point a collision
 has occurred. Games are built around collision detection -- think of any of your favorite video games and tell me if the game would still work
 if entities could not detect and react to colliding with other entities, and I guarantee you it cannot.
 
@@ -135,7 +135,7 @@ and begin executing.
 ## Player class reacting to a collision
 
 The `GameObject` method provides two methods that are intended to be overridden by a subclass: `onEndCollisionCheckX` and `onEndCollisionCheckY`.
-After a collision check has occurred, the collision methods will let the `Player` class (or any other `GameObject` subclass like the `Enemy` class that moves
+After a collision check has occurred, the collision methods will let the `Player` class (or any other `GameObject` subclass like the `NPC` class that can move
 while checking for collisions) know if a collision occurred and what direction the collision happened from (left, right, up, or down).
 
 At the moment, these aren't being used in the `Player` class (or any other entity), but they can be really useful for other future features.. 
