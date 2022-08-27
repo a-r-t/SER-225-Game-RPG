@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Enemies
+title: Triggers
 nav_order: 8
 parent: Map
 grand_parent: Game Code Details
-permalink: /GameCodeDetails/Map/Enemies
+permalink: /GameCodeDetails/Map/Triggers
 ---
 
 ## Table of contents
@@ -15,7 +15,7 @@ permalink: /GameCodeDetails/Map/Enemies
 
 ---
 
-# Enemies
+# Triggers
 
 ## What is an enemy?
 
