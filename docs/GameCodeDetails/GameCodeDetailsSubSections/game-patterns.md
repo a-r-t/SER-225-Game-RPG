@@ -291,79 +291,12 @@ can be called at any point in time to actually instantiate the object. This tech
 all tiles using the `MapTileBuilder`, but it doesn't `build` them and instead lets the `Map` class build them since they require additional information from the `Map` class
 to finish their creation.
 
-In the `Builders` package, there are two builders defined: `FrameBuilder` (for creating a `Frame` object instance) and `MapTileBuilder` (for creating a `MapTile` object instance). Both are used heavily in the `CommonTileset` class to construct `MapTile` class instances, and the `FrameBuilder` is used in nearly every game object's `loadAnimations` method (such as the player, enemies, etc.).
-
-## Observer Pattern
-
-I use the Observer Pattern one time to enable the `Player` class to trigger events in the `PlayLevelClass` when the `Player` has
-either completed a level or died, which then lets the `PlayerLevelClass` react to those events.
-
-I'm not going to go into much detail on this pattern since it's only used one time. Basically,
-an interface named `PlayerListener` is defined in the `Level` class, and any class that implements this interface must implement the methods
-`onLevelCompleted` and `onDeath`. A class would implement this interface to "listen" to events from the `Player` class.
-
-Then in the `Player` class, an `ArrayList` instance variable of type `PlayerListener` is defined (the variable's name is `listeners`). There is also an
-`addListener` method which will add a `PlayerListener` to the player's list of listeners. The `PlayLevelScreen` implements `PlayerListener` and
-then passes itself in to the `Player` using the `addListener` method:
-
-```java
-// create new player
-this.player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
-this.player.setMap(map);
-
-// PlayLevelScreen adds itself to the Player class as a "listener"
-this.player.addListener(this);
-```
-
-That's all the setup that's needed. Now whenever the player wants, it can "trigger" events for its listeners by calling their
-`onLevelCompleted` or `onDeath` method where appropriate. For example, the `Player` does this in its `updateLevelCompleted` method once it
-has finished playing out the "win" animation to let the `PlayLevelScreen` know that a level has been completed:
-
-```java
-for (PlayerListener listener : listeners) {
-    listener.onLevelCompleted();
-}
-```
-
-And then in the `PlayLevelScreen`, which HAS to have an `onLevelCompleted` method because it implements `PlayerListner`, the method
-looks like this:
-
-```java
-@Override
-public void onLevelCompleted() {
-    if (playLevelScreenState != PlayLevelScreenState.LEVEL_COMPLETED) {
-        playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
-        levelCompletedStateChangeStart = true;
-    }
-}
-```
-
-Essentially it just updates its own level state here and then its `update` cycle logic will see that change and perform the
-desired actions (in this case, will load the level cleared message screen).
-
-Now, while I could have just passed in the `PlayLevelScreen` instance to the `Player` class, I didn't want to do that because it really
-didn't belong in the `Player` class. The `PlayLevelScreen` has nothing to do with the `Player` class, and if I ever wanted to use the `Player` class
-somewhere else/in another program, that dependency on the `PlayLevelScreen` would not be welcomed. Additionally, if the `Player` were
-to be used on a different screen (like maybe the menu screen, like how some games show the character walking around), the `PlayLevelScreen`
-would be unavailable to be passed in. Instead, with this pattern, ANY class can be a `PlayerListener` and have events for `onLevelCompleted`
-and `onPlayerDeath`, and the `Player` is free to trigger them by just calling those methods on its `listeners` when its ready to.
-
-Like I said, this pattern is only used in that one place, so you won't see it or have to interact with it much. The Observer Pattern
-is actually really simple assuming you understand how interfaces work and is very commonly used elsewhere in programming.
-Notably, Android development relies heavily on the observer pattern.
-
-[This video](https://www.youtube.com/watch?v=WRkw0l72BL4) provides a good overview of the Observer Pattern and why it's important
-using real-world examples.
+In the `Builders` package, there are two builders defined: `FrameBuilder` (for creating a `Frame` object instance) and `MapTileBuilder` (for creating a `MapTile` object instance). Both are used heavily in the `CommonTileset` class to construct `MapTile` class instances, and the `FrameBuilder` is used in nearly every game object's `loadAnimations` method (such as the player, NPCs, etc.).
 
 ## Utility Enums
 
-There are a two enums defined in the `Utils` package that several classes use: `Direction` and `AirGroundState`.
-
-`Direction` has four possible values: `LEFT`, `RIGHT`, `UP`, and `DOWN`. It is used in various places around the program. Since
+The `Direction` enum defined in the `Utils` package creates a data type that has four possible values: `LEFT`, `RIGHT`, `UP`, and `DOWN`. It is used in various places around the program. Since
 a 2D space only has those four directions, it's a very nice data type to have available.
-
-The `AirGroundState` enum is used mainly for map entities that can have a concept of being on ground vs in the air (such as the `Player` when
-jumping/falling or various enemies). This enum only has two possible values: `GROUND` and `AIR`. Nice and simple but very handy! Wish I could've come up with a better name for the class, but you know what, the name is self-documenting and I've grown to like it.
 
 ## Utility Point
 

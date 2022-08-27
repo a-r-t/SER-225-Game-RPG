@@ -2,6 +2,7 @@ package MapEditor;
 
 import Level.Map;
 import Utils.Colors;
+import Utils.Direction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +43,7 @@ public class MapBuilder extends JPanel {
         tileBuilder = new TileBuilder(controlPanelHolder, hoveredTileIndexLabel);
         tileBuilderScroll = new JScrollPane();
         tileBuilderScroll.setViewportView(tileBuilder);
-        tileBuilderScroll.getVerticalScrollBar().setValue(tileBuilderScroll.getVerticalScrollBar().getMaximum());
+        scrollToMaxY();
         tileBuilderScroll.setLocation(0, 0);
         tileBuilderScroll.setSize(585, 546);
         add(tileBuilderScroll, BorderLayout.CENTER);
@@ -59,6 +60,10 @@ public class MapBuilder extends JPanel {
         tileBuilderScroll.getVerticalScrollBar().setValue(tileBuilderScroll.getVerticalScrollBar().getMaximum());
         mapWidthLabel.setText("Width: " + map.getWidth());
         mapHeightLabel.setText("Height: " + map.getHeight());
+    }
+
+    public void scrollToMaxY() {
+        tileBuilderScroll.getVerticalScrollBar().setValue(tileBuilderScroll.getVerticalScrollBar().getMaximum());
     }
 
     public TileBuilder getTileBuilder() { return tileBuilder; }

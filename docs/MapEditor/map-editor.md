@@ -130,7 +130,11 @@ Map files can be found in the project's `MapFiles` folder. This folder location 
 
 ## Options Menu
 
-At the top left of the Map Editor window, there is a menu strip with an "Options" menu item. Clicking it will reveal three options - "Show NPCs", "Show Enhanced Map Tiles", and "Show Enemies". Toggling an option on will show the desired entities in the map editor. The entities cannot be moved or interacted with in the editor, but it does at least show you where these entities are placed on the map.
+At the top left of the Map Editor window, there is a menu strip with an "Options" menu item. Clicking it will reveal three options - "Show NPCs", "Show Enhanced Map Tiles", and "Show Triggers". Toggling an option on will show the desired entities in the map editor. 
+The entities cannot be moved or interacted with in the editor, but it does at least show you where these entities are placed on the map.
+
+Since triggers are invisible and can't normally be seen on the map, the map editor will draw them as magenta boxes with a black border to help with visualizing and positioning them.
+They will not appear like this in the actual game.
 
 ## How does the map editor work?
 
