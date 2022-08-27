@@ -11,9 +11,10 @@ import java.util.HashMap;
 public class MapEntity extends GameObject {
     protected MapEntityStatus mapEntityStatus = MapEntityStatus.ACTIVE;
 
-    // if true, enemy cannot go out of camera's update range
+    // if true, entity cannot go out of camera's update range
     protected boolean isUpdateOffScreen = false;
 
+    // if true, entity will no longer be updated or drawn on the map
     protected boolean isHidden = false;
 
     // if given an existence flag, and that flag gets set, the entity will no longer exist until the flag is unset

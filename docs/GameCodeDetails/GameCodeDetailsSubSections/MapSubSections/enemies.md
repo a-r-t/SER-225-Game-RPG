@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Enemies
-nav_order: 6
+nav_order: 8
 parent: Map
 grand_parent: Game Code Details
 permalink: /GameCodeDetails/Map/Enemies
