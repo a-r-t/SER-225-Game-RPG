@@ -98,7 +98,7 @@ public abstract class Player extends GameObject {
             map.entityInteract(this);
         }
 
-        // if walk left or walk right key is pressed, player enters WALKING state
+        // if a walk key is pressed, player enters WALKING state
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY) || Keyboard.isKeyDown(MOVE_UP_KEY) || Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
             playerState = PlayerState.WALKING;
         }
@@ -177,6 +177,8 @@ public abstract class Player extends GameObject {
             this.currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
         }
         else if (playerState == PlayerState.INTERACTING) {
+            // sets animation to STAND when player is interacting
+            // player can be told to stand or walk during Script by using the "stand" and "walk" methods
             this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
         }
     }

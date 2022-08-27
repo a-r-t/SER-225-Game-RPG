@@ -63,21 +63,4 @@ playGame.draw();
 Using a `SpriteFont` inside a `GameObject` to have the sprite font text show on the map works just like normal. To do this,
 simply set up the sprite font and add it to the game object's `draw` cycle. One thing to look out for is that a `SpriteFont` will not automatically
 calibrate its draw location based on the map's camera unlike a `GameObject` does, since `GameObjects` have extra logic added for that. To
-resolve this issue, you can update the `SpriteFont's` location relative to the `GameObject's` location. This is done in the NPC `Walrus` class
-to create its speech bubble when taking to it:
-
-![walrus-talking.PNG](../../assets/images/walrus-talking.PNG)
-
-The draw method for the `Walrus` NPC class will make sure the "Hello!" sprite font message is always drawn
-at a location relative to itself so the `SpriteFont` follows map camera draw logic.
-
-```java
-// SpriteFont variable is named "message"
-
-// set message box relative to walrus's current calibrated location
-message.setLocation(getCalibratedXLocation() + 2, getCalibratedYLocation() - 8);
-```
-
-Each update cycle, the location of `message` is set to the calibrated location of the `Walrus` class (read more about the "calibrated" methods [here](./game-object.md#gameobject-class)). 
-This ensures its location stays relative to the walrus entity's location.
-
+resolve this issue, you can update the `SpriteFont's` location relative to the `GameObject's` location. 

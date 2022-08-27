@@ -27,12 +27,12 @@ For example, take a look at the below screenshot of a piece of a level:
 
 ![tile-map-example-original.png](../../../assets/images/tile-map-example-original.png)
 
-This image is actually made up of individual tiles, such as the grass tile and the sky tile:
+This image is actually made up of individual tiles, such as the grass tile and the sign tile:
 
 ![grass-tile.png](../../../assets/images/grass-tile.png)
-![sky-tile.png](../../../assets/images/sky-tile.png)
+![sign-tile.png](../../../assets/images/sign-tile.png)
 
-So the image seen above of the grass, tree, flower and sky is actually composed together by smaller individual tiles, which is known as a tile map:
+So the image seen above of the grass, sign, cobblestone and house is actually composed together by smaller individual tiles, which is known as a tile map:
 
 ![tile-map-example.png](../../../assets/images/tile-map-example.png)
 
@@ -43,7 +43,7 @@ would be (0,1).
 
 The class `MapTile` in the `Level` package represents a map tile, which is really just a standard sprite with an attribute
 for `TileType`. The `TileType` attribute determines how the tile is treated by the game -- for example, a tile type of `NOT_PASSABLE` means
-that the `Player` cannot walk or fall through the tile, which is used on tiles like grass in order for the player to be able to walk on it.
+that the `Player` cannot walk over the tile, which is used on tiles like the pieces of the house in order for the player to not be able to walk on top of it.
 The available tile types are included in the `TileType` enum in the `Level` package. 
 
 ## Map Tileset
@@ -51,7 +51,7 @@ The available tile types are included in the `TileType` enum in the `Level` pack
 A tileset is a collection of map tiles. Easy enough.
 
 Graphic wise, a tileset defines each tile in one image. Below is the `CommonTileset.png` which is used by `TestMap`
-to construct its tile map. You will notice that the common tileset image is one big image with each individual map tile defined. Note that each map tile in a tileset
+to construct its tile map. You will notice that the common tileset image is one big image with each individual map tile defined. Each map tile in a tileset
 must be the SAME width and height.
 
 ![common-tileset.png](../../../assets/images/common-tileset.png)
@@ -98,7 +98,7 @@ public ArrayList<MapTileBuilder> defineTiles() {
             .build();
 
     MapTileBuilder grassTile = new MapTileBuilder(grassFrame)
-            .withTileType(TileType.NOT_PASSABLE);
+            .withTileType(TileType.PASSABLE);
 
     mapTiles.add(grassTile);
 
@@ -118,15 +118,15 @@ as 16x16, the `getSubImage` method will start at location (0, 0) on the image an
 the resulting subimage, which is how the individual grass tile graphic gets returned.
 
 Then, a `MapTileBuilder` class instance must be created to represent the actual `MapTile` (although it won't instantiate the `MapTile` at this time).
-Here is where the grass tile (`grassTile`) is given the `TileType` `NOT_PASSABLE`, meaning the player cannot walk or fall through it (it is "solid").
+Here is where the grass tile (`grassTile`) is given the `TileType` `PASSABLE`, meaning the player can walk over it.
 
 Finally, the tile is added to the `mapTiles` list.
 
-Let's do one for the sky tile now:
+Let's do one for the sign tile now:
 
-![sky-tile.png](../../../assets/images/sky-tile.png)
+![sky-tile.png](../../../assets/images/sign-tile.png)
 
-In the `CommmonTileset.png` image shown earlier, the sky tile is located to the left of the grass tile at index (0, 1).
+In the `CommmonTileset.png` image shown earlier, the sign tile is located a couple rows down from the grass tile at index (3, 0).
 With that slight difference in mind, nearly everything else will be the same for the sky tile as the grass tile:
 
 ```java
@@ -146,14 +146,15 @@ public ArrayList<MapTileBuilder> defineTiles() {
 
     return mapTiles;
 
-    // sky
-    Frame skyFrame = new FrameBuilder(getSubImage(0, 1))
+    // sign
+    Frame signFrame = new FrameBuilder(getSubImage(3, 0))
             .withScale(tileScale)
             .build();
 
-    MapTileBuilder skyTile = new MapTileBuilder(skyFrame)
+    MapTileBuilder signTile = new MapTileBuilder(signFrame)
+            .withTileType(TileType.NOT_PASSABLE);
 
-    mapTiles.add(skyTile);
+    mapTiles.add(signTile);
 
     // ...
 
@@ -162,12 +163,12 @@ public ArrayList<MapTileBuilder> defineTiles() {
 }
 ```
 
-Unlike with the grass tile, the sky tile is not "solid" and can be passed through by the player, so its `TileType` needs to be set to
-`PASSABLE`. This is the default tile type, so it does not need to be specified, but it can be by adding `.withTileType(TileType.PASSABLE)`.
+Unlike with the grass tile, the sky tile is "solid" and the player shouldn't be able to walk over it, so its `TileType` needs to be set to
+`NOT_PASSABLE`.
 
 ### Adding an animated map tile to a tileset
 
-Tiles can be animated! Currently, the `CommonTileset` contains three animated tiles: the yellow flower, the purple flower, and the shining sun.
+Tiles can be animated! Currently, the `CommonTileset` contains three animated tiles: the yellow flower, the purple flower, and the rising/falling water on the shore.
 To set this up, the tileset image file must have a separate image for each frame in the tile's animation. 
 
 For example, below are the frame tiles used for the flower (three different frame images):
@@ -185,16 +186,16 @@ The code for this animated tile looks like this:
 ```java
 // purple flower
 Frame[] purpleFlowerFrames = new Frame[] {
+        new FrameBuilder(getSubImage(0, 2), 500)
+                .withScale(tileScale)
+                .build(),
         new FrameBuilder(getSubImage(0, 3), 500)
+                .withScale(tileScale)
+                .build(),
+        new FrameBuilder(getSubImage(0, 2), 500)
                 .withScale(tileScale)
                 .build(),
         new FrameBuilder(getSubImage(0, 4), 500)
-                .withScale(tileScale)
-                .build(),
-        new FrameBuilder(getSubImage(0, 3), 500)
-                .withScale(tileScale)
-                .build(),
-        new FrameBuilder(getSubImage(0, 5), 500)
                 .withScale(tileScale)
                 .build()
 };
@@ -213,13 +214,43 @@ Each frame in this animation has a delay of 500 milliseconds (half a second). Th
 ![purple-flower-image-1.png](../../../assets/images/purple-flower-image-1.png)
 ![purple-flower-image-1.png](../../../assets/images/purple-flower-image-3.png)
 
-After each animation cycle, the animation will loop back to the beginning again (unless the delay is set to -1, in which case
-it will never move on from an animation frame without something else explicitly telling it to).
+After each animation cycle, the animation will loop back to the beginning again. If the delay is set to -1, in which case
+it will never move on from an animation frame without something else explicitly telling it to.
 
 ### Tile Types
 
 The available tile types are defined in the `TileType` enum, and include:
 
-- **NOT_PASSABLE** -- player cannot pass through it, they are "solid", such as the grass tiles
-- **PASSABLE** -- player can pass through it, such as the sky tiles
-- **JUMP_THROUGH_PLATFORM** -- the player can walk on top of it and cannot pass through it when coming downwards from above, but can pass through it when coming upwards from below, such as the tree branch tiles
+- **NOT_PASSABLE** -- player cannot walk over it, they are "solid", such as the rock tiles
+- **PASSABLE** -- player can walk over it, such as grass tiles
+
+### Tile Layers
+
+Each map tile supports two "layers" -- a bottom layer (required) and a top layer (optional).
+Tile layering has two benefits. The first is that tile images can be reused, as the top layer will be "pasted" on top of the bottom layer.
+The second is that the top layer of a map tile will be drawn after the player, meaning it will cover the player.
+You can see in the below gif that the tree tops have a top layer, which is why the player is covered by them when it makes its way to those tiles.
+
+![map-tile-layer-example.gif](../../../assets/images/map-tile-layer-example.gif)
+
+This gives off the illusion that the player is behind the tile and gives the game some more artistic depth, and is a common tactic video games of this style use. 
+
+In the above examples for creating the grass and sign tiles, they only had a bottom layer. A top layer must be explicitly specified.
+Both the bottom layer and top layer can be optionally animated as well.
+Below is the code used to create the tree tops that utilize a top layer being added to a map tile:
+
+```java
+// tree top leaves
+Frame treeTopLeavesFrame = new FrameBuilder(getSubImage(1, 1))
+        .withScale(tileScale)
+        .build();
+
+MapTileBuilder treeTopLeavesTile = new MapTileBuilder(grassFrame)
+        .withTopLayer(treeTopLeavesFrame)
+        .withTileType(TileType.PASSABLE);
+
+mapTiles.add(treeTopLeavesTile);
+```
+
+The bottom layer is just a grass tile, while the top layer is the tree top tile. The tile is also set to passable, so the player is able to walk on it.
+The bottom layer will be covered by the player (the grass), while the top layer covers the player (the tree tops).

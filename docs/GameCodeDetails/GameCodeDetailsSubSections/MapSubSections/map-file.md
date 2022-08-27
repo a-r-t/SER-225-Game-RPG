@@ -29,25 +29,25 @@ Below is an example map file:
 
 ```
 17 12
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-1 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-1 1 1 1 1 1 1 1 1 1 1 1 8 8 8 1 1
-1 1 1 1 1 1 1 1 1 1 1 8 8 8 8 8 1
-1 1 1 1 1 1 1 1 1 1 1 8 8 8 8 8 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 7 1 1 1
-1 1 1 1 1 1 1 9 1 1 1 1 1 7 1 1 1
-1 1 1 1 1 0 0 0 0 1 1 1 1 7 1 9 1
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 8 8 8 0 0
+0 0 0 0 0 0 0 0 0 0 0 8 8 8 8 8 0
+0 0 0 0 0 0 0 0 0 0 0 8 8 8 8 8 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 7 0 0 0
+0 0 0 0 0 0 0 9 0 0 0 0 0 7 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 7 0 9 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ```
 
 The first two numbers (in this case 17 and 12) are the width and height of the map.
 
 Afterwards, each number in the "grid" corresponds to a specific map tile from a tileset. The Map Editor handles for you
 which index maps to which map tile, so that is not something that has to be worried about. For example, the Map Editor may have mapped
-the grass tile to the number 0, the sky tile to the number 1, etc.
+the grass tile to the number 0, the water tile to the number 1, etc.
 
 ## Reading the map file into the game
 

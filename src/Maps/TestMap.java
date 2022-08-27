@@ -36,10 +36,12 @@ public class TestMap extends Map {
         ArrayList<NPC> npcs = new ArrayList<>();
 
         Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
+        walrus.setInteractScript(new WalrusScript());
         npcs.add(walrus);
 
         Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
         dinosaur.setExistenceFlag("hasTalkedToDinosaur");
+        dinosaur.setInteractScript(new DinoScript());
         npcs.add(dinosaur);
 
         return npcs;
@@ -63,9 +65,6 @@ public class TestMap extends Map {
         getMapTile(20, 4).setInteractScript(new SimpleTextInteractScript("Dino's house"));
 
         getMapTile(2, 6).setInteractScript(new TreeScript());
-
-        getNPCById(1).setInteractScript(new WalrusScript());
-        getNPCById(2).setInteractScript(new DinoScript());
     }
 }
 

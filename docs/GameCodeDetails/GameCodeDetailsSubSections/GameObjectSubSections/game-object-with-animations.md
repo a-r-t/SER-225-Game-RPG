@@ -87,7 +87,7 @@ public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         put("STAND_RIGHT", new Frame[] {
                 new FrameBuilder(spriteSheet.getSprite(0, 0))
                         .withScale(3)
-                        .withBounds(8, 9, 8, 9)
+                        .withBounds(6, 12, 12, 7)
                         .build()
         });
     
@@ -96,7 +96,7 @@ public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
                 new FrameBuilder(spriteSheet.getSprite(0, 0))
                         .withScale(3)
                         .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(8, 9, 8, 9)
+                        .withBounds(6, 12, 12, 7)
                         .build()
         });
     }};
@@ -130,23 +130,23 @@ public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
     
         // add WALK_RIGHT animation
         put("WALK_RIGHT", new Frame[] {
-               new FrameBuilder(spriteSheet.getSprite(1, 0), 200)
-                       .withScale(3)
-                       .withBounds(8, 9, 8, 9)
-                       .build(),
-               new FrameBuilder(spriteSheet.getSprite(1, 1), 200)
-                       .withScale(3)
-                       .withBounds(8, 9, 8, 9)
-                       .build(),
-               new FrameBuilder(spriteSheet.getSprite(1, 2), 200)
-                       .withScale(3)
-                       .withBounds(8, 9, 8, 9)
-                       .build(),
-               new FrameBuilder(spriteSheet.getSprite(1, 3), 200)
-                       .withScale(3)
-                       .withBounds(8, 9, 8, 9)
-                       .build()
-        });     
+            new FrameBuilder(spriteSheet.getSprite(1, 0), 200)
+                    .withScale(3)
+                    .withBounds(6, 12, 12, 7)
+                    .build(),
+            new FrameBuilder(spriteSheet.getSprite(1, 1), 200)
+                    .withScale(3)
+                    .withBounds(6, 12, 12, 7)
+                    .build(),
+            new FrameBuilder(spriteSheet.getSprite(1, 2), 200)
+                    .withScale(3)
+                    .withBounds(6, 12, 12, 7)
+                    .build(),
+            new FrameBuilder(spriteSheet.getSprite(1, 3), 200)
+                    .withScale(3)
+                    .withBounds(6, 12, 12, 7)
+                    .build()
+        });
 
     }};
 }
@@ -175,13 +175,13 @@ The `AnimatedSprite` class provides some instance variables that can be used to 
 - **currentFrameIndex** -- the current frame index of an animation
 - **hasAnimationLooped** -- will be true if an animation has looped at least one time (transitioned from the last frame index back to the first frame)
 
-For example, in the `Player` class's `update` logic for when the player is standing and the right key is pressed, it will change the player's state to "WALKING".
+For example, in the `Player` class's `update` logic for when the player is standing and an arrow key is pressed, it will change the player's state to "WALKING".
 
 ```java
 // ...
 
-// if walk left or walk right key is pressed, player enters WALKING state
-if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
+// if walk left, right, up, or down key is pressed, player enters WALKING state
+if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY) || Keyboard.isKeyDown(MOVE_UP_KEY) || Keyboard.isKeyDown(MOVE_DOWN_KEY)) {
     playerState = PlayerState.WALKING;
 }
 
@@ -200,7 +200,8 @@ else if (playerState == PlayerState.WALKING) {
 ```
 
 Lastly, the `update` logic at some point must make a call out to the base class's method in order for the `AnimatedSprite` class to run the required animation logic.
-Otherwise, a `GameObject` will never be able to switch animations or transition between animation frames. Typically this call should be made at the end of the subclass's `update` method.
+Otherwise, a `GameObject` will never be able to switch animations or transition between animation frames. 
+Typically, this call should be made at the end of the subclass's `update` method.
 
 ```java
 public void update(Player player) {
