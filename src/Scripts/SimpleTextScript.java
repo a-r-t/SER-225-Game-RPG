@@ -5,14 +5,14 @@ import Level.ScriptState;
 
 // Reusable simple interact script
 // Just shows text upon interacting with the associated entity
-public class SimpleTextInteractScript extends Script {
+public class SimpleTextScript extends Script {
     private String[] textItems;
 
-    public SimpleTextInteractScript(String text) {
+    public SimpleTextScript(String text) {
         this.textItems = new String[] { text };
     }
 
-    public SimpleTextInteractScript(String[] text) {
+    public SimpleTextScript(String[] text) {
         this.textItems = text;
     }
 

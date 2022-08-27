@@ -33,6 +33,13 @@ Each trigger also can optionally be supplied an `existenceFlag`,
 Triggers often use this feature to ensure they only are able to be triggered one time.
 You can read more about flags [here](./scripts.md#Flags), and more about the existence flag [here](./map-entities.md#Existence Flag)
 
+## How to create a trigger
+
+The `Trigger` class is very simple. It just needs an x, y, width, and height to specify its location/size on the map,
+a [script](./scripts.md) to act as its `triggerScript`, and an optional flag[./scripts.md#Flags] to act as its `existenceFlag`.
+There is no real need to subclass them, as the trigger script is what essentially dictates what each trigger does; at their core,
+they are just a rectangle with a script attached.
+
 ## Adding a trigger to a map
 
 In a map subclass's `loadTriggers` method, triggers can be defined and added to the map's enemy list. For example, in `TestMap`,

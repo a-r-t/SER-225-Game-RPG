@@ -7,7 +7,7 @@ import Level.NPC;
 import Level.Trigger;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
-import Scripts.SimpleTextInteractScript;
+import Scripts.SimpleTextScript;
 import Scripts.TestMap.DinoScript;
 import Scripts.TestMap.LostBallScript;
 import Scripts.TestMap.TreeScript;
@@ -58,11 +58,11 @@ public class TestMap extends Map {
 
     @Override
     public void loadScripts() {
-        getMapTile(21, 19).setInteractScript(new SimpleTextInteractScript("Cat's house"));
+        getMapTile(21, 19).setInteractScript(new SimpleTextScript("Cat's house"));
 
-        getMapTile(7, 26).setInteractScript(new SimpleTextInteractScript("Walrus's house"));
+        getMapTile(7, 26).setInteractScript(new SimpleTextScript("Walrus's house"));
 
-        getMapTile(20, 4).setInteractScript(new SimpleTextInteractScript("Dino's house"));
+        getMapTile(20, 4).setInteractScript(new SimpleTextScript("Dino's house"));
 
         getMapTile(2, 6).setInteractScript(new TreeScript());
     }
