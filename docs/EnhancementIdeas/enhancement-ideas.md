@@ -44,3 +44,8 @@ This game engine has a lot of flexibility in the direction it gets taken in, but
 
 There is no music/sounds in this game! Music and sound support could be added to specific classes, or even
 be added to the actual game engine itself so every class in the game can use them in a convenient manner.
+
+# More Set Pieces
+
+The game could use more variety, from map tile graphics to NPC scripts to map design.
+It would make the game a lot more interesting to look at and traverse through.
