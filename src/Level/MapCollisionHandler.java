@@ -23,7 +23,7 @@ public class MapCollisionHandler {
                     adjustedPositionX = mapTile.getBoundsX1() - gameObject.getWidth() + boundsDifference;
                 } else if (direction == Direction.LEFT) {
                     float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
-                    adjustedPositionX = mapTile.getBoundsX2() - boundsDifference;
+                    adjustedPositionX = (mapTile.getBoundsX2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
             }
@@ -38,7 +38,7 @@ public class MapCollisionHandler {
                     adjustedPositionX = enhancedMapTile.getBoundsX1() - gameObject.getWidth() + boundsDifference;
                 } else if (direction == Direction.LEFT) {
                     float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
-                    adjustedPositionX = enhancedMapTile.getBoundsX2() - boundsDifference;
+                    adjustedPositionX = (enhancedMapTile.getBoundsX2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
             }
@@ -53,7 +53,7 @@ public class MapCollisionHandler {
                     adjustedPositionX = npc.getBoundsX1() - gameObject.getWidth() + boundsDifference;
                 } else if (direction == Direction.LEFT) {
                     float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
-                    adjustedPositionX = npc.getBoundsX2() - boundsDifference;
+                    adjustedPositionX = (npc.getBoundsX2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
             }
@@ -69,7 +69,7 @@ public class MapCollisionHandler {
                         adjustedPositionX = trigger.getBoundsX1() - gameObject.getWidth() + boundsDifference;
                     } else if (direction == Direction.LEFT) {
                         float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
-                        adjustedPositionX = trigger.getBoundsX2() - boundsDifference;
+                        adjustedPositionX = (trigger.getBoundsX2() + 1) - boundsDifference;
                     }
                     return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
                 }
@@ -95,7 +95,7 @@ public class MapCollisionHandler {
                     adjustedPositionY = mapTile.getBoundsY1() - gameObject.getHeight() + boundsDifference;
                 } else if (direction == Direction.UP) {
                     float boundsDifference = gameObject.getBoundsY1() - gameObject.getY();
-                    adjustedPositionY = mapTile.getBoundsY2() - boundsDifference;
+                    adjustedPositionY = (mapTile.getBoundsY2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(gameObject.getX(), adjustedPositionY), entityCollidedWith);
             }
@@ -110,7 +110,7 @@ public class MapCollisionHandler {
                     adjustedPositionY = enhancedMapTile.getBoundsY1() - gameObject.getHeight() + boundsDifference;
                 } else if (direction == Direction.UP) {
                     float boundsDifference = gameObject.getBoundsY1() - gameObject.getY();
-                    adjustedPositionY = enhancedMapTile.getBoundsY2() - boundsDifference;
+                    adjustedPositionY = (enhancedMapTile.getBoundsY2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(gameObject.getX(), adjustedPositionY), entityCollidedWith);
             }
@@ -125,7 +125,7 @@ public class MapCollisionHandler {
                     adjustedPositionY = npc.getBoundsY1() - gameObject.getHeight() + boundsDifference;
                 } else if (direction == Direction.UP) {
                     float boundsDifference = gameObject.getBoundsY1() - gameObject.getY();
-                    adjustedPositionY = npc.getBoundsY2() - boundsDifference;
+                    adjustedPositionY = (npc.getBoundsY2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(gameObject.getX(), adjustedPositionY), entityCollidedWith);
             }
@@ -141,7 +141,7 @@ public class MapCollisionHandler {
                         adjustedPositionY = trigger.getBoundsY1() - gameObject.getHeight() + boundsDifference;
                     } else if (direction == Direction.UP) {
                         float boundsDifference = gameObject.getBoundsY1() - gameObject.getY();
-                        adjustedPositionY = trigger.getBoundsY2() - boundsDifference;
+                        adjustedPositionY = (trigger.getBoundsY2() + 1) - boundsDifference;
                     }
                     return new MapCollisionCheckResult(new Point(gameObject.getX(), adjustedPositionY), entityCollidedWith);
                 }

@@ -94,7 +94,6 @@ public class MapTile extends MapEntity {
         if (topLayer != null) {
             topLayer.draw(graphicsHandler);
         }
-        //drawBounds(graphicsHandler, new Color(0, 0, 255, 100));
     }
 
     public void drawBottomLayer(GraphicsHandler graphicsHandler) {

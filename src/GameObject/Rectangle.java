@@ -176,14 +176,16 @@ public class Rectangle implements IntersectableRectangle {
 				Math.round(intersectRectangle.getY1()) <= Math.round(otherIntersectRectangle.getY2() + 1) && Math.round(intersectRectangle.getY2() + 1) >= Math.round(otherIntersectRectangle.getY1());
 	}
 
+	// calculates the area that a rectangle is overlapping another rectangle by
+	// and returns the total number of pixels
 	public float getAreaOverlapped(IntersectableRectangle other) {
 		Rectangle intersectRectangle = getIntersectRectangle();
 		Rectangle otherIntersectRectangle = other.getIntersectRectangle();
 		if (!overlaps(other)) {
 			return 0;
 		}
-		float width = Math.abs(Math.min(intersectRectangle.getX2(), otherIntersectRectangle.getX2()) - Math.max(intersectRectangle.getX1(), otherIntersectRectangle.getX1()));
-		float height = Math.abs(Math.min(intersectRectangle.getY2(), otherIntersectRectangle.getY2()) - Math.max(intersectRectangle.getY1(), otherIntersectRectangle.getY1()));
+		float width = Math.abs(Math.min(intersectRectangle.getX2() + 1, otherIntersectRectangle.getX2() + 1) - Math.max(intersectRectangle.getX1(), otherIntersectRectangle.getX1()));
+		float height = Math.abs(Math.min(intersectRectangle.getY2() + 1, otherIntersectRectangle.getY2() + 1) - Math.max(intersectRectangle.getY1(), otherIntersectRectangle.getY1()));
 		return width * height;
 	}
 }

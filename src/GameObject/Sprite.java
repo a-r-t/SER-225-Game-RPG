@@ -9,14 +9,14 @@ import java.awt.image.BufferedImage;
 // This class is for representing a Sprite, which is essentially a Rectangle with an image attached
 // it also includes an attribute for "bounds", which can be thought of a sub rectangle on the image where it can be interacted with (like for collisions)
 public class Sprite extends Rectangle implements IntersectableRectangle {
-	protected BufferedImage image;
+    protected BufferedImage image;
     protected Rectangle bounds;
     protected ImageEffect imageEffect;
 
     public Sprite (BufferedImage image) {
-        super(0, 0, image.getWidth(), image.getHeight());
+        super(0, 0, image.getWidth(), image.getHeight(), 1);
         this.image = image;
-        this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight());
+        this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight(), scale);
         this.imageEffect = ImageEffect.NONE;
     }
 
@@ -33,14 +33,14 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
         this.bounds = new Rectangle(0, 0, image.getWidth(), image.getHeight(), scale);
         this.imageEffect = imageEffect;
     }
-	
-	public BufferedImage getImage() {
-		return image;
-	}
-	
-	public void setImage(String imageFileName) {
-		image = ImageLoader.load(imageFileName);
-	}
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(String imageFileName) {
+        image = ImageLoader.load(imageFileName);
+    }
 
     public void setImage(BufferedImage image) {
         this.image = image;
@@ -53,7 +53,7 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
     }
 
     public float getBoundsX1() {
-        return x + (bounds.getX1() * scale);
+        return getX() + (bounds.getX1() * scale);
     }
 
     public float getBoundsX2() {
@@ -89,16 +89,16 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
     }
 
     @Override
-	public void update() {
-		super.update();
-	}
-	
-	@Override
-	public void draw(GraphicsHandler graphicsHandler) {
-		graphicsHandler.drawImage(image, Math.round(getX()), Math.round(getY()), getWidth(), getHeight(), imageEffect);
-	}
+    public void update() {
+        super.update();
+    }
 
-	public void drawBounds(GraphicsHandler graphicsHandler, Color color) {
+    @Override
+    public void draw(GraphicsHandler graphicsHandler) {
+        graphicsHandler.drawImage(image, Math.round(getX()), Math.round(getY()), getWidth(), getHeight(), imageEffect);
+    }
+
+    public void drawBounds(GraphicsHandler graphicsHandler, Color color) {
         Rectangle scaledBounds = getBounds();
         scaledBounds.setColor(color);
         scaledBounds.draw(graphicsHandler);
