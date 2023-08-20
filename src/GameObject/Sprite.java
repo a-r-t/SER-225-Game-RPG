@@ -57,15 +57,15 @@ public class Sprite extends Rectangle implements IntersectableRectangle {
     }
 
     public float getBoundsX2() {
-        return getBoundsX1() + bounds.getWidth();
+        return (getBoundsX1() + bounds.getWidth()) - 1;
     }
 
     public float getBoundsY1() {
-        return y + (bounds.getY1() * scale);
+        return getY() + (bounds.getY1() * scale);
     }
 
     public float getBoundsY2() {
-        return getBoundsY1() + bounds.getHeight();
+        return (getBoundsY1() + bounds.getHeight()) - 1;
     }
 
     public Rectangle getBounds() {
