@@ -29,6 +29,7 @@ public class GamePanel extends JPanel {
 	private SpriteFont pauseLabel;
 	private KeyLocker keyLocker = new KeyLocker();
 	private final Key pauseKey = Key.P;
+	private Thread gameLoop;
 
 	/*
 	 * The JPanel and various important class instances are setup here
@@ -70,7 +71,37 @@ public class GamePanel extends JPanel {
 
 	// this starts the timer (the game loop is started here
 	public void startGame() {
-		timer.start();
+		//timer.start();
+		gameLoop = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				long lastime = System.nanoTime();
+				double AmountOfTicks = 60;
+				double ns = 1000000000 / AmountOfTicks;
+				double delta = 0;
+				int frames = 0;
+				double time = System.currentTimeMillis();
+
+				while (true) {
+					long now = System.nanoTime();
+					delta += (now - lastime) / ns;
+					lastime = now;
+
+					if (delta >= 1) {
+						update();
+						repaint();
+						frames++;
+						delta--;
+						if (System.currentTimeMillis() - time >= 1000) {
+							System.out.println("fps:" + frames);
+							time += 1000;
+							frames = 0;
+						}
+					}
+				}
+			}
+		});
+		gameLoop.start();
 	}
 
 	public ScreenManager getScreenManager() {
