@@ -30,6 +30,7 @@ public class GamePanel extends JPanel {
 	private KeyLocker keyLocker = new KeyLocker();
 	private final Key pauseKey = Key.P;
 	private Thread gameLoop;
+	private boolean printFPS = false; // if true, the game's actual FPS will be printed to the console every so often
 
 	/*
 	 * The JPanel and various important class instances are setup here
@@ -49,16 +50,39 @@ public class GamePanel extends JPanel {
 		pauseLabel.setOutlineColor(Color.black);
 		pauseLabel.setOutlineThickness(2.0f);
 
-		// Every timer "tick" will call the update method as well as tell the JPanel to repaint
-		// Remember that repaint "schedules" a paint rather than carries it out immediately
-		// If the game is really laggy/slow, I would consider upping the FPS in the Config file.
-		timer = new Timer(1000 / Config.FPS, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				update();
-				repaint();
+		// this game loop code will run in a separate thread from the rest of the program
+		// will continually update and repaint the game
+		// the FPS (frames per second) is the number of times this code is desired to be run per second (assuming the computer running this game can handle it)
+		gameLoop = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Notch's game loop
+				long previousTime = System.nanoTime();
+				double FPS = 1000000000 / Config.FPS;
+				double delta = 0;
+				int frames = 0;
+				double lastCycleTime = System.currentTimeMillis();
+
+				while (true) {
+					long currentTime = System.nanoTime();
+					delta += (currentTime - previousTime) / FPS;
+					previousTime = currentTime;
+
+					if (delta >= 1) {
+						update();
+						repaint();
+						frames++;
+						delta--;
+
+						if (printFPS && System.currentTimeMillis() - lastCycleTime >= 1000) {
+							lastCycleTime += 1000;
+							frames = 0;
+							System.out.println("FPS:" + frames);
+						}
+					}
+				}
 			}
 		});
-		timer.setRepeats(true);
 	}
 
 	// this is called later after instantiation, and will initialize screenManager
@@ -71,36 +95,6 @@ public class GamePanel extends JPanel {
 
 	// this starts the timer (the game loop is started here
 	public void startGame() {
-		//timer.start();
-		gameLoop = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				long lastime = System.nanoTime();
-				double AmountOfTicks = 60;
-				double ns = 1000000000 / AmountOfTicks;
-				double delta = 0;
-				int frames = 0;
-				double time = System.currentTimeMillis();
-
-				while (true) {
-					long now = System.nanoTime();
-					delta += (now - lastime) / ns;
-					lastime = now;
-
-					if (delta >= 1) {
-						update();
-						repaint();
-						frames++;
-						delta--;
-						if (System.currentTimeMillis() - time >= 1000) {
-							System.out.println("fps:" + frames);
-							time += 1000;
-							frames = 0;
-						}
-					}
-				}
-			}
-		});
 		gameLoop.start();
 	}
 
