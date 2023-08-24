@@ -25,11 +25,11 @@ public class GamePanel extends JPanel {
 	private KeyLocker keyLocker = new KeyLocker();
 	private final Key pauseKey = Key.P;
 	private Thread gameLoop;
-	private boolean printFPS = false; // if true, the game's actual FPS will be printed to the console every so often
 
-	/*
-	 * The JPanel and various important class instances are setup here
-	 */
+	// if true, the game's actual FPS will be printed to the console every so often
+	private boolean printFPS = false;
+
+	// The JPanel and various important class instances are setup here
 	public GamePanel() {
 		super();
 		this.setDoubleBuffered(true);
@@ -46,8 +46,7 @@ public class GamePanel extends JPanel {
 		pauseLabel.setOutlineThickness(2.0f);
 
 		// this game loop code will run in a separate thread from the rest of the program
-		// will continually update and repaint the game
-		// the FPS (frames per second) is the number of times this code is desired to be run per second (assuming the computer running this game can handle it)
+		// will continually update the game's logic and repaint the game's graphics
 		gameLoop = new Thread(new Runnable() {
 			@Override
 			public void run() {
