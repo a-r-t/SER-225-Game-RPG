@@ -6,8 +6,6 @@ import Utils.Colors;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /*
  * This is where the game loop starts
@@ -17,9 +15,6 @@ public class GamePanel extends JPanel {
 	// loads Screens on to the JPanel
 	// each screen has its own update and draw methods defined to handle a "section" of the game.
 	private ScreenManager screenManager;
-
-	// used to create the game loop and cycle between update and draw calls
-	private Timer timer;
 
 	// used to draw graphics to the panel
 	private GraphicsHandler graphicsHandler;
