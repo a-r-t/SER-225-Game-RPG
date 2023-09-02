@@ -6,7 +6,7 @@ import java.awt.*;
 
 /*
  * This class holds some constants like window width/height and resource folder locations
- * Tweak these as needed, they shouldn't break anything (keyword shouldn't).
+ * Tweak these as needed prior to running the application
  */
 public class Config {
     public static final int TARGET_FPS = 60;
