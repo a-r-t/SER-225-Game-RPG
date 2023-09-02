@@ -79,13 +79,7 @@ public class GamePanel extends JPanel {
 							lastCycleTime += 1000;
 							frames = 0;
 						}
-					}
-					else {
-						try {
-							Thread.sleep(1);
-						} catch(InterruptedException e) {}
-					}
-					
+					}	
 				}
 			}
 		});
