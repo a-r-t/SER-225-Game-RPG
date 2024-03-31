@@ -1,7 +1,13 @@
 package Scripts;
 
+import java.util.ArrayList;
+
 import Level.Script;
 import Level.ScriptState;
+import Scripting.LockPlayerScriptAction;
+import Scripting.ScriptAction;
+import Scripting.TextboxScriptAction;
+import Scripting.UnlockPlayerScriptAction;
 
 // Reusable simple interact script
 // Just shows text upon interacting with the associated entity
@@ -44,5 +50,14 @@ public class SimpleTextScript extends Script {
 
         // script ends
         return ScriptState.COMPLETED;
+    }
+
+    @Override
+    public ArrayList<ScriptAction> loadScriptActions() {
+        ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+        scriptActions.add(new LockPlayerScriptAction());
+        scriptActions.add(new TextboxScriptAction(textItems, getMap().getTextbox()));
+        scriptActions.add(new UnlockPlayerScriptAction());
+        return scriptActions;
     }
 }

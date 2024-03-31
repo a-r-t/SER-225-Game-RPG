@@ -1,5 +1,7 @@
 package Scripts.TestMap;
 
+import java.util.ArrayList;
+
 import Level.Script;
 import Level.ScriptState;
 
@@ -31,5 +33,11 @@ public class LostBallScript extends Script {
             end();
         }
         return ScriptState.COMPLETED;
+    }
+
+    @Override
+    public ArrayList loadScriptActions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'loadScriptActions'");
     }
 }

@@ -1,9 +1,12 @@
 package Scripts.TestMap;
 
+import java.util.ArrayList;
+
 import Builders.FrameBuilder;
 import Builders.MapTileBuilder;
 import GameObject.Frame;
 import Level.*;
+import Scripting.ScriptAction;
 import Utils.Direction;
 import Utils.Point;
 
@@ -173,6 +176,12 @@ public class DinoScript extends Script<NPC> {
             return ScriptState.RUNNING;
         }
         return ScriptState.COMPLETED;
+    }
+
+    @Override
+    public ArrayList<ScriptAction> loadScriptActions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'loadScriptActions'");
     }
 }
 

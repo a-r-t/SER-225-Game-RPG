@@ -1,5 +1,8 @@
 package Level;
+import java.util.ArrayList;
+
 import GameObject.Rectangle;
+import Scripting.ScriptAction;
 import Utils.Direction;
 
 // This class is a base class for all scripts in the game -- all scripts should extend from it
@@ -7,6 +10,8 @@ import Utils.Direction;
 // Each script defines a set of instructions that will be carried out by the game when it is set to active
 // Some examples include interact scripts (such as talking to an NPC) and trigger scripts (scripts that activate when the player walks on them)
 public abstract class Script<T extends MapEntity> {
+    protected ArrayList<ScriptAction> scriptActions;
+
     // this is set to true if script is currently being executed
     protected boolean isActive = false;
 
@@ -33,6 +38,22 @@ public abstract class Script<T extends MapEntity> {
     public void setMapEntity(T entity) {
         this.entity = entity;
     }
+    public ArrayList<ScriptAction> getScriptActions() {
+        return scriptActions;
+    }
+
+    public Script() {
+    }
+
+    public void initialize() {
+        scriptActions = loadScriptActions();
+        for (ScriptAction scriptAction : scriptActions) {
+            scriptAction.setMap(map);
+            scriptAction.setPlayer(player);
+        }
+    }
+
+    public abstract ArrayList<ScriptAction> loadScriptActions();
 
     // "setup" logic for a script to prepare for execution update cycle
     protected abstract void setup();
@@ -43,21 +64,46 @@ public abstract class Script<T extends MapEntity> {
     // the "meat" of the script, it's the logic to be carried out when the script becomes active
     // when script is finished, it should return the COMPLETED Script State
     // if script is still running, it should return the RUNNING Script State
-    protected abstract ScriptState execute();
+    protected ScriptState execute() {
+        return ScriptState.COMPLETED;
+
+    }
+
+    // private ScriptAction currentScriptAction;
+    private int currentScriptActionIndex;
+
+    private boolean hasScriptActions() {
+        return scriptActions.size() > 0;
+    }
 
     public void update() {
-        // Runs an execute cycle of the Script
-        ScriptState scriptState = execute();
+         // Runs an execute cycle of the Script
+         ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
+         ScriptState scriptState = currentScriptAction.execute();
+         if (scriptState == ScriptState.COMPLETED) {
+            currentScriptAction.cleanup();
+            currentScriptActionIndex++;
 
-        if (frameDelayCounter > 0) {
-            frameDelayCounter--;
-        }
+            if (currentScriptActionIndex < scriptActions.size()) {
+                scriptActions.get(currentScriptActionIndex).setup();
+            }
+            else {
+                this.isActive = false;
+                map.setActiveInteractScript(null);
+            }
+         }
+ 
 
-        // If Script is completed, set it to inactive to allow game to carry on
-        if (scriptState == ScriptState.COMPLETED) {
-            this.isActive = false;
-            map.setActiveInteractScript(null);
-        }
+
+        // if (frameDelayCounter > 0) {
+        //     frameDelayCounter--;
+        // }
+
+        // // If Script is completed, set it to inactive to allow game to carry on
+        // if (scriptState == ScriptState.COMPLETED) {
+        //     this.isActive = false;
+        //     map.setActiveInteractScript(null);
+        // }
     }
 
     // call setup logic once on script start
@@ -78,7 +124,13 @@ public abstract class Script<T extends MapEntity> {
     // if is active is true, game will execute script
     public boolean isActive() { return isActive; }
 
-    public void setIsActive(boolean isActive) { this.isActive = isActive; }
+    public void setIsActive(boolean isActive) { 
+        if (hasScriptActions()) {
+            this.isActive = isActive; 
+            this.currentScriptActionIndex = 0;
+            scriptActions.get(currentScriptActionIndex).setup();
+        }
+    }
 
     // prevents player from being able to do anything (such as move) while script is being executed
     // useful to prevent player from moving away while interacting with something, etc

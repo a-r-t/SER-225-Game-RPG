@@ -51,24 +51,28 @@ public class PlayLevelScreen extends Screen {
             if (mapTile.getInteractScript() != null) {
                 mapTile.getInteractScript().setMap(map);
                 mapTile.getInteractScript().setPlayer(player);
+                mapTile.getInteractScript().initialize();
             }
         }
         for (NPC npc : map.getNPCs()) {
             if (npc.getInteractScript() != null) {
                 npc.getInteractScript().setMap(map);
                 npc.getInteractScript().setPlayer(player);
+                npc.getInteractScript().initialize();
             }
         }
         for (EnhancedMapTile enhancedMapTile : map.getEnhancedMapTiles()) {
             if (enhancedMapTile.getInteractScript() != null) {
                 enhancedMapTile.getInteractScript().setMap(map);
                 enhancedMapTile.getInteractScript().setPlayer(player);
+                enhancedMapTile.getInteractScript().initialize();
             }
         }
         for (Trigger trigger : map.getTriggers()) {
             if (trigger.getTriggerScript() != null) {
                 trigger.getTriggerScript().setMap(map);
                 trigger.getTriggerScript().setPlayer(player);
+                trigger.getInteractScript().initialize();
             }
         }
 

@@ -1,8 +1,11 @@
 package Scripts.TestMap;
 
+import java.util.ArrayList;
+
 import Level.NPC;
 import Level.Script;
 import Level.ScriptState;
+import Scripting.ScriptAction;
 
 // script for talking to walrus npc
 public class WalrusScript extends Script<NPC> {
@@ -41,5 +44,11 @@ public class WalrusScript extends Script<NPC> {
         }
         end();
         return ScriptState.COMPLETED;
+    }
+
+    @Override
+    public ArrayList<ScriptAction> loadScriptActions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'loadScriptActions'");
     }
 }
