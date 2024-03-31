@@ -46,13 +46,15 @@ public class ConditionalScriptAction extends ScriptAction {
             // this prevents a crash from occurring if no group requirements have been met
             // it just adds a fake group with a fake script action that does nothing
             // while there are other ways of fixing this, the other ways result in the script execution code being less efficient, which is not ideal for a game that needs to run as fast as possible
-            ConditionalScriptActionGroup conditionalScriptActionGroup = new ConditionalScriptActionGroup();
-            conditionalScriptActionGroup.addScriptAction(new DoNothingScriptAction());
-            conditionalScriptActionGroups.add(conditionalScriptActionGroup);
+            conditionalScriptActionGroups.add(doNothingActionGroup);
             currentScriptActionGroupIndex = conditionalScriptActionGroups.size() - 1;
             currentScriptActionIndex = 0;
         }
     }
+
+    private static ConditionalScriptActionGroup doNothingActionGroup = new ConditionalScriptActionGroup() {{
+        addScriptAction(new DoNothingScriptAction());
+    }};
 
     protected boolean areFlagRequirementsMet(ConditionalScriptActionGroup conditionalScriptActionGroup) {
         ArrayList<Boolean> metFlagRequirementStatuses = new ArrayList<>();
