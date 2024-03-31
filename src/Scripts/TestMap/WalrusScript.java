@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Level.NPC;
 import Level.Script;
+import Level.ScriptState;
 import ScriptActions.ChangeFlagScriptAction;
 import ScriptActions.ConditionalScriptAction;
 import ScriptActions.ConditionalScriptActionGroup;
