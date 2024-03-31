@@ -3,10 +3,10 @@ package Scripts;
 import java.util.ArrayList;
 
 import Level.Script;
-import Scripting.LockPlayerScriptAction;
-import Scripting.ScriptAction;
-import Scripting.TextboxScriptAction;
-import Scripting.UnlockPlayerScriptAction;
+import ScriptActions.LockPlayerScriptAction;
+import ScriptActions.ScriptAction;
+import ScriptActions.TextboxScriptAction;
+import ScriptActions.UnlockPlayerScriptAction;
 
 // Reusable simple interact script
 // Just shows text upon interacting with the associated entity

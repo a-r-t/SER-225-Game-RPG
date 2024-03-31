@@ -4,16 +4,15 @@ import java.util.ArrayList;
 
 import Level.NPC;
 import Level.Script;
-import Level.ScriptState;
-import Scripting.ChangeFlagScriptAction;
-import Scripting.ConditionalScriptAction;
-import Scripting.ConditionalScriptActionGroup;
-import Scripting.FlagRequirement;
-import Scripting.LockPlayerScriptAction;
-import Scripting.NPCFacePlayerScriptAction;
-import Scripting.ScriptAction;
-import Scripting.TextboxScriptAction;
-import Scripting.UnlockPlayerScriptAction;
+import ScriptActions.ChangeFlagScriptAction;
+import ScriptActions.ConditionalScriptAction;
+import ScriptActions.ConditionalScriptActionGroup;
+import ScriptActions.FlagRequirement;
+import ScriptActions.LockPlayerScriptAction;
+import ScriptActions.NPCFacePlayerScriptAction;
+import ScriptActions.ScriptAction;
+import ScriptActions.TextboxScriptAction;
+import ScriptActions.UnlockPlayerScriptAction;
 
 // script for talking to walrus npc
 public class WalrusScript extends Script<NPC> {

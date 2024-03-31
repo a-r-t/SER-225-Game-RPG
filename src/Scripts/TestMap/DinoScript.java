@@ -6,7 +6,7 @@ import Builders.FrameBuilder;
 import Builders.MapTileBuilder;
 import GameObject.Frame;
 import Level.*;
-import Scripting.ScriptAction;
+import ScriptActions.ScriptAction;
 import Utils.Direction;
 import Utils.Point;
 

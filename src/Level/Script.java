@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import GameObject.Rectangle;
-import Scripting.ConditionalScriptAction;
-import Scripting.ConditionalScriptActionGroup;
-import Scripting.ScriptAction;
+import ScriptActions.ConditionalScriptAction;
+import ScriptActions.ConditionalScriptActionGroup;
+import ScriptActions.ScriptAction;
 import Utils.Direction;
 
 // This class is a base class for all scripts in the game -- all scripts should extend from it

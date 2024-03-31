@@ -1,4 +1,4 @@
-package Scripting;
+package ScriptActions;
 
 public class FlagRequirement {
     protected String flagName;

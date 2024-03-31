@@ -1,4 +1,4 @@
-package Scripting;
+package ScriptActions;
 
 import java.util.ArrayList;
 

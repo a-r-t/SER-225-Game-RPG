@@ -1,4 +1,4 @@
-package Scripting;
+package ScriptActions;
 
 import Level.Map;
 import Level.MapEntity;
