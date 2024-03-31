@@ -5,50 +5,38 @@ import java.util.ArrayList;
 import Level.NPC;
 import Level.Script;
 import Level.ScriptState;
+import Scripting.ChangeFlagScriptAction;
+import Scripting.LockPlayerScriptAction;
+import Scripting.NPCFacePlayerScriptAction;
 import Scripting.ScriptAction;
+import Scripting.TextboxScriptAction;
+import Scripting.UnlockPlayerScriptAction;
 
 // script for talking to walrus npc
 public class WalrusScript extends Script<NPC> {
 
     @Override
-    protected void setup() {
-        lockPlayer();
-        showTextbox();
+    public ArrayList<ScriptAction> loadScriptActions() {
+        ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+        scriptActions.add(new LockPlayerScriptAction());
 
-        // changes what walrus says when talking to him the first time (flag is not set) vs talking to him afterwards (flag is set)
+        scriptActions.add(new NPCFacePlayerScriptAction());
+
+        
+
+        TextboxScriptAction textboxAction = new TextboxScriptAction();
         if (!isFlagSet("hasTalkedToWalrus")) {
-            addTextToTextboxQueue( "Hi Cat!");
-            addTextToTextboxQueue( "...oh, you lost your ball?");
-            addTextToTextboxQueue( "Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+            textboxAction.addText("Hi Cat!");
+            textboxAction.addText("...oh, you lost your ball?");
+            textboxAction.addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
         }
         else {
-            addTextToTextboxQueue( "I sure love doing walrus things!");
+            textboxAction.addText("I sure love doing walrus things!");
         }
-        entity.facePlayer(player);
-    }
+        scriptActions.add(textboxAction);
+        scriptActions.add(new UnlockPlayerScriptAction());
 
-    @Override
-    protected void cleanup() {
-        unlockPlayer();
-        hideTextbox();
-
-        // set flag so that if walrus is talked to again after the first time, what he says changes
-        setFlag("hasTalkedToWalrus");
-    }
-
-    @Override
-    public ScriptState execute() {
-        start();
-        if (!isTextboxQueueEmpty()) {
-            return ScriptState.RUNNING;
-        }
-        end();
-        return ScriptState.COMPLETED;
-    }
-
-    @Override
-    public ArrayList<ScriptAction> loadScriptActions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadScriptActions'");
+        scriptActions.add(new ChangeFlagScriptAction("hasTalkedToWalrus", true));
+        return scriptActions;
     }
 }

@@ -42,32 +42,16 @@ public abstract class Script<T extends MapEntity> {
         return scriptActions;
     }
 
-    public Script() {
-    }
-
     public void initialize() {
         scriptActions = loadScriptActions();
         for (ScriptAction scriptAction : scriptActions) {
             scriptAction.setMap(map);
             scriptAction.setPlayer(player);
+            scriptAction.setEntity(entity);
         }
     }
 
     public abstract ArrayList<ScriptAction> loadScriptActions();
-
-    // "setup" logic for a script to prepare for execution update cycle
-    protected abstract void setup();
-
-    // "cleanup" logic for a script to be carried out after execution update cycle ends
-    protected abstract void cleanup();
-
-    // the "meat" of the script, it's the logic to be carried out when the script becomes active
-    // when script is finished, it should return the COMPLETED Script State
-    // if script is still running, it should return the RUNNING Script State
-    protected ScriptState execute() {
-        return ScriptState.COMPLETED;
-
-    }
 
     // private ScriptAction currentScriptAction;
     private int currentScriptActionIndex;
@@ -77,10 +61,10 @@ public abstract class Script<T extends MapEntity> {
     }
 
     public void update() {
-         // Runs an execute cycle of the Script
-         ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-         ScriptState scriptState = currentScriptAction.execute();
-         if (scriptState == ScriptState.COMPLETED) {
+        // Runs an execute cycle of the Script
+        ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
+        ScriptState scriptState = currentScriptAction.execute();
+        if (scriptState == ScriptState.COMPLETED) {
             currentScriptAction.cleanup();
             currentScriptActionIndex++;
 
@@ -91,34 +75,7 @@ public abstract class Script<T extends MapEntity> {
                 this.isActive = false;
                 map.setActiveInteractScript(null);
             }
-         }
- 
-
-
-        // if (frameDelayCounter > 0) {
-        //     frameDelayCounter--;
-        // }
-
-        // // If Script is completed, set it to inactive to allow game to carry on
-        // if (scriptState == ScriptState.COMPLETED) {
-        //     this.isActive = false;
-        //     map.setActiveInteractScript(null);
-        // }
-    }
-
-    // call setup logic once on script start
-    protected void start() {
-        if (start) {
-            setup();
-            start = false;
         }
-    }
-
-    // call cleanup logic
-    // reset start in case more setup logic is to be carried out in the case of multistep scripts
-    protected void end() {
-        cleanup();
-        start = true;
     }
 
     // if is active is true, game will execute script
