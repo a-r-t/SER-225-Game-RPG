@@ -6,6 +6,9 @@ import Level.NPC;
 import Level.Script;
 import Level.ScriptState;
 import Scripting.ChangeFlagScriptAction;
+import Scripting.ConditionalScriptAction;
+import Scripting.ConditionalScriptActionGroup;
+import Scripting.FlagRequirement;
 import Scripting.LockPlayerScriptAction;
 import Scripting.NPCFacePlayerScriptAction;
 import Scripting.ScriptAction;
@@ -22,18 +25,27 @@ public class WalrusScript extends Script<NPC> {
 
         scriptActions.add(new NPCFacePlayerScriptAction());
 
-        
 
-        TextboxScriptAction textboxAction = new TextboxScriptAction();
-        if (!isFlagSet("hasTalkedToWalrus")) {
-            textboxAction.addText("Hi Cat!");
-            textboxAction.addText("...oh, you lost your ball?");
-            textboxAction.addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
-        }
-        else {
-            textboxAction.addText("I sure love doing walrus things!");
-        }
-        scriptActions.add(textboxAction);
+        ConditionalScriptAction hasTalkedToWalrusConditional = new ConditionalScriptAction();
+
+        ConditionalScriptActionGroup hasNotTalkedToWalrus = new ConditionalScriptActionGroup();
+        hasNotTalkedToWalrus.addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", false));
+        TextboxScriptAction hasNotTalkedToWalrusTextbox = new TextboxScriptAction();
+        hasNotTalkedToWalrusTextbox.addText("Hi Cat!");
+        hasNotTalkedToWalrusTextbox.addText("...oh, you lost your ball?");
+        hasNotTalkedToWalrusTextbox.addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+        hasNotTalkedToWalrus.addScriptAction(hasNotTalkedToWalrusTextbox);
+        hasTalkedToWalrusConditional.addConditionalScriptActionGroup(hasNotTalkedToWalrus);
+
+        ConditionalScriptActionGroup hasTalkedToWalrus = new ConditionalScriptActionGroup();
+        hasTalkedToWalrus.addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+        TextboxScriptAction hasTalkedToWalrusTextbox = new TextboxScriptAction();
+        hasTalkedToWalrusTextbox.addText("I sure love doing walrus things!");
+        hasTalkedToWalrus.addScriptAction(hasTalkedToWalrusTextbox);
+        hasTalkedToWalrusConditional.addConditionalScriptActionGroup(hasTalkedToWalrus);
+
+        scriptActions.add(hasTalkedToWalrusConditional);
+
         scriptActions.add(new UnlockPlayerScriptAction());
 
         scriptActions.add(new ChangeFlagScriptAction("hasTalkedToWalrus", true));

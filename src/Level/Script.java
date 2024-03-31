@@ -1,7 +1,11 @@
 package Level;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import GameObject.Rectangle;
+import Scripting.ConditionalScriptAction;
+import Scripting.ConditionalScriptActionGroup;
 import Scripting.ScriptAction;
 import Utils.Direction;
 
@@ -44,10 +48,23 @@ public abstract class Script<T extends MapEntity> {
 
     public void initialize() {
         scriptActions = loadScriptActions();
+        Queue<ScriptAction> scriptActionsToInitialize = new LinkedList<>();
         for (ScriptAction scriptAction : scriptActions) {
+            scriptActionsToInitialize.add(scriptAction);
+        }
+        while (!scriptActionsToInitialize.isEmpty()) {
+            ScriptAction scriptAction = scriptActionsToInitialize.poll();
             scriptAction.setMap(map);
             scriptAction.setPlayer(player);
             scriptAction.setEntity(entity);
+            if (scriptAction instanceof ConditionalScriptAction) {
+                ConditionalScriptAction conditionalScriptAction = (ConditionalScriptAction)scriptAction;
+                for (ConditionalScriptActionGroup conditionalScriptActionGroup : conditionalScriptAction.getConditionalScriptActionGroups()) {
+                    for (ScriptAction conditionalScriptActionGroupScriptAction : conditionalScriptActionGroup.getScriptActions()) {
+                        scriptActionsToInitialize.add(conditionalScriptActionGroupScriptAction);
+                    }
+                }
+            }
         }
     }
 
