@@ -1,6 +1,5 @@
 package ScriptActions;
 
-import Level.NPC;
 import Level.ScriptState;
 
 public class ChangeFlagScriptAction extends ScriptAction {
@@ -13,11 +12,6 @@ public class ChangeFlagScriptAction extends ScriptAction {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public ScriptState execute() {
         if (flagState) {
             this.map.getFlagManager().setFlag(flagName);
@@ -27,10 +21,4 @@ public class ChangeFlagScriptAction extends ScriptAction {
         }
         return ScriptState.COMPLETED;
     }
-
-    @Override
-    public void cleanup() {
-
-    }
-    
 }

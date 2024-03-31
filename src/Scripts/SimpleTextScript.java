@@ -2,6 +2,7 @@ package Scripts;
 
 import java.util.ArrayList;
 
+import Level.FlagManager;
 import Level.Script;
 import ScriptActions.LockPlayerScriptAction;
 import ScriptActions.ScriptAction;
@@ -20,7 +21,7 @@ public class SimpleTextScript extends Script {
     public SimpleTextScript(String[] text) {
         this.textItems = text;
     }
-
+    
     @Override
     public ArrayList<ScriptAction> loadScriptActions() {
         ArrayList<ScriptAction> scriptActions = new ArrayList<>();

@@ -1,5 +1,6 @@
 package ScriptActions;
 
+import Level.FlagManager;
 import Level.Map;
 import Level.MapEntity;
 import Level.Player;
@@ -9,12 +10,15 @@ public abstract class ScriptAction {
     protected Map map;
     protected Player player;
     protected MapEntity entity;
+    protected ScriptActionOutputManager outputManager;
 
-    public abstract void setup();
+    public void setup() {}
 
-    public abstract ScriptState execute();
+    public ScriptState execute() {
+        return ScriptState.COMPLETED;
+    }
 
-    public abstract void cleanup();
+    public void cleanup() {}
 
     public void setMap(Map map) {
         this.map = map;
@@ -26,5 +30,9 @@ public abstract class ScriptAction {
 
     public void setEntity(MapEntity entity) {
         this.entity = entity;
+    }
+
+    public void setOutputManager(ScriptActionOutputManager outputManager) {
+        this.outputManager = outputManager;
     }
 }

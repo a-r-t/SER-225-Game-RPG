@@ -100,11 +100,6 @@ public class ConditionalScriptAction extends ScriptAction {
         return ScriptState.RUNNING;
     }
 
-    @Override
-    public void cleanup() {
-        
-    }
-
     public void setMap(Map map) {
         this.map = map;
     }

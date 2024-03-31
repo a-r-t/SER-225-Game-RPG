@@ -7,6 +7,7 @@ import GameObject.Rectangle;
 import ScriptActions.ConditionalScriptAction;
 import ScriptActions.ConditionalScriptActionGroup;
 import ScriptActions.ScriptAction;
+import ScriptActions.ScriptActionOutputManager;
 import Utils.Direction;
 
 // This class is a base class for all scripts in the game -- all scripts should extend from it
@@ -32,6 +33,12 @@ public abstract class Script<T extends MapEntity> {
     // reference to the player instance which can be used in any script
     protected Player player;
 
+    protected ScriptActionOutputManager scriptActionOutputManager;
+
+    public Script() {
+        scriptActionOutputManager = new ScriptActionOutputManager();
+    }
+
     protected int frameDelayCounter = 0;
 
     public Map getMap() { return map; }
@@ -45,6 +52,9 @@ public abstract class Script<T extends MapEntity> {
     public ArrayList<ScriptAction> getScriptActions() {
         return scriptActions;
     }
+    public ScriptActionOutputManager getScriptActionOutputManager() {
+        return scriptActionOutputManager;
+    }
 
     public void initialize() {
         scriptActions = loadScriptActions();
@@ -57,6 +67,7 @@ public abstract class Script<T extends MapEntity> {
             scriptAction.setMap(map);
             scriptAction.setPlayer(player);
             scriptAction.setEntity(entity);
+            scriptAction.setOutputManager(scriptActionOutputManager);
             if (scriptAction instanceof ConditionalScriptAction) {
                 ConditionalScriptAction conditionalScriptAction = (ConditionalScriptAction)scriptAction;
                 for (ConditionalScriptActionGroup conditionalScriptActionGroup : conditionalScriptAction.getConditionalScriptActionGroups()) {

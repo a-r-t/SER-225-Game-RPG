@@ -2,9 +2,9 @@ package Scripts.TestMap;
 
 import java.util.ArrayList;
 
+import Level.FlagManager;
 import Level.NPC;
 import Level.Script;
-import Level.ScriptState;
 import ScriptActions.ChangeFlagScriptAction;
 import ScriptActions.ConditionalScriptAction;
 import ScriptActions.ConditionalScriptActionGroup;

@@ -5,15 +5,6 @@ import Level.ScriptState;
 
 public class NPCFacePlayerScriptAction extends ScriptAction {
 
-
-    public NPCFacePlayerScriptAction() {
-    }
-
-    @Override
-    public void setup() {
-
-    }
-
     @Override
     public ScriptState execute() {
         if (entity instanceof NPC) {
@@ -22,10 +13,4 @@ public class NPCFacePlayerScriptAction extends ScriptAction {
         }
         return ScriptState.COMPLETED;
     }
-
-    @Override
-    public void cleanup() {
-
-    }
-    
 }
