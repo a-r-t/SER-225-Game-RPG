@@ -31,13 +31,26 @@ public class ConditionalScriptAction extends ScriptAction {
 
     @Override
     public void setup() {
+        boolean groupRequirementMet = false;
         for (int i = 0; i < conditionalScriptActionGroups.size(); i++) {
             ConditionalScriptActionGroup conditionalScriptActionGroup = conditionalScriptActionGroups.get(i);
             if (areFlagRequirementsMet(conditionalScriptActionGroup)) {
                 currentScriptActionGroupIndex = i;
                 currentScriptActionIndex = 0;
                 conditionalScriptActionGroups.get(currentScriptActionGroupIndex).getScriptActions().get(currentScriptActionIndex).setup();
+                groupRequirementMet = true;
+                break;
             }
+        }
+        if (!groupRequirementMet) {
+            // this prevents a crash from occurring if no group requirements have been met
+            // it just adds a fake group with a fake script action that does nothing
+            // while there are other ways of fixing this, the other ways result in the script execution code being less efficient, which is not ideal for a game that needs to run as fast as possible
+            ConditionalScriptActionGroup conditionalScriptActionGroup = new ConditionalScriptActionGroup();
+            conditionalScriptActionGroup.addScriptAction(new DoNothingScriptAction());
+            conditionalScriptActionGroups.add(conditionalScriptActionGroup);
+            currentScriptActionGroupIndex = conditionalScriptActionGroups.size() - 1;
+            currentScriptActionIndex = 0;
         }
     }
 
