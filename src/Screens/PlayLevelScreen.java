@@ -72,7 +72,7 @@ public class PlayLevelScreen extends Screen {
             if (trigger.getTriggerScript() != null) {
                 trigger.getTriggerScript().setMap(map);
                 trigger.getTriggerScript().setPlayer(player);
-                trigger.getInteractScript().initialize();
+                trigger.getTriggerScript().initialize();
             }
         }
 

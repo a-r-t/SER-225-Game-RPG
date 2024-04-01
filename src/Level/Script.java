@@ -57,7 +57,11 @@ public abstract class Script<T extends MapEntity> {
     }
 
     public void initialize() {
+        // load script actions from subclass
         scriptActions = loadScriptActions();
+
+        // recursively iterate through all script actoins and set the necessary properties on them
+        // the recursive part is needed due ot conditionals having nested script actions, and those conditionals can have nested conditionals, etc.
         Queue<ScriptAction> scriptActionsToInitialize = new LinkedList<>();
         for (ScriptAction scriptAction : scriptActions) {
             scriptActionsToInitialize.add(scriptAction);
@@ -101,7 +105,7 @@ public abstract class Script<T extends MapEntity> {
             }
             else {
                 this.isActive = false;
-                map.setActiveInteractScript(null);
+                map.setActiveScript(null);
             }
         }
     }

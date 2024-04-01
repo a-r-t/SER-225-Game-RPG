@@ -58,7 +58,7 @@ public abstract class Map {
     protected ArrayList<NPC> npcs;
     protected ArrayList<Trigger> triggers;
 
-    protected Script activeInteractScript;
+    protected Script activeScript;
 
     // if set to false, camera will not move as player moves
     protected boolean adjustCamera = true;
@@ -304,13 +304,12 @@ public abstract class Map {
         return animatedMapTiles;
     }
 
-    public Script getActiveInteractScript() {
-        return activeInteractScript;
+    public Script getActiveScript() {
+        return activeScript;
     }
 
-    // this method is only used to set activeInteractScript back to null after the script is finished running
-    public void setActiveInteractScript(Script script) {
-        activeInteractScript = script;
+    public void setActiveScript(Script script) {
+        activeScript = script;
     }
 
     public NPC getNPCById(int id) {
@@ -408,7 +407,7 @@ public abstract class Map {
         }
         if (interactedEntity != null) {
             interactedEntity.getInteractScript().setIsActive(true);
-            activeInteractScript = interactedEntity.getInteractScript();
+            activeScript = interactedEntity.getInteractScript();
         }
     }
 
