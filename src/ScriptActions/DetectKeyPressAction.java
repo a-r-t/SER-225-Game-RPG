@@ -6,17 +6,17 @@ import Engine.Key;
 import Engine.Keyboard;
 import Level.ScriptState;
 
-public class KeyPressAction extends ScriptAction {
+public class DetectKeyPressAction extends ScriptAction {
 
     protected ArrayList<Key> keyOptions;
     protected String keyPressedFlagName;
 
-    public KeyPressAction(String keyPressedFlagName) {
+    public DetectKeyPressAction(String keyPressedFlagName) {
         this.keyOptions = new ArrayList<>();
         this.keyPressedFlagName = keyPressedFlagName;
     }
 
-    public KeyPressAction(ArrayList<Key> keyOptions, String keyPressedFlagName) {
+    public DetectKeyPressAction(ArrayList<Key> keyOptions, String keyPressedFlagName) {
         this.keyOptions = keyOptions;
         this.keyPressedFlagName = keyPressedFlagName;
     }

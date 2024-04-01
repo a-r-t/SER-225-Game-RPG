@@ -131,11 +131,4 @@ public class GamePanel extends JPanel {
 		graphicsHandler.setGraphics((Graphics2D) g);
 		draw();
 	}
-
-	// prevent JPanel from scheduling a repaint unless "repaint" is explicitly called
-	// this fixes some drawing order bugs that were inconsistently occurring on startup
-	@Override
-	public boolean isPaintingOrigin() {
-		return false;
-	}
 }

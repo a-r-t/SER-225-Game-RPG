@@ -1,17 +1,12 @@
 package Maps;
 
 import EnhancedMapTiles.PushableRock;
-import Level.EnhancedMapTile;
-import Level.Map;
-import Level.NPC;
-import Level.Trigger;
+import Level.*;
+import NPCs.Bug;
 import NPCs.Dinosaur;
 import NPCs.Walrus;
 import Scripts.SimpleTextScript;
-import Scripts.TestMap.DinoScript;
-import Scripts.TestMap.LostBallScript;
-import Scripts.TestMap.TreeScript;
-import Scripts.TestMap.WalrusScript;
+import Scripts.TestMap.*;
 import Tilesets.CommonTileset;
 
 import java.util.ArrayList;
@@ -46,6 +41,10 @@ public class TestMap extends Map {
         dinosaur.setExistenceFlag("hasTalkedToDinosaur");
         dinosaur.setInteractScript(new DinoScript());
         npcs.add(dinosaur);
+        
+        Bug bug = new Bug(3, getMapTile(20, 12).getLocation());
+        bug.setInteractScript(new BugScript());
+        npcs.add(bug);
 
         return npcs;
     }
