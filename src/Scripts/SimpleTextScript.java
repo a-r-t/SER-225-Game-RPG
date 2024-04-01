@@ -1,13 +1,9 @@
 package Scripts;
 
 import java.util.ArrayList;
-
-import Level.FlagManager;
 import Level.Script;
-import ScriptActions.LockPlayerScriptAction;
-import ScriptActions.ScriptAction;
-import ScriptActions.TextboxScriptAction;
-import ScriptActions.UnlockPlayerScriptAction;
+import ScriptActions.*;
+
 
 // Reusable simple interact script
 // Just shows text upon interacting with the associated entity

@@ -14,7 +14,7 @@ import Utils.Direction;
 // Scripts can be used to interact with map entities
 // Each script defines a set of instructions that will be carried out by the game when it is set to active
 // Some examples include interact scripts (such as talking to an NPC) and trigger scripts (scripts that activate when the player walks on them)
-public abstract class Script<T extends MapEntity> {
+public abstract class Script {
     protected ArrayList<ScriptAction> scriptActions;
 
     // this is set to true if script is currently being executed
@@ -24,8 +24,7 @@ public abstract class Script<T extends MapEntity> {
     protected boolean start = true;
 
     // references to the map entity the script is attached to
-    // use generic type if you need to use this reference
-    protected T entity;
+    protected MapEntity entity;
 
     // reference to the map instance which can be used in any script
     protected Map map;
@@ -45,8 +44,8 @@ public abstract class Script<T extends MapEntity> {
     public void setMap(Map map) { this.map = map; }
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
-    public T getEntity() { return entity; }
-    public void setMapEntity(T entity) {
+    public MapEntity getEntity() { return entity; }
+    public void setMapEntity(MapEntity entity) {
         this.entity = entity;
     }
     public ArrayList<ScriptAction> getScriptActions() {

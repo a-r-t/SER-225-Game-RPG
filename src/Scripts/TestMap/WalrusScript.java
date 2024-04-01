@@ -2,21 +2,11 @@ package Scripts.TestMap;
 
 import java.util.ArrayList;
 
-import Level.FlagManager;
-import Level.NPC;
 import Level.Script;
-import ScriptActions.ChangeFlagScriptAction;
-import ScriptActions.ConditionalScriptAction;
-import ScriptActions.ConditionalScriptActionGroup;
-import ScriptActions.FlagRequirement;
-import ScriptActions.LockPlayerScriptAction;
-import ScriptActions.NPCFacePlayerScriptAction;
-import ScriptActions.ScriptAction;
-import ScriptActions.TextboxScriptAction;
-import ScriptActions.UnlockPlayerScriptAction;
+import ScriptActions.*;
 
 // script for talking to walrus npc
-public class WalrusScript extends Script<NPC> {
+public class WalrusScript extends Script {
 
     @Override
     public ArrayList<ScriptAction> loadScriptActions() {
@@ -25,26 +15,21 @@ public class WalrusScript extends Script<NPC> {
 
         scriptActions.add(new NPCFacePlayerScriptAction());
 
+        scriptActions.add(new ConditionalScriptAction() {{
+            addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+                addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", false));
+                addScriptAction(new TextboxScriptAction() {{
+                    addText("Hi Cat!");
+                    addText("...oh, you lost your ball?");
+                    addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+                }});
+            }});
 
-        ConditionalScriptAction hasTalkedToWalrusConditional = new ConditionalScriptAction();
-
-        ConditionalScriptActionGroup hasNotTalkedToWalrus = new ConditionalScriptActionGroup();
-        hasNotTalkedToWalrus.addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", false));
-        TextboxScriptAction hasNotTalkedToWalrusTextbox = new TextboxScriptAction();
-        hasNotTalkedToWalrusTextbox.addText("Hi Cat!");
-        hasNotTalkedToWalrusTextbox.addText("...oh, you lost your ball?");
-        hasNotTalkedToWalrusTextbox.addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
-        hasNotTalkedToWalrus.addScriptAction(hasNotTalkedToWalrusTextbox);
-        hasTalkedToWalrusConditional.addConditionalScriptActionGroup(hasNotTalkedToWalrus);
-
-        ConditionalScriptActionGroup hasTalkedToWalrus = new ConditionalScriptActionGroup();
-        hasTalkedToWalrus.addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", true));
-        TextboxScriptAction hasTalkedToWalrusTextbox = new TextboxScriptAction();
-        hasTalkedToWalrusTextbox.addText("I sure love doing walrus things!");
-        hasTalkedToWalrus.addScriptAction(hasTalkedToWalrusTextbox);
-        hasTalkedToWalrusConditional.addConditionalScriptActionGroup(hasTalkedToWalrus);
-
-        scriptActions.add(hasTalkedToWalrusConditional);
+            addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+                addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+                addScriptAction(new TextboxScriptAction("I sure love doing walrus things!"));
+            }});
+        }});
 
         scriptActions.add(new UnlockPlayerScriptAction());
 

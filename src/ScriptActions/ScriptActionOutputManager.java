@@ -23,6 +23,10 @@ public class ScriptActionOutputManager {
         output.put(flagName, new ScriptActionOutput(data));
     }
 
+    public void addFlag(String flagName, Object data) {
+        output.put(flagName, new ScriptActionOutput(data));
+    }
+
     public <T> T getFlagData(String flagName) {
         return (T)output.get(flagName).getData();
     }

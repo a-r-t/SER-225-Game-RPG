@@ -12,6 +12,11 @@ public class TextboxScriptAction extends ScriptAction {
         this.textItems = new ArrayList<String>();
     }
 
+    public TextboxScriptAction(String text) {
+        this.textItems = new ArrayList<String>();
+        this.textItems.add(text);
+    }
+
     public TextboxScriptAction(String[] textItems) {
         this.textItems = new ArrayList<String>(Arrays.asList(textItems));
     }
