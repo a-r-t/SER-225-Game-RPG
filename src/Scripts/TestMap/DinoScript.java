@@ -25,8 +25,8 @@ public class DinoScript extends Script {
 
         scriptActions.add(new ConditionalScriptAction() {{
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
-                addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", true));
-                addFlagRequirement(new FlagRequirement("hasTalkedToDinosaur", false));
+                addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+                addRequirement(new FlagRequirement("hasTalkedToDinosaur", false));
 
                 addScriptAction(new WaitScriptAction(70));
                 addScriptAction(new NPCFacePlayerScriptAction());
@@ -38,6 +38,7 @@ public class DinoScript extends Script {
                     addText("Now, if you'll excuse me, I have to go.");
                 }});
                 addScriptAction(new NPCStandScriptAction(Direction.RIGHT));
+
                 addScriptAction(new NPCWalkScriptAction(Direction.DOWN, 36, 2));
                 addScriptAction(new NPCWalkScriptAction(Direction.RIGHT, 196, 2));
 
@@ -58,8 +59,10 @@ public class DinoScript extends Script {
                         return ScriptState.COMPLETED;
                     }
                 });
+
                 addScriptAction(new NPCWalkScriptAction(Direction.UP, 50, 2));
                 addScriptAction(new NPCChangeVisibilityScriptAction(Visibility.HIDDEN));
+
                 addScriptAction(new ScriptAction() {
                     @Override
                     public ScriptState execute() {

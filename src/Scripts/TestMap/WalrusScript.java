@@ -17,7 +17,7 @@ public class WalrusScript extends Script {
 
         scriptActions.add(new ConditionalScriptAction() {{
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
-                addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", false));
+                addRequirement(new FlagRequirement("hasTalkedToWalrus", false));
                 addScriptAction(new TextboxScriptAction() {{
                     addText("Hi Cat!");
                     addText("...oh, you lost your ball?");
@@ -26,7 +26,7 @@ public class WalrusScript extends Script {
             }});
 
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
-                addFlagRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+                addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
                 addScriptAction(new TextboxScriptAction("I sure love doing walrus things!"));
             }});
         }});

@@ -1,6 +1,6 @@
 package ScriptActions;
 
-public class FlagRequirement {
+public class FlagRequirement extends Requirement {
     protected String flagName;
     protected boolean flagValue;
 

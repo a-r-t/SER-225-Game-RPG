@@ -34,7 +34,8 @@ public class ConditionalScriptAction extends ScriptAction {
         boolean groupRequirementMet = false;
         for (int i = 0; i < conditionalScriptActionGroups.size(); i++) {
             ConditionalScriptActionGroup conditionalScriptActionGroup = conditionalScriptActionGroups.get(i);
-            if (areFlagRequirementsMet(conditionalScriptActionGroup)) {
+            
+            if (areRequirementsMet(conditionalScriptActionGroup)) {
                 currentScriptActionGroupIndex = i;
                 currentScriptActionIndex = 0;
                 conditionalScriptActionGroups.get(currentScriptActionGroupIndex).getScriptActions().get(currentScriptActionIndex).setup();
@@ -56,27 +57,41 @@ public class ConditionalScriptAction extends ScriptAction {
         addScriptAction(new DoNothingScriptAction());
     }};
 
-    protected boolean areFlagRequirementsMet(ConditionalScriptActionGroup conditionalScriptActionGroup) {
-        ArrayList<Boolean> metFlagRequirementStatuses = new ArrayList<>();
-        for (FlagRequirement flagRequirement : conditionalScriptActionGroup.getFlagRequirements()) {
-            String flagName = flagRequirement.getFlagName();
-            boolean currentFlagStatus = this.map.getFlagManager().isFlagSet(flagName);
-            if (flagRequirement.flagValue == currentFlagStatus) {
-                metFlagRequirementStatuses.add(true);
+    protected boolean areRequirementsMet(ConditionalScriptActionGroup conditionalScriptActionGroup) {
+        ArrayList<Boolean> metRequirementStatuses = new ArrayList<>();
+        for (Requirement requirement : conditionalScriptActionGroup.getRequirements()) {
+            boolean requirementStatus = false;
+            if (requirement instanceof FlagRequirement) {
+                requirementStatus = isFlagRequirementMet((FlagRequirement)requirement);
+            }
+            else if (requirement instanceof CustomRequirement) {
+                requirementStatus = ((CustomRequirement)requirement).isRequirementMet();
+            }
+            if (!requirementStatus && conditionalScriptActionGroup.flagStrategy == FlagStrategy.AND) {
+                return false;
+            }
+            else if (requirementStatus && conditionalScriptActionGroup.flagStrategy == FlagStrategy.OR) {
+                return true;
             }
             else {
-                metFlagRequirementStatuses.add(false);
+                metRequirementStatuses.add(requirementStatus);
             }
         }
+        // if strategy is AND, all requirements had to have been met up to this point to avoid the short circuit, so we know its true
         if (conditionalScriptActionGroup.getFlagStrategy() == FlagStrategy.AND) {
-            boolean allMet = metFlagRequirementStatuses.stream().allMatch(val -> val == true);
-            return allMet;
+            return true;
         }
+        // if strategy is OR, no requirements had to have been met up to this point to avoid the short circuit, so we know its false
         else {
-            boolean someMet = metFlagRequirementStatuses.stream().anyMatch(val -> val == true);
-            return someMet;
+            return false;
         }
 
+    }
+
+    protected boolean isFlagRequirementMet(FlagRequirement flagRequirement) {
+        String flagName = flagRequirement.getFlagName();
+        boolean currentFlagStatus = this.map.getFlagManager().isFlagSet(flagName);
+        return flagRequirement.flagValue == currentFlagStatus;
     }
 
     @Override

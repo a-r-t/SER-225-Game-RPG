@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class ConditionalScriptActionGroup {
     protected ArrayList<ScriptAction> scriptActions;
-    protected ArrayList<FlagRequirement> flagRequirements;
+    protected ArrayList<Requirement> requirements;
     protected FlagStrategy flagStrategy;
 
     public ConditionalScriptActionGroup() {
         scriptActions = new ArrayList<ScriptAction>();
-        flagRequirements = new ArrayList<FlagRequirement>();
+        requirements = new ArrayList<Requirement>();
         this.flagStrategy = FlagStrategy.AND;
     }
     
@@ -21,12 +21,12 @@ public class ConditionalScriptActionGroup {
         scriptActions.add(scriptAction);
     }
 
-    public void addFlagRequirement(FlagRequirement flagRequirement) {
-        flagRequirements.add(flagRequirement);
+    public void addRequirement(Requirement requirement) {
+        requirements.add(requirement);
     }
 
-    public ArrayList<FlagRequirement> getFlagRequirements() {
-        return flagRequirements;
+    public ArrayList<Requirement> getRequirements() {
+        return requirements;
     }
 
     public FlagStrategy getFlagStrategy() {
