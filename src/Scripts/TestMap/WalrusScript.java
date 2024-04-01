@@ -23,6 +23,7 @@ public class WalrusScript extends Script {
                     addText("...oh, you lost your ball?");
                     addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
                 }});
+                addScriptAction(new ChangeFlagScriptAction("hasTalkedToWalrus", true));
             }});
 
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
@@ -33,7 +34,6 @@ public class WalrusScript extends Script {
 
         scriptActions.add(new UnlockPlayerScriptAction());
 
-        scriptActions.add(new ChangeFlagScriptAction("hasTalkedToWalrus", true));
         return scriptActions;
     }
 }
