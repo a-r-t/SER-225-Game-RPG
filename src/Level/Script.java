@@ -38,8 +38,6 @@ public abstract class Script {
         scriptActionOutputManager = new ScriptActionOutputManager();
     }
 
-    protected int frameDelayCounter = 0;
-
     public Map getMap() { return map; }
     public void setMap(Map map) { this.map = map; }
     public Player getPlayer() { return player; }
@@ -84,7 +82,6 @@ public abstract class Script {
 
     public abstract ArrayList<ScriptAction> loadScriptActions();
 
-    // private ScriptAction currentScriptAction;
     private int currentScriptActionIndex;
 
     private boolean hasScriptActions() {
@@ -122,41 +119,41 @@ public abstract class Script {
 
     // prevents player from being able to do anything (such as move) while script is being executed
     // useful to prevent player from moving away while interacting with something, etc
-    protected void lockPlayer() {
-        player.setPlayerState(PlayerState.INTERACTING);
-        player.setCurrentAnimationName(player.getFacingDirection() == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT");
-    }
+    // protected void lockPlayer() {
+    //     player.setPlayerState(PlayerState.INTERACTING);
+    //     player.setCurrentAnimationName(player.getFacingDirection() == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT");
+    // }
 
-    // allow player to go back to its usual game state (being able to move, talk to things, etc)
-    // typically used right before script is finished to give control back to the player
-    protected void unlockPlayer() {
-        player.setPlayerState(PlayerState.STANDING);
-    }
+    // // allow player to go back to its usual game state (being able to move, talk to things, etc)
+    // // typically used right before script is finished to give control back to the player
+    // protected void unlockPlayer() {
+    //     player.setPlayerState(PlayerState.STANDING);
+    // }
 
     // textbox is shown on screen
-    protected void showTextbox() {
-        map.getTextbox().setIsActive(true);
-    }
+    // protected void showTextbox() {
+    //     map.getTextbox().setIsActive(true);
+    // }
 
-    // adds text to be shown in textbox
-    protected void addTextToTextboxQueue(String text) {
-        map.getTextbox().addText(text);
-    }
+    // // adds text to be shown in textbox
+    // protected void addTextToTextboxQueue(String text) {
+    //     map.getTextbox().addText(text);
+    // }
 
-    // adds a series of text to be shown in textbox
-    protected void addTextToTextboxQueue(String[] text) {
-        map.getTextbox().addText(text);
-    }
+    // // adds a series of text to be shown in textbox
+    // protected void addTextToTextboxQueue(String[] text) {
+    //     map.getTextbox().addText(text);
+    // }
 
-    // checks if textbox has already shown all text in its queue
-    protected boolean isTextboxQueueEmpty() {
-        return map.getTextbox().isTextQueueEmpty();
-    }
+    // // checks if textbox has already shown all text in its queue
+    // protected boolean isTextboxQueueEmpty() {
+    //     return map.getTextbox().isTextQueueEmpty();
+    // }
 
-    // remove textbox from screen
-    protected void hideTextbox() {
-        map.getTextbox().setIsActive(false);
-    }
+    // // remove textbox from screen
+    // protected void hideTextbox() {
+    //     map.getTextbox().setIsActive(false);
+    // }
 
     // gets an npc instance by its id value
     protected NPC getNPC(int npcId) {
@@ -168,23 +165,23 @@ public abstract class Script {
         return null;
     }
 
-    // force an npc instance to face the player
-    // npc chosen based on its id value
-    protected void npcFacePlayer(int npcId) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.facePlayer(player);
-        }
-    }
+    // // force an npc instance to face the player
+    // // npc chosen based on its id value
+    // protected void npcFacePlayer(int npcId) {
+    //     NPC npc = getNPC(npcId);
+    //     if (npc != null) {
+    //         npc.facePlayer(player);
+    //     }
+    // }
 
-    // force an npc to walk in a specified direction at a specified speed
-    // npc chosen based on its id value
-    protected void npcWalk(int npcId, Direction direction, float speed) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.walk(direction, speed);
-        }
-    }
+    // // force an npc to walk in a specified direction at a specified speed
+    // // npc chosen based on its id value
+    // protected void npcWalk(int npcId, Direction direction, float speed) {
+    //     NPC npc = getNPC(npcId);
+    //     if (npc != null) {
+    //         npc.walk(direction, speed);
+    //     }
+    // }
 
     // force an npc to enter a specified animation
     // npc chosen based on its id value
@@ -217,27 +214,6 @@ public abstract class Script {
     // sets a flag to falase
     protected void unsetFlag(String flagName) {
         map.getFlagManager().unsetFlag(flagName);
-    }
-
-    // sets amount of frames to wait before moving on
-    protected void setWaitTime(int frames) {
-        frameDelayCounter = frames;
-    }
-
-    // checks if wait time is completed (use in conjunction with setWaitTime)
-    protected boolean isWaitTimeUp() {
-        return frameDelayCounter == 0;
-    }
-
-    // gets a specified map tile instance by index from the map
-    protected MapTile getMapTile(int x, int y) {
-        return map.getMapTile(x, y);
-    }
-
-    // changes a specified map tile instance by index from the map to the provided map tile
-    protected void setMapTile(int x, int y, MapTile mapTile) {
-        mapTile.setMap(map);
-        map.setMapTile(x, y, mapTile);
     }
 
     // checks if player is currently below the entity attached to this script

@@ -108,21 +108,18 @@ public class GamePanel extends JPanel {
 		fpsDisplayLabel.setText("FPS: " + currentFPS);
 	}
 
-	public void draw() {
-		if (gameLoopProcess.isAlive()) {
-			
-			// draw current game state
-			screenManager.draw(graphicsHandler);
+	public void draw() {			
+		// draw current game state
+		screenManager.draw(graphicsHandler);
 
-			// if game is paused, draw pause gfx over Screen gfx
-			if (isGamePaused) {
-				pauseLabel.draw(graphicsHandler);
-				graphicsHandler.drawFilledRectangle(0, 0, ScreenManager.getScreenWidth(), ScreenManager.getScreenHeight(), new Color(0, 0, 0, 100));
-			}
+		// if game is paused, draw pause gfx over Screen gfx
+		if (isGamePaused) {
+			pauseLabel.draw(graphicsHandler);
+			graphicsHandler.drawFilledRectangle(0, 0, ScreenManager.getScreenWidth(), ScreenManager.getScreenHeight(), new Color(0, 0, 0, 100));
+		}
 
-			if (showFPS) {
-				fpsDisplayLabel.draw(graphicsHandler);
-			}
+		if (showFPS) {
+			fpsDisplayLabel.draw(graphicsHandler);
 		}
 	}
 
@@ -133,5 +130,12 @@ public class GamePanel extends JPanel {
 		// when called, it will setup the graphics handler and then call this class's draw method
 		graphicsHandler.setGraphics((Graphics2D) g);
 		draw();
+	}
+
+	// prevent JPanel from scheduling a repaint unless "repaint" is explicitly called
+	// this fixes some drawing order bugs that were inconsistently occurring on startup
+	@Override
+	public boolean isPaintingOrigin() {
+		return false;
 	}
 }
