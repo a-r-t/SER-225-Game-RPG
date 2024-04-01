@@ -26,11 +26,6 @@ public class DetectKeyPressAction extends ScriptAction {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public ScriptState execute() {
         for (Key key: this.keyOptions) {
             if (Keyboard.isKeyDown(key)) {
@@ -40,10 +35,4 @@ public class DetectKeyPressAction extends ScriptAction {
         }
         return ScriptState.RUNNING;
     }
-
-    @Override
-    public void cleanup() {
-        
-    }
-    
 }

@@ -16,12 +16,16 @@ public class NPCChangeVisibilityScriptAction extends ScriptAction {
         this.npc = map.getNPCById(npcId);
         this.visibility = visibility;
     }
-
+    
     @Override
-    public ScriptState execute() {
+    public void setup() {
         if (this.npc == null) {
             this.npc = (NPC)entity;
         }
+    }
+
+    @Override
+    public ScriptState execute() {
         if (visibility == Visibility.VISIBLE) {
             npc.setIsHidden(false);
         }

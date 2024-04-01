@@ -26,6 +26,9 @@ public class NPCWalkScriptAction extends ScriptAction {
 
     @Override
     public void setup() {
+        if (this.npc == null) {
+            this.npc = (NPC)entity;
+        }
         amountMoved = 0;
     }
 

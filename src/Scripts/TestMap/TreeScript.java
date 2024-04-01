@@ -22,6 +22,7 @@ public class TreeScript extends Script {
     public ArrayList<ScriptAction> loadScriptActions() {
         ArrayList<ScriptAction> scriptActions = new ArrayList<>();
         scriptActions.add(new LockPlayerScriptAction());
+        
         scriptActions.add(new ConditionalScriptAction() {{
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
                 addRequirement(new FlagRequirement("hasTalkedToDinosaur", true));
@@ -32,9 +33,7 @@ public class TreeScript extends Script {
                     public boolean isRequirementMet() {
                         return isPlayerBelowEntity();
                     }
-                    
                 });
-
 
                 addScriptAction(new TextboxScriptAction() {{
                     addText("...");

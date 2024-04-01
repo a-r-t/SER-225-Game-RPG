@@ -18,10 +18,14 @@ public class NPCStandScriptAction extends ScriptAction {
     }
 
     @Override
-    public ScriptState execute() {
+    public void setup() {
         if (this.npc == null) {
             this.npc = (NPC)entity;
         }
+    }
+
+    @Override
+    public ScriptState execute() {
         npc.stand(facingDirection);
         return ScriptState.COMPLETED;
     }
