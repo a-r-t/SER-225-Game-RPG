@@ -72,6 +72,9 @@ public abstract class Map {
     // map's textbox instance
     protected Textbox textbox;
 
+    // reference to current player
+    protected Player player;
+
     public Map(String mapFileName, Tileset tileset) {
         this.mapFileName = mapFileName;
         this.tileset = tileset;
@@ -311,6 +314,53 @@ public abstract class Map {
 
     public void setActiveScript(Script script) {
         activeScript = script;
+
+        // script is set to null if there is no active script running, or if a script has completed running
+        // if script is null, do not set it to be active
+        // otherwise, set script to active, which will begin its execution
+        if (script != null) {
+
+            // if the script was not previously preloaded (preloadScripts method) beforehand, this will load the script dynamically
+            // preloading is recommended, but both are supported
+            if (script.getScriptActions() == null) {
+                activeScript.setMap(this);
+                activeScript.setPlayer(player);
+                activeScript.initialize();
+            }
+            activeScript.setIsActive(true);
+        }
+    }
+
+    public void preloadScripts() {
+        // setup map scripts to have references to the map and player
+        for (MapTile mapTile : mapTiles) {
+            if (mapTile.getInteractScript() != null) {
+                mapTile.getInteractScript().setMap(this);
+                mapTile.getInteractScript().setPlayer(player);
+                mapTile.getInteractScript().initialize();
+            }
+        }
+        for (NPC npc : npcs) {
+            if (npc.getInteractScript() != null) {
+                npc.getInteractScript().setMap(this);
+                npc.getInteractScript().setPlayer(player);
+                npc.getInteractScript().initialize();
+            }
+        }
+        for (EnhancedMapTile enhancedMapTile : enhancedMapTiles) {
+            if (enhancedMapTile.getInteractScript() != null) {
+                enhancedMapTile.getInteractScript().setMap(this);
+                enhancedMapTile.getInteractScript().setPlayer(player);
+                enhancedMapTile.getInteractScript().initialize();
+            }
+        }
+        for (Trigger trigger : triggers) {
+            if (trigger.getTriggerScript() != null) {
+                trigger.getTriggerScript().setMap(this);
+                trigger.getTriggerScript().setPlayer(player);
+                trigger.getTriggerScript().initialize();
+            }
+        }
     }
 
     public NPC getNPCById(int id) {
@@ -407,8 +457,8 @@ public abstract class Map {
             interactedEntity = currentLargestAreaOverlappedEntity;
         }
         if (interactedEntity != null) {
-            interactedEntity.getInteractScript().setIsActive(true);
-            activeScript = interactedEntity.getInteractScript();
+            // interactedEntity.getInteractScript().setIsActive(true);
+            setActiveScript(interactedEntity.getInteractScript());
         }
     }
 
@@ -559,4 +609,8 @@ public abstract class Map {
 
     public int getEndBoundX() { return endBoundX; }
     public int getEndBoundY() { return endBoundY; }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }
