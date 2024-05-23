@@ -1,6 +1,5 @@
 package ScriptActions;
 
-import Level.FlagManager;
 import Level.Map;
 import Level.MapEntity;
 import Level.Player;

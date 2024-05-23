@@ -4,35 +4,50 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import Level.ScriptState;
+import Level.TextboxItem;
 
 public class TextboxScriptAction extends ScriptAction {
-    private ArrayList<String> textItems;
+    private ArrayList<TextboxItem> textboxItems;
 
     public TextboxScriptAction() {
-        this.textItems = new ArrayList<String>();
+        this.textboxItems = new ArrayList<TextboxItem>();
     }
 
     public TextboxScriptAction(String text) {
-        this.textItems = new ArrayList<String>();
-        this.textItems.add(text);
+        this.textboxItems = new ArrayList<TextboxItem>();
+        this.textboxItems.add(new TextboxItem(text));
     }
 
     public TextboxScriptAction(String[] textItems) {
-        this.textItems = new ArrayList<String>(Arrays.asList(textItems));
+        this.textboxItems = new ArrayList<>();
+        for (String text : textItems) {
+            textboxItems.add(new TextboxItem(text));
+        }
     }
 
     public TextboxScriptAction(ArrayList<String> textItems) {
-        this.textItems = textItems;
+        this.textboxItems = new ArrayList<>();
+        for (String text : textItems) {
+            textboxItems.add(new TextboxItem(text));
+        }
     }
 
     public void addText(String text) {
-        this.textItems.add(text);
+        this.textboxItems.add(new TextboxItem(text));
+    }
+
+    public void addText(TextboxItem text) {
+        this.textboxItems.add(text);
+    }
+
+    public void addText(String text, String[] options) {
+        this.textboxItems.add(new TextboxItem(text, new ArrayList<>(Arrays.asList(options))));
     }
 
     @Override
     public void setup() {
-        String[] textItemsArray = textItems.toArray(new String[0]);
-        this.map.getTextbox().addText(textItemsArray);
+        TextboxItem[] textboxItemsArray = textboxItems.toArray(new TextboxItem[0]);
+        this.map.getTextbox().addText(textboxItemsArray);
         this.map.getTextbox().setIsActive(true);
     }
 

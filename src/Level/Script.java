@@ -8,7 +8,6 @@ import ScriptActions.ConditionalScriptAction;
 import ScriptActions.ConditionalScriptActionGroup;
 import ScriptActions.ScriptAction;
 import ScriptActions.ScriptActionOutputManager;
-import Utils.Direction;
 
 // This class is a base class for all scripts in the game -- all scripts should extend from it
 // Scripts can be used to interact with map entities
@@ -57,8 +56,8 @@ public abstract class Script {
         // load script actions from subclass
         scriptActions = loadScriptActions();
 
-        // recursively iterate through all script actoins and set the necessary properties on them
-        // the recursive part is needed due ot conditionals having nested script actions, and those conditionals can have nested conditionals, etc.
+        // recursively iterate through all script actiohns and set the necessary properties on them
+        // the recursive part is needed due to conditionals having nested script actions, and those conditionals can have nested conditionals, etc.
         Queue<ScriptAction> scriptActionsToInitialize = new LinkedList<>();
         for (ScriptAction scriptAction : scriptActions) {
             scriptActionsToInitialize.add(scriptAction);

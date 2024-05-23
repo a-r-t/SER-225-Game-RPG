@@ -15,20 +15,35 @@ public class BugScript extends Script {
 
         scriptActions.add(new NPCFacePlayerScriptAction());
 
+        scriptActions.add(new TextboxScriptAction() {{
+            addText("Hello!");
+            addText("Do you like bugs?", new String[] { "Yes", "No" });
+        }});
+
         scriptActions.add(new ConditionalScriptAction() {{
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
-                addRequirement(new FlagRequirement("hasTalkedToWalrus", false));
+                addRequirement(new CustomRequirement() {
+                    @Override
+                    public boolean isRequirementMet() {
+                        String answer = outputManager.getFlagData("TEXTBOX_SELECTION");
+                        return answer.equals("Yes");
+                    }
+                });
                 addScriptAction(new TextboxScriptAction() {{
-                    addText("Hi Cat!");
-                    addText("...oh, you lost your ball?");
-                    addText("Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+                    addText("I knew you were a cool cat!");
+                    addText("I'm going to let you in on a little secret...\nYou can push some rocks out of the way.");
                 }});
-                addScriptAction(new ChangeFlagScriptAction("hasTalkedToWalrus", true));
             }});
 
             addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
-                addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
-                addScriptAction(new TextboxScriptAction("I sure love doing walrus things!"));
+                addRequirement(new CustomRequirement() {
+                    @Override
+                    public boolean isRequirementMet() {
+                        String answer = outputManager.getFlagData("TEXTBOX_SELECTION");
+                        return answer.equals("No");
+                    }
+                });
+                addScriptAction(new TextboxScriptAction("Oh...uh...awkward..."));
             }});
         }});
 
