@@ -12,14 +12,15 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 // Represents the game's textbox
-// will display the text it is given to its textQueue
-// each String in the textQueue will be displayed in the textbox, and hitting the interact key will cycle between additional Strings in the queue
-// use the newline character in a String in the textQueue to break the text up into a second line if needed
+// Will display the text it is given to its textQueue
+// Each String in the textQueue will be displayed in the textbox, and hitting the interact key will cycle between additional Strings in the queue
+// Use the newline character in a String in the textQueue to break the text up into a second line if needed
+// Also supports adding options for a player to select from
 public class Textbox {
     // whether textbox is shown or not
     protected boolean isActive;
 
-    // textbox properties
+    // textbox constants
     protected final int x = 22;
     protected final int bottomY = 460;
     protected final int topY = 22;
@@ -29,7 +30,7 @@ public class Textbox {
     protected final int width = 750;
     protected final int height = 100;
 
-    // options textbox properties
+    // options textbox constants
     protected final int optionX = 680;
     protected final int optionBottomY = 350;
     protected final int optionTopY = 130;
@@ -43,14 +44,16 @@ public class Textbox {
     protected final int optionPointerYBottomStart = 378;
     protected final int optionPointerYTopStart = 158;
 
+    // core vars that make textbox work
     private Queue<TextboxItem> textQueue;
     private TextboxItem currentTextItem;
     protected int selectedOptionIndex = 0;
     private SpriteFont text = null;
     private ArrayList<SpriteFont> options = null;
     private KeyLocker keyLocker = new KeyLocker();
-    private Map map;
     private Key interactKey = Key.SPACE;
+
+    private Map map;
 
     public Textbox(Map map) {
         this.map = map;
@@ -103,23 +106,19 @@ public class Textbox {
 
             // if camera is at bottom of screen, text is drawn at top of screen instead of the bottom like usual
             // to prevent it from covering the player
-            int fontY;
-            if (!map.getCamera().isAtBottomOfMap()) {
-                fontY = fontBottomY;
-            }
-            else {
-                fontY = fontTopY;
-            }
+            int fontY = !map.getCamera().isAtBottomOfMap() ? fontBottomY : fontTopY;
+  
+            // create text spritefont that will be drawn in textbox
             text = new SpriteFont(currentTextItem.getText(), fontX, fontY, "Arial", 30, Color.black);
-            if (currentTextItem.getOptions() != null && currentTextItem.getOptions().size() > 0) {
-                int fontOptionY;
-                if (!map.getCamera().isAtBottomOfMap()) {
-                    fontOptionY = fontOptionBottomYStart;
-                }
-                else {
-                    fontOptionY = fontOptionTopYStart;
-                }
+
+            // if there are options associated with this text item, prepare option spritefont text to be drawn in options textbox
+            if (currentTextItem.getOptions() != null) {
+                // if camera is at bottom of screen, text is drawn at top of screen instead of the bottom like usual
+                // to prevent it from covering the player
+                int fontOptionY = !map.getCamera().isAtBottomOfMap() ? fontOptionBottomYStart : fontOptionTopYStart;
+
                 options = new ArrayList<>();
+                // for each option, crate option text spritefont that will be drawn in options textbox
                 for (int i = 0; i < currentTextItem.getOptions().size(); i++) {
                     options.add(new SpriteFont(currentTextItem.options.get(i), fontOptionX, fontOptionY + (i *  fontOptionSpacing), "Arial", 30, Color.black));
                 }
@@ -154,42 +153,34 @@ public class Textbox {
                 }
             }
         }
-
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
+        // draw textbox
         // if camera is at bottom of screen, textbox is drawn at top of screen instead of the bottom like usual
         // to prevent it from covering the player
-        if (!map.getCamera().isAtBottomOfMap()) {
-            graphicsHandler.drawFilledRectangleWithBorder(x, bottomY, width, height, Color.white, Color.black, 2);
-        }
-        else {
-            graphicsHandler.drawFilledRectangleWithBorder(x, topY, width, height, Color.white, Color.black, 2);
-        }
+        int y = !map.getCamera().isAtBottomOfMap() ? bottomY : topY;
+        graphicsHandler.drawFilledRectangleWithBorder(x, y, width, height, Color.white, Color.black, 2);
+
         if (text != null) {
             // draw text in textbox
             text.drawWithParsedNewLines(graphicsHandler, 10);
             if (options != null) {
                 // draw options textbox
-                if (!map.getCamera().isAtBottomOfMap()) {
-                    graphicsHandler.drawFilledRectangleWithBorder(optionX, optionBottomY, optionWidth, optionHeight, Color.white, Color.black, 2);
-                }
-                else {
-                    graphicsHandler.drawFilledRectangleWithBorder(optionX, optionTopY, optionWidth, optionHeight, Color.white, Color.black, 2);
-                }
+                // if camera is at bottom of screen, textbox is drawn at top of screen instead of the bottom like usual
+                // to prevent it from covering the player
+                int optionY = !map.getCamera().isAtBottomOfMap() ? optionBottomY : optionTopY;
+                graphicsHandler.drawFilledRectangleWithBorder(optionX, optionY, optionWidth, optionHeight, Color.white, Color.black, 2);
 
                 // draw each option text
                 for (SpriteFont option : options) {
                     option.draw(graphicsHandler);
                 }
 
-                // draw option selection indicator
-                if (!map.getCamera().isAtBottomOfMap()) {
-                    graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYBottomStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
-                }
-                else {
-                    graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYTopStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
-                }
+                // the start y location of the option pointer depends on whether the options textbox is on top or bottom of screen
+                int optionPointerYStart = !map.getCamera().isAtBottomOfMap() ? optionPointerYBottomStart : optionPointerYTopStart;
+                // draw option selection indicator (small black rectangle)
+                graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
             }
         }
     }
