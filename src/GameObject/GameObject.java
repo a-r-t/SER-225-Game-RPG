@@ -166,7 +166,6 @@ public class GameObject extends AnimatedSprite {
 		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger && map.getActiveScript() == null) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
-				// trigger.getTriggerScript().setIsActive(true);
 				map.setActiveScript(trigger.getTriggerScript());
 			}
 		}
@@ -235,7 +234,6 @@ public class GameObject extends AnimatedSprite {
 		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger && map.getActiveScript() == null) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
-				// trigger.getTriggerScript().setIsActive(true);
 				map.setActiveScript(trigger.getTriggerScript());
 			}
 		}

@@ -457,7 +457,6 @@ public abstract class Map {
             interactedEntity = currentLargestAreaOverlappedEntity;
         }
         if (interactedEntity != null) {
-            // interactedEntity.getInteractScript().setIsActive(true);
             setActiveScript(interactedEntity.getInteractScript());
         }
     }
