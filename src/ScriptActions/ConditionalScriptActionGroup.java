@@ -12,6 +12,12 @@ public class ConditionalScriptActionGroup {
         requirements = new ArrayList<Requirement>();
         this.flagStrategy = FlagStrategy.AND;
     }
+
+    public ConditionalScriptActionGroup(FlagStrategy flagStrategy) {
+        scriptActions = new ArrayList<ScriptAction>();
+        requirements = new ArrayList<Requirement>();
+        this.flagStrategy = flagStrategy;
+    }
     
     public ArrayList<ScriptAction> getScriptActions() {
         return scriptActions;

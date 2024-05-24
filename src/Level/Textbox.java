@@ -16,7 +16,10 @@ import java.util.Queue;
 // each String in the textQueue will be displayed in the textbox, and hitting the interact key will cycle between additional Strings in the queue
 // use the newline character in a String in the textQueue to break the text up into a second line if needed
 public class Textbox {
+    // whether textbox is shown or not
     protected boolean isActive;
+
+    // textbox properties
     protected final int x = 22;
     protected final int bottomY = 460;
     protected final int topY = 22;
@@ -26,16 +29,23 @@ public class Textbox {
     protected final int width = 750;
     protected final int height = 100;
 
+    // options textbox properties
+    protected final int optionX = 680;
+    protected final int optionBottomY = 350;
+    protected final int optionTopY = 130;
+    protected final int optionWidth = 92;
+    protected final int optionHeight = 100;
     protected final int fontOptionX = 706;
-    protected final int fontOptionYStart = 365;
+    protected final int fontOptionBottomYStart = 365;
+    protected final int fontOptionTopYStart = 145;
     protected final int fontOptionSpacing = 35;
     protected final int optionPointerX = 690;
-    protected final int optionPointerYStart = 378;
-    protected int selectedOptionIndex = 0;
-
+    protected final int optionPointerYBottomStart = 378;
+    protected final int optionPointerYTopStart = 158;
 
     private Queue<TextboxItem> textQueue;
     private TextboxItem currentTextItem;
+    protected int selectedOptionIndex = 0;
     private SpriteFont text = null;
     private ArrayList<SpriteFont> options = null;
     private KeyLocker keyLocker = new KeyLocker();
@@ -102,9 +112,16 @@ public class Textbox {
             }
             text = new SpriteFont(currentTextItem.getText(), fontX, fontY, "Arial", 30, Color.black);
             if (currentTextItem.getOptions() != null && currentTextItem.getOptions().size() > 0) {
+                int fontOptionY;
+                if (!map.getCamera().isAtBottomOfMap()) {
+                    fontOptionY = fontOptionBottomYStart;
+                }
+                else {
+                    fontOptionY = fontOptionTopYStart;
+                }
                 options = new ArrayList<>();
                 for (int i = 0; i < currentTextItem.getOptions().size(); i++) {
-                    options.add(new SpriteFont(currentTextItem.options.get(i), fontOptionX, fontOptionYStart + (i *  fontOptionSpacing), "Arial", 30, Color.black));
+                    options.add(new SpriteFont(currentTextItem.options.get(i), fontOptionX, fontOptionY + (i *  fontOptionSpacing), "Arial", 30, Color.black));
                 }
                 selectedOptionIndex = 0;
             }
@@ -114,8 +131,11 @@ public class Textbox {
         if (Keyboard.isKeyDown(interactKey) && !keyLocker.isKeyLocked(interactKey)) {
             keyLocker.lockKey(interactKey);
             textQueue.poll();
+
+            // if an option was selected, set output manager flag to the index of the selected option
+            // a script can then look at output manager later to see which option was selected and do with that information what it wants
             if (options != null) {
-                map.getActiveScript().getScriptActionOutputManager().addFlag("TEXTBOX_SELECTION", currentTextItem.getOptions().get(selectedOptionIndex));
+                map.getActiveScript().getScriptActionOutputManager().addFlag("TEXTBOX_OPTION_SELECTION", selectedOptionIndex);
             }
         }
         else if (Keyboard.isKeyUp(interactKey)) {
@@ -147,13 +167,29 @@ public class Textbox {
             graphicsHandler.drawFilledRectangleWithBorder(x, topY, width, height, Color.white, Color.black, 2);
         }
         if (text != null) {
+            // draw text in textbox
             text.drawWithParsedNewLines(graphicsHandler, 10);
             if (options != null) {
-                graphicsHandler.drawFilledRectangleWithBorder(680, 350, 92, 100, Color.white, Color.black, 2);
+                // draw options textbox
+                if (!map.getCamera().isAtBottomOfMap()) {
+                    graphicsHandler.drawFilledRectangleWithBorder(optionX, optionBottomY, optionWidth, optionHeight, Color.white, Color.black, 2);
+                }
+                else {
+                    graphicsHandler.drawFilledRectangleWithBorder(optionX, optionTopY, optionWidth, optionHeight, Color.white, Color.black, 2);
+                }
+
+                // draw each option text
                 for (SpriteFont option : options) {
                     option.draw(graphicsHandler);
                 }
-                graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
+
+                // draw option selection indicator
+                if (!map.getCamera().isAtBottomOfMap()) {
+                    graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYBottomStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
+                }
+                else {
+                    graphicsHandler.drawFilledRectangle(optionPointerX, optionPointerYTopStart + (selectedOptionIndex * fontOptionSpacing), 10, 10, Color.black);
+                }
             }
         }
     }

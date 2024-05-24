@@ -5,8 +5,8 @@ import Level.Script;
 import ScriptActions.*;
 
 
-// Reusable simple interact script
-// Just shows text upon interacting with the associated entity
+// simple reusable script that just shows text in textbox
+// useful for generic dialogue, signs, etc.
 public class SimpleTextScript extends Script {
     private String[] textItems;
 

@@ -116,44 +116,6 @@ public abstract class Script {
         }
     }
 
-    // prevents player from being able to do anything (such as move) while script is being executed
-    // useful to prevent player from moving away while interacting with something, etc
-    // protected void lockPlayer() {
-    //     player.setPlayerState(PlayerState.INTERACTING);
-    //     player.setCurrentAnimationName(player.getFacingDirection() == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT");
-    // }
-
-    // // allow player to go back to its usual game state (being able to move, talk to things, etc)
-    // // typically used right before script is finished to give control back to the player
-    // protected void unlockPlayer() {
-    //     player.setPlayerState(PlayerState.STANDING);
-    // }
-
-    // textbox is shown on screen
-    // protected void showTextbox() {
-    //     map.getTextbox().setIsActive(true);
-    // }
-
-    // // adds text to be shown in textbox
-    // protected void addTextToTextboxQueue(String text) {
-    //     map.getTextbox().addText(text);
-    // }
-
-    // // adds a series of text to be shown in textbox
-    // protected void addTextToTextboxQueue(String[] text) {
-    //     map.getTextbox().addText(text);
-    // }
-
-    // // checks if textbox has already shown all text in its queue
-    // protected boolean isTextboxQueueEmpty() {
-    //     return map.getTextbox().isTextQueueEmpty();
-    // }
-
-    // // remove textbox from screen
-    // protected void hideTextbox() {
-    //     map.getTextbox().setIsActive(false);
-    // }
-
     // gets an npc instance by its id value
     protected NPC getNPC(int npcId) {
         for (NPC npc : map.getNPCs()) {
@@ -163,24 +125,6 @@ public abstract class Script {
         }
         return null;
     }
-
-    // // force an npc instance to face the player
-    // // npc chosen based on its id value
-    // protected void npcFacePlayer(int npcId) {
-    //     NPC npc = getNPC(npcId);
-    //     if (npc != null) {
-    //         npc.facePlayer(player);
-    //     }
-    // }
-
-    // // force an npc to walk in a specified direction at a specified speed
-    // // npc chosen based on its id value
-    // protected void npcWalk(int npcId, Direction direction, float speed) {
-    //     NPC npc = getNPC(npcId);
-    //     if (npc != null) {
-    //         npc.walk(direction, speed);
-    //     }
-    // }
 
     // force an npc to enter a specified animation
     // npc chosen based on its id value

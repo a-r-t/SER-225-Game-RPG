@@ -13,7 +13,6 @@ import Utils.Point;
 import Utils.Visibility;
 
 // script for talking to dino npc
-// the script is segmented -- it has multiple setups, cleanups, and executions based on its current action
 public class DinoScript extends Script {
 
     @Override

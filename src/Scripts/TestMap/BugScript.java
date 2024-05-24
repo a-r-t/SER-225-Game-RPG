@@ -25,8 +25,8 @@ public class BugScript extends Script {
                 addRequirement(new CustomRequirement() {
                     @Override
                     public boolean isRequirementMet() {
-                        String answer = outputManager.getFlagData("TEXTBOX_SELECTION");
-                        return answer.equals("Yes");
+                        int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+                        return answer == 0;
                     }
                 });
                 addScriptAction(new TextboxScriptAction() {{
@@ -39,8 +39,8 @@ public class BugScript extends Script {
                 addRequirement(new CustomRequirement() {
                     @Override
                     public boolean isRequirementMet() {
-                        String answer = outputManager.getFlagData("TEXTBOX_SELECTION");
-                        return answer.equals("No");
+                        int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+                        return answer == 1;
                     }
                 });
                 addScriptAction(new TextboxScriptAction("Oh...uh...awkward..."));
