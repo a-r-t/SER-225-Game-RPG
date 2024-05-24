@@ -1,12 +1,21 @@
 package Level;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import GameObject.Rectangle;
-import Utils.Direction;
+import ScriptActions.ConditionalScriptAction;
+import ScriptActions.ConditionalScriptActionGroup;
+import ScriptActions.ScriptAction;
+import ScriptActions.ScriptActionOutputManager;
 
 // This class is a base class for all scripts in the game -- all scripts should extend from it
 // Scripts can be used to interact with map entities
 // Each script defines a set of instructions that will be carried out by the game when it is set to active
 // Some examples include interact scripts (such as talking to an NPC) and trigger scripts (scripts that activate when the player walks on them)
-public abstract class Script<T extends MapEntity> {
+public abstract class Script {
+    protected ArrayList<ScriptAction> scriptActions;
+
     // this is set to true if script is currently being executed
     protected boolean isActive = false;
 
@@ -14,8 +23,7 @@ public abstract class Script<T extends MapEntity> {
     protected boolean start = true;
 
     // references to the map entity the script is attached to
-    // use generic type if you need to use this reference
-    protected T entity;
+    protected MapEntity entity;
 
     // reference to the map instance which can be used in any script
     protected Map map;
@@ -23,99 +31,89 @@ public abstract class Script<T extends MapEntity> {
     // reference to the player instance which can be used in any script
     protected Player player;
 
-    protected int frameDelayCounter = 0;
+    protected ScriptActionOutputManager scriptActionOutputManager;
+
+    public Script() {
+        scriptActionOutputManager = new ScriptActionOutputManager();
+    }
 
     public Map getMap() { return map; }
     public void setMap(Map map) { this.map = map; }
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
-    public T getEntity() { return entity; }
-    public void setMapEntity(T entity) {
+    public MapEntity getEntity() { return entity; }
+    public void setMapEntity(MapEntity entity) {
         this.entity = entity;
     }
+    public ArrayList<ScriptAction> getScriptActions() {
+        return scriptActions;
+    }
+    public ScriptActionOutputManager getScriptActionOutputManager() {
+        return scriptActionOutputManager;
+    }
 
-    // "setup" logic for a script to prepare for execution update cycle
-    protected abstract void setup();
+    public void initialize() {
+        // load script actions from subclass
+        scriptActions = loadScriptActions();
 
-    // "cleanup" logic for a script to be carried out after execution update cycle ends
-    protected abstract void cleanup();
+        // recursively iterate through all script actiohns and set the necessary properties on them
+        // the recursive part is needed due to conditionals having nested script actions, and those conditionals can have nested conditionals, etc.
+        Queue<ScriptAction> scriptActionsToInitialize = new LinkedList<>();
+        for (ScriptAction scriptAction : scriptActions) {
+            scriptActionsToInitialize.add(scriptAction);
+        }
+        while (!scriptActionsToInitialize.isEmpty()) {
+            ScriptAction scriptAction = scriptActionsToInitialize.poll();
+            scriptAction.setMap(map);
+            scriptAction.setPlayer(player);
+            scriptAction.setEntity(entity);
+            scriptAction.setOutputManager(scriptActionOutputManager);
+            if (scriptAction instanceof ConditionalScriptAction) {
+                ConditionalScriptAction conditionalScriptAction = (ConditionalScriptAction)scriptAction;
+                for (ConditionalScriptActionGroup conditionalScriptActionGroup : conditionalScriptAction.getConditionalScriptActionGroups()) {
+                    for (ScriptAction conditionalScriptActionGroupScriptAction : conditionalScriptActionGroup.getScriptActions()) {
+                        scriptActionsToInitialize.add(conditionalScriptActionGroupScriptAction);
+                    }
+                }
+            }
+        }
+    }
 
-    // the "meat" of the script, it's the logic to be carried out when the script becomes active
-    // when script is finished, it should return the COMPLETED Script State
-    // if script is still running, it should return the RUNNING Script State
-    protected abstract ScriptState execute();
+    public abstract ArrayList<ScriptAction> loadScriptActions();
+
+    private int currentScriptActionIndex;
+
+    private boolean hasScriptActions() {
+        return scriptActions.size() > 0;
+    }
 
     public void update() {
         // Runs an execute cycle of the Script
-        ScriptState scriptState = execute();
-
-        if (frameDelayCounter > 0) {
-            frameDelayCounter--;
-        }
-
-        // If Script is completed, set it to inactive to allow game to carry on
+        ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
+        ScriptState scriptState = currentScriptAction.execute();
         if (scriptState == ScriptState.COMPLETED) {
-            this.isActive = false;
-            map.setActiveInteractScript(null);
-        }
-    }
+            currentScriptAction.cleanup();
+            currentScriptActionIndex++;
 
-    // call setup logic once on script start
-    protected void start() {
-        if (start) {
-            setup();
-            start = false;
+            if (currentScriptActionIndex < scriptActions.size()) {
+                scriptActions.get(currentScriptActionIndex).setup();
+            }
+            else {
+                this.isActive = false;
+                map.setActiveScript(null);
+            }
         }
-    }
-
-    // call cleanup logic
-    // reset start in case more setup logic is to be carried out in the case of multistep scripts
-    protected void end() {
-        cleanup();
-        start = true;
     }
 
     // if is active is true, game will execute script
     public boolean isActive() { return isActive; }
 
-    public void setIsActive(boolean isActive) { this.isActive = isActive; }
-
-    // prevents player from being able to do anything (such as move) while script is being executed
-    // useful to prevent player from moving away while interacting with something, etc
-    protected void lockPlayer() {
-        player.setPlayerState(PlayerState.INTERACTING);
-        player.setCurrentAnimationName(player.getFacingDirection() == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT");
-    }
-
-    // allow player to go back to its usual game state (being able to move, talk to things, etc)
-    // typically used right before script is finished to give control back to the player
-    protected void unlockPlayer() {
-        player.setPlayerState(PlayerState.STANDING);
-    }
-
-    // textbox is shown on screen
-    protected void showTextbox() {
-        map.getTextbox().setIsActive(true);
-    }
-
-    // adds text to be shown in textbox
-    protected void addTextToTextboxQueue(String text) {
-        map.getTextbox().addText(text);
-    }
-
-    // adds a series of text to be shown in textbox
-    protected void addTextToTextboxQueue(String[] text) {
-        map.getTextbox().addText(text);
-    }
-
-    // checks if textbox has already shown all text in its queue
-    protected boolean isTextboxQueueEmpty() {
-        return map.getTextbox().isTextQueueEmpty();
-    }
-
-    // remove textbox from screen
-    protected void hideTextbox() {
-        map.getTextbox().setIsActive(false);
+    public void setIsActive(boolean isActive) { 
+        if (hasScriptActions()) {
+            this.isActive = isActive; 
+            this.currentScriptActionIndex = 0;
+            scriptActions.get(currentScriptActionIndex).setup();
+        }
     }
 
     // gets an npc instance by its id value
@@ -126,24 +124,6 @@ public abstract class Script<T extends MapEntity> {
             }
         }
         return null;
-    }
-
-    // force an npc instance to face the player
-    // npc chosen based on its id value
-    protected void npcFacePlayer(int npcId) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.facePlayer(player);
-        }
-    }
-
-    // force an npc to walk in a specified direction at a specified speed
-    // npc chosen based on its id value
-    protected void npcWalk(int npcId, Direction direction, float speed) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.walk(direction, speed);
-        }
     }
 
     // force an npc to enter a specified animation
@@ -177,27 +157,6 @@ public abstract class Script<T extends MapEntity> {
     // sets a flag to falase
     protected void unsetFlag(String flagName) {
         map.getFlagManager().unsetFlag(flagName);
-    }
-
-    // sets amount of frames to wait before moving on
-    protected void setWaitTime(int frames) {
-        frameDelayCounter = frames;
-    }
-
-    // checks if wait time is completed (use in conjunction with setWaitTime)
-    protected boolean isWaitTimeUp() {
-        return frameDelayCounter == 0;
-    }
-
-    // gets a specified map tile instance by index from the map
-    protected MapTile getMapTile(int x, int y) {
-        return map.getMapTile(x, y);
-    }
-
-    // changes a specified map tile instance by index from the map to the provided map tile
-    protected void setMapTile(int x, int y, MapTile mapTile) {
-        mapTile.setMap(map);
-        map.setMapTile(x, y, mapTile);
     }
 
     // checks if player is currently below the entity attached to this script

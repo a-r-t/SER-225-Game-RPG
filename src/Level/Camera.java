@@ -65,6 +65,7 @@ public class Camera extends Rectangle {
     public void updateMapEntities(Player player) {
         activeEnhancedMapTiles = loadActiveEnhancedMapTiles();
         activeNPCs = loadActiveNPCs();
+        activeTriggers = loadActiveTriggers();
 
         for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
             enhancedMapTile.update(player);
@@ -79,16 +80,8 @@ public class Camera extends Rectangle {
     // only one script should be able to be running (active) at a time
     private void updateScripts() {
         // if there is an active interact script, update the script
-        if (map.getActiveInteractScript() != null) {
-            map.getActiveInteractScript().update();
-        }
-
-        // if there is an active trigger, update the script
-        activeTriggers = loadActiveTriggers();
-        for (Trigger trigger : activeTriggers) {
-            if (trigger.getTriggerScript() != null && trigger.getTriggerScript().isActive()) {
-                trigger.getTriggerScript().update();
-            }
+        if (map.getActiveScript() != null) {
+            map.getActiveScript().update();
         }
     }
 

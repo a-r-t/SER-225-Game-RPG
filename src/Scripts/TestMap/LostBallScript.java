@@ -1,35 +1,29 @@
 package Scripts.TestMap;
 
+import java.util.ArrayList;
+
 import Level.Script;
-import Level.ScriptState;
+import ScriptActions.*;
+
 
 // trigger script at beginning of game to set that heavy emotional plot
 public class LostBallScript extends Script {
-    @Override
-    protected void setup() {
-        lockPlayer();
-        showTextbox();
-        addTextToTextboxQueue("Where did my ball go!?");
-        addTextToTextboxQueue("I left it right here before I took my 22 hour cat nap.");
-        addTextToTextboxQueue("Maybe Walrus has seen it.");
-    }
 
     @Override
-    protected void cleanup() {
-        setFlag("hasLostBall");
-        hideTextbox();
-        unlockPlayer();
-    }
+    public ArrayList<ScriptAction> loadScriptActions() {
+        ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+        scriptActions.add(new LockPlayerScriptAction());
 
-    @Override
-    public ScriptState execute() {
-        if (!isFlagSet("hasLostBall")) {
-            start();
-            if (!isTextboxQueueEmpty()) {
-                return ScriptState.RUNNING;
-            }
-            end();
-        }
-        return ScriptState.COMPLETED;
+        scriptActions.add(new TextboxScriptAction() {{
+            addText("Where did my ball go!?");
+            addText("I left it right here before I took my 22 hour cat nap.");
+            addText("Maybe Walrus has seen it.");
+        }});
+
+        scriptActions.add(new ChangeFlagScriptAction("hasLostBall", true));
+
+        scriptActions.add(new UnlockPlayerScriptAction());
+
+        return scriptActions;
     }
 }

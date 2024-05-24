@@ -163,10 +163,11 @@ public class GameObject extends AnimatedSprite {
 			}
 		}
 
-		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger) {
+		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger && map.getActiveScript() == null) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
-				trigger.getTriggerScript().setIsActive(true);
+				// trigger.getTriggerScript().setIsActive(true);
+				map.setActiveScript(trigger.getTriggerScript());
 			}
 		}
 		else {
@@ -231,10 +232,11 @@ public class GameObject extends AnimatedSprite {
 			}
 		}
 
-		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger) {
+		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger && map.getActiveScript() == null) {
 			Trigger trigger = (Trigger)entityCollidedWith;
 			if (trigger.getTriggerScript() != null) {
-				trigger.getTriggerScript().setIsActive(true);
+				// trigger.getTriggerScript().setIsActive(true);
+				map.setActiveScript(trigger.getTriggerScript());
 			}
 		}
 		else {

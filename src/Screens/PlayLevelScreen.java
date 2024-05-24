@@ -32,45 +32,25 @@ public class PlayLevelScreen extends Screen {
         flagManager.addFlag("hasFoundBall", false);
 
         // define/setup map
-        this.map = new TestMap();
+        map = new TestMap();
         map.setFlagManager(flagManager);
 
         // setup player
-        this.player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
-        this.player.setMap(map);
+        player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
+        player.setMap(map);
         Point playerStartPosition = map.getPlayerStartPosition();
-        this.player.setLocation(playerStartPosition.x, playerStartPosition.y);
-        this.playLevelScreenState = PlayLevelScreenState.RUNNING;
-        this.player.setFacingDirection(Direction.LEFT);
+        player.setLocation(playerStartPosition.x, playerStartPosition.y);
+        playLevelScreenState = PlayLevelScreenState.RUNNING;
+        player.setFacingDirection(Direction.LEFT);
+
+        map.setPlayer(player);
 
         // let pieces of map know which button to listen for as the "interact" button
         map.getTextbox().setInteractKey(player.getInteractKey());
 
-        // setup map scripts to have references to the map and player
-        for (MapTile mapTile : map.getMapTiles()) {
-            if (mapTile.getInteractScript() != null) {
-                mapTile.getInteractScript().setMap(map);
-                mapTile.getInteractScript().setPlayer(player);
-            }
-        }
-        for (NPC npc : map.getNPCs()) {
-            if (npc.getInteractScript() != null) {
-                npc.getInteractScript().setMap(map);
-                npc.getInteractScript().setPlayer(player);
-            }
-        }
-        for (EnhancedMapTile enhancedMapTile : map.getEnhancedMapTiles()) {
-            if (enhancedMapTile.getInteractScript() != null) {
-                enhancedMapTile.getInteractScript().setMap(map);
-                enhancedMapTile.getInteractScript().setPlayer(player);
-            }
-        }
-        for (Trigger trigger : map.getTriggers()) {
-            if (trigger.getTriggerScript() != null) {
-                trigger.getTriggerScript().setMap(map);
-                trigger.getTriggerScript().setPlayer(player);
-            }
-        }
+        // preloads all scripts ahead of time rather than loading them dynamically
+        // both are supported, however preloading is recommended
+        map.preloadScripts();
 
         winScreen = new WinScreen(this);
     }

@@ -108,7 +108,8 @@ public class GamePanel extends JPanel {
 		fpsDisplayLabel.setText("FPS: " + currentFPS);
 	}
 
-	public void draw() {
+	public void draw() {			
+		// draw current game state
 		screenManager.draw(graphicsHandler);
 
 		// if game is paused, draw pause gfx over Screen gfx
