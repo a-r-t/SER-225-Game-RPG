@@ -8,8 +8,6 @@ import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 import Utils.Direction;
 
-import java.util.ArrayList;
-
 public abstract class Player extends GameObject {
     // values that affect player movement
     // these should be set in a subclass
@@ -30,9 +28,6 @@ public abstract class Player extends GameObject {
     protected Direction facingDirection;
     protected Direction lastMovementDirection;
 
-    // classes that listen to player events can be added to this list
-    protected ArrayList<PlayerListener> listeners = new ArrayList<>();
-
     // define keys
     protected KeyLocker keyLocker = new KeyLocker();
     protected Key MOVE_LEFT_KEY = Key.LEFT;
@@ -40,6 +35,8 @@ public abstract class Player extends GameObject {
     protected Key MOVE_UP_KEY = Key.UP;
     protected Key MOVE_DOWN_KEY = Key.DOWN;
     protected Key INTERACT_KEY = Key.SPACE;
+
+    protected boolean isLocked = false;
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
         super(spriteSheet, x, y, startingAnimationName);
@@ -50,18 +47,18 @@ public abstract class Player extends GameObject {
     }
 
     public void update() {
-        moveAmountX = 0;
-        moveAmountY = 0;
+        if (!isLocked) {
+            moveAmountX = 0;
+            moveAmountY = 0;
 
-        // if player is currently playing through level (has not won or lost)
-        // update player's state and current actions, which includes things like determining how much it should move each frame and if its walking or jumping
-        do {
-            previousPlayerState = playerState;
-            handlePlayerState();
-        } while (previousPlayerState != playerState);
+            // if player is currently playing through level (has not won or lost)
+            // update player's state and current actions, which includes things like determining how much it should move each frame and if its walking or jumping
+            do {
+                previousPlayerState = playerState;
+                handlePlayerState();
+            } while (previousPlayerState != playerState);
 
         // move player with respect to map collisions based on how much player needs to move this frame
-        if (playerState != PlayerState.INTERACTING) {
             lastAmountMovedY = super.moveYHandleCollision(moveAmountY);
             lastAmountMovedX = super.moveXHandleCollision(moveAmountX);
         }
@@ -82,9 +79,6 @@ public abstract class Player extends GameObject {
                 break;
             case WALKING:
                 playerWalking();
-                break;
-            case INTERACTING:
-                playerInteracting();
                 break;
         }
     }
@@ -155,11 +149,8 @@ public abstract class Player extends GameObject {
         }
     }
 
-    // player INTERACTING state logic -- intentionally does nothing so player is locked in place while a script is running
-    protected void playerInteracting() { }
-
     protected void updateLockedKeys() {
-        if (Keyboard.isKeyUp(INTERACT_KEY) && playerState != PlayerState.INTERACTING) {
+        if (Keyboard.isKeyUp(INTERACT_KEY) && !isLocked) {
             keyLocker.unlockKey(INTERACT_KEY);
         }
     }
@@ -173,11 +164,6 @@ public abstract class Player extends GameObject {
         else if (playerState == PlayerState.WALKING) {
             // sets animation to a WALK animation based on which way player is facing
             this.currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
-        }
-        else if (playerState == PlayerState.INTERACTING) {
-            // sets animation to STAND when player is interacting
-            // player can be told to stand or walk during Script by using the "stand" and "walk" methods
-            this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
         }
     }
 
@@ -208,10 +194,6 @@ public abstract class Player extends GameObject {
         this.facingDirection = facingDirection;
     }
 
-    public void addListener(PlayerListener listener) {
-        listeners.add(listener);
-    }
-
     public Rectangle getInteractionRange() {
         return new Rectangle(
                 getBounds().getX1() - interactionRange,
@@ -226,7 +208,22 @@ public abstract class Player extends GameObject {
     public Direction getLastWalkingXDirection() { return lastWalkingXDirection; }
     public Direction getLastWalkingYDirection() { return lastWalkingYDirection; }
 
+    
+    public void lock() {
+        isLocked = true;
+        playerState = PlayerState.STANDING;
+        this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+    }
+
+    public void unlock() {
+        isLocked = false;
+        playerState = PlayerState.STANDING;
+        this.currentAnimationName = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
+    }
+
+    // used by other files or scripts to force player to stand
     public void stand(Direction direction) {
+        playerState = PlayerState.STANDING;
         facingDirection = direction;
         if (direction == Direction.RIGHT) {
             this.currentAnimationName = "STAND_RIGHT";
@@ -236,21 +233,15 @@ public abstract class Player extends GameObject {
         }
     }
 
+    // used by other files or scripts to force player to walk
     public void walk(Direction direction, float speed) {
+        playerState = PlayerState.WALKING;
         facingDirection = direction;
         if (direction == Direction.RIGHT) {
             this.currentAnimationName = "WALK_RIGHT";
         }
         else if (direction == Direction.LEFT) {
             this.currentAnimationName = "WALK_LEFT";
-        }
-        else {
-            if (this.currentAnimationName.contains("RIGHT")) {
-                this.currentAnimationName = "WALK_RIGHT";
-            }
-            else {
-                this.currentAnimationName = "WALK_LEFT";
-            }
         }
         if (direction == Direction.UP) {
             moveY(-speed);
