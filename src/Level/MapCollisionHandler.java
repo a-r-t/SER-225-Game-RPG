@@ -12,7 +12,7 @@ public class MapCollisionHandler {
         int numberOfTilesToCheck = Math.max(gameObject.getBounds().getHeight() / map.getTileset().getScaledSpriteHeight(), 1);
         float edgeBoundX = direction == Direction.LEFT ? gameObject.getBounds().getX1() : gameObject.getBounds().getX2();
         Point tileIndex = map.getTileIndexByPosition(edgeBoundX, gameObject.getBounds().getY1());
-        MapEntity entityCollidedWith = null;
+        GameObject entityCollidedWith = null;
         for (int i = -1; i <= numberOfTilesToCheck + 1; i++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x), Math.round(tileIndex.y + i));
             if (mapTile != null && hasCollidedWithMapEntity(gameObject, mapTile, direction)) {
@@ -73,6 +73,21 @@ public class MapCollisionHandler {
                     }
                     return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
                 }
+            }
+        }
+
+        if (map.getPlayer() != null && !gameObject.equals(map.getPlayer())) {
+            if (hasCollidedWithMapEntity(gameObject, map.getPlayer(), direction)) {
+                entityCollidedWith = map.getPlayer();
+                float adjustedPositionX = gameObject.getX();
+                if (direction == Direction.RIGHT) {
+                    float boundsDifference = gameObject.getX2() - gameObject.getBoundsX2();
+                    adjustedPositionX = map.getPlayer().getBoundsX1() - gameObject.getWidth() + boundsDifference;
+                } else if (direction == Direction.LEFT) {
+                    float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
+                    adjustedPositionX = (map.getPlayer().getBoundsX2() + 1) - boundsDifference;
+                }
+                return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
             }
         }
 
@@ -153,7 +168,7 @@ public class MapCollisionHandler {
     }
 
     // based on tile type, perform logic to determine if a collision did occur with an intersecting tile or not
-    private static boolean hasCollidedWithMapEntity(GameObject gameObject, MapEntity mapEntity, Direction direction) {
+    private static boolean hasCollidedWithMapEntity(GameObject gameObject, GameObject mapEntity, Direction direction) {
         if (mapEntity instanceof MapTile) {
             MapTile mapTile = (MapTile)mapEntity;
             switch (mapTile.getTileType()) {
@@ -164,6 +179,14 @@ public class MapCollisionHandler {
                 default:
                     return false;
             }
+        }
+        else if (mapEntity instanceof MapEntity) {
+            MapEntity me = (MapEntity)mapEntity;
+            return me.intersects(gameObject);
+        }
+        else if (mapEntity instanceof Player) {
+            Player me = (Player)mapEntity;
+            return me.intersects(gameObject);
         }
         else {
             return mapEntity.intersects(gameObject);

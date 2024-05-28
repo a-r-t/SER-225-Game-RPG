@@ -19,10 +19,6 @@ public class Walrus extends NPC {
         super(id, location.x, location.y, new SpriteSheet(ImageLoader.load("Walrus.png"), 24, 24), "STAND_LEFT");
     }
 
-    public void update(Player player) {
-        super.update(player);
-    }
-
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {{

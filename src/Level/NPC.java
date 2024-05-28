@@ -10,6 +10,7 @@ import java.util.HashMap;
 // This class is a base class for all npcs in the game -- all npcs should extend from it
 public class NPC extends MapEntity {
     protected int id = 0;
+    protected boolean isLocked = false;
 
     public NPC(int id, float x, float y, SpriteSheet spriteSheet, String startingAnimation) {
         super(x, y, spriteSheet, startingAnimation);
@@ -39,10 +40,14 @@ public class NPC extends MapEntity {
     public int getId() { return id; }
 
     public void facePlayer(Player player) {
-        if (Math.round(getBoundsX2()) - (getBounds().getWidth() / 2) < Math.round(player.getBoundsX2())) {
+        // if npc's center point is to the right of the player's center point, npc needs to face left
+        // else if npc's center point is to the left of the player's center point, npc needs to face right
+        float centerPoint = (getBounds().getX() + getBounds().getWidth() - 1) / 2;
+        float playerCenterPoint = (player.getBounds().getX() + player.getBounds().getWidth() - 1) / 2;
+        if (centerPoint < playerCenterPoint) {
             this.currentAnimationName = "STAND_RIGHT";
         }
-        else if (Math.round(getBoundsX1()) + (getBounds().getWidth() / 2) > Math.round(player.getBoundsX1())) {
+        else if (centerPoint >= playerCenterPoint) {
             this.currentAnimationName = "STAND_LEFT";
         }
     }
@@ -86,8 +91,21 @@ public class NPC extends MapEntity {
     }
 
     public void update(Player player) {
+        if (!isLocked) {
+            this.performAction(player);
+        }
         super.update();
     }
+
+    public void lock() {
+        isLocked = true;
+    }
+
+    public void unlock() {
+        isLocked = false;
+    }
+
+    protected void performAction(Player player) {}
 
     @Override
     public void draw(GraphicsHandler graphicsHandler) {

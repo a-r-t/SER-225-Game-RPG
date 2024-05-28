@@ -1,14 +1,15 @@
 package Level;
 
+import GameObject.GameObject;
 import Utils.Point;
 
 // Return type from MapTileCollisionHandler collision checks
 // Contains adjusted location (where player should be moved to if a collision occurred) and the entity the player collided with (if any)
 public class MapCollisionCheckResult {
     private Point adjustedLocation;
-    private MapEntity entityCollidedWith;
+    private GameObject entityCollidedWith;
 
-    public MapCollisionCheckResult(Point adjustedLocationAfterCollisionCheck, MapEntity entityCollidedWith) {
+    public MapCollisionCheckResult(Point adjustedLocationAfterCollisionCheck, GameObject entityCollidedWith) {
         this.adjustedLocation = adjustedLocationAfterCollisionCheck;
         this.entityCollidedWith = entityCollidedWith;
     }
@@ -21,7 +22,7 @@ public class MapCollisionCheckResult {
         this.adjustedLocation = adjustedLocation;
     }
 
-    public MapEntity getEntityCollidedWith() {
+    public GameObject getEntityCollidedWith() {
         return entityCollidedWith;
     }
 

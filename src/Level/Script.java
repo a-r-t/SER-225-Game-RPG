@@ -161,7 +161,6 @@ public abstract class Script {
 
     // checks if player is currently below the entity attached to this script
     protected boolean isPlayerBelowEntity() {
-        Rectangle entityBounds = entity.getCalibratedBounds();
-        return player.getBounds().getY1() > entityBounds.getY2();
+        return player.getBounds().getY1() > entity.getBounds().getY2();
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Level.Script;
 import ScriptActions.*;
+import Utils.Direction;
 
 // script for talking to bug npc
 public class BugScript extends Script {
@@ -12,6 +13,8 @@ public class BugScript extends Script {
     public ArrayList<ScriptAction> loadScriptActions() {
         ArrayList<ScriptAction> scriptActions = new ArrayList<>();
         scriptActions.add(new LockPlayerScriptAction());
+
+        scriptActions.add(new NPCLockScriptAction());
 
         scriptActions.add(new NPCFacePlayerScriptAction());
 
@@ -47,6 +50,7 @@ public class BugScript extends Script {
             }});
         }});
 
+        scriptActions.add(new NPCUnlockScriptAction());
         scriptActions.add(new UnlockPlayerScriptAction());
 
         return scriptActions;
