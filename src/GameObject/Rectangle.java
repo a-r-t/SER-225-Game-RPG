@@ -187,7 +187,7 @@ public class Rectangle implements IntersectableRectangle {
 				Math.round(intersectRectangle.getY1()) < Math.round(otherIntersectRectangle.getY2() + 1) && Math.round(intersectRectangle.getY2() + 1) > Math.round(otherIntersectRectangle.getY1());
 	}
 
-	// check if this touching or overlapping with another rectangle
+	// check if this is touching (side by side) or overlapping with another rectangle
 	public boolean touching(IntersectableRectangle other) {
 		Rectangle intersectRectangle = getIntersectRectangle();
 		Rectangle otherIntersectRectangle = other.getIntersectRectangle();
