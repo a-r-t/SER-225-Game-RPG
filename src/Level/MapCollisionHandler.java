@@ -85,7 +85,7 @@ public class MapCollisionHandler {
         // check for collision with player
         // this is to allow non-player entities to collision check against the player
         Player player = map.getPlayer();
-        if (player != null && !gameObject.equals(player)) {
+        if (player != null && !gameObject.equals(player) && (!(gameObject instanceof MapEntity) || !((MapEntity)(gameObject)).isUncollidable())) {
             if (hasCollidedWithMapEntity(gameObject, player, direction)) {
                 entityCollidedWith = player;
                 float adjustedPositionX = gameObject.getX();
@@ -181,7 +181,7 @@ public class MapCollisionHandler {
         // check for collision with player
         // this is to allow non-player entities to collision check against the player
         Player player = map.getPlayer();
-        if (player != null && !gameObject.equals(player)) {
+        if (player != null && !gameObject.equals(player) && (!(gameObject instanceof MapEntity) || !((MapEntity)(gameObject)).isUncollidable())) {
             if (hasCollidedWithMapEntity(gameObject, player, direction)) {
                 entityCollidedWith = player;
                 float adjustedPositionY = gameObject.getY();
