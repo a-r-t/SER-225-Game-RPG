@@ -8,7 +8,10 @@ import Utils.Point;
 // it is used by the game object class to determine if and where a collision occurred
 public class MapCollisionHandler {
 
+    // x axis collision logic
+    // determines if a collision occurred with another entity on the map, and calculates where gameobject should be placed to resolve the collision
     public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckX(GameObject gameObject, Map map, Direction direction) {
+        // check map tiles in surrounding radius for potential collision
         int numberOfTilesToCheck = Math.max(gameObject.getBounds().getHeight() / map.getTileset().getScaledSpriteHeight(), 1);
         float edgeBoundX = direction == Direction.LEFT ? gameObject.getBounds().getX1() : gameObject.getBounds().getX2();
         Point tileIndex = map.getTileIndexByPosition(edgeBoundX, gameObject.getBounds().getY1());
@@ -29,6 +32,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active enhanced map tiles for potential collision
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
             if (!gameObject.equals(enhancedMapTile) && !enhancedMapTile.isUncollidable() && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
@@ -44,6 +48,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active npcs for potential collision
         for (NPC npc : map.getActiveNPCs()) {
             if (!gameObject.equals(npc) && !npc.isUncollidable() && hasCollidedWithMapEntity(gameObject, npc, direction)) {
                 entityCollidedWith = npc;
@@ -59,6 +64,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active triggers for potential collision
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
                 if (!gameObject.equals(trigger) && !trigger.isUncollidable() && trigger.exists() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
@@ -76,16 +82,19 @@ public class MapCollisionHandler {
             }
         }
 
-        if (map.getPlayer() != null && !gameObject.equals(map.getPlayer())) {
-            if (hasCollidedWithMapEntity(gameObject, map.getPlayer(), direction)) {
-                entityCollidedWith = map.getPlayer();
+        // check for collision with player
+        // this is to allow non-player entities to collision check against the player
+        Player player = map.getPlayer();
+        if (player != null && !gameObject.equals(player)) {
+            if (hasCollidedWithMapEntity(gameObject, player, direction)) {
+                entityCollidedWith = player;
                 float adjustedPositionX = gameObject.getX();
                 if (direction == Direction.RIGHT) {
                     float boundsDifference = gameObject.getX2() - gameObject.getBoundsX2();
-                    adjustedPositionX = map.getPlayer().getBoundsX1() - gameObject.getWidth() + boundsDifference;
+                    adjustedPositionX =player.getBoundsX1() - gameObject.getWidth() + boundsDifference;
                 } else if (direction == Direction.LEFT) {
                     float boundsDifference = gameObject.getBoundsX1() - gameObject.getX();
-                    adjustedPositionX = (map.getPlayer().getBoundsX2() + 1) - boundsDifference;
+                    adjustedPositionX = (player.getBoundsX2() + 1) - boundsDifference;
                 }
                 return new MapCollisionCheckResult(new Point(adjustedPositionX, gameObject.getY()), entityCollidedWith);
             }
@@ -95,11 +104,14 @@ public class MapCollisionHandler {
         return new MapCollisionCheckResult(null, null);
     }
 
+    // y axis collision logic
+    // determines if a collision occurred with another entity on the map, and calculates where gameobject should be placed to resolve the collision
     public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckY(GameObject gameObject, Map map, Direction direction) {
+        // check map tiles in surrounding radius for potential collision
         int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(), 1);
         float edgeBoundY = direction == Direction.UP ? gameObject.getBounds().getY() : gameObject.getBounds().getY2();
         Point tileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX1(), edgeBoundY);
-        MapEntity entityCollidedWith = null;
+        GameObject entityCollidedWith = null;
         for (int i = -1; i <= numberOfTilesToCheck + 1; i++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x) + i, Math.round(tileIndex.y));
             if (mapTile != null && hasCollidedWithMapEntity(gameObject, mapTile, direction)) {
@@ -116,6 +128,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active enhanced map tiles for potential collision
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
             if (!gameObject.equals(enhancedMapTile) && !enhancedMapTile.isUncollidable() && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
@@ -131,6 +144,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active npcs for potential collision
         for (NPC npc : map.getActiveNPCs()) {
             if (!gameObject.equals(npc) && !npc.isUncollidable() && hasCollidedWithMapEntity(gameObject, npc, direction)) {
                 entityCollidedWith = npc;
@@ -146,6 +160,7 @@ public class MapCollisionHandler {
             }
         }
 
+        // check active triggers for potential collision
         if (gameObject.isAffectedByTriggers()) {
             for (Trigger trigger : map.getActiveTriggers()) {
                 if (!gameObject.equals(trigger) && !trigger.isUncollidable() && trigger.exists() && hasCollidedWithMapEntity(gameObject, trigger, direction)) {
@@ -163,14 +178,34 @@ public class MapCollisionHandler {
             }
         }
 
+        // check for collision with player
+        // this is to allow non-player entities to collision check against the player
+        Player player = map.getPlayer();
+        if (player != null && !gameObject.equals(player)) {
+            if (hasCollidedWithMapEntity(gameObject, player, direction)) {
+                entityCollidedWith = player;
+                float adjustedPositionY = gameObject.getY();
+                if (direction == Direction.DOWN) {
+                    float boundsDifference = gameObject.getY2() - gameObject.getBoundsY2();
+                    adjustedPositionY = player.getBoundsY1() - gameObject.getHeight() + boundsDifference;
+                } else if (direction == Direction.UP) {
+                    float boundsDifference = gameObject.getBoundsY1() - gameObject.getY();
+                    adjustedPositionY = (player.getBoundsY2() + 1) - boundsDifference;
+                }
+                return new MapCollisionCheckResult(new Point(gameObject.getX(), adjustedPositionY), entityCollidedWith);
+            }
+        }
+
         // no collision occurred
         return new MapCollisionCheckResult(null, null);
     }
 
     // based on tile type, perform logic to determine if a collision did occur with an intersecting tile or not
-    private static boolean hasCollidedWithMapEntity(GameObject gameObject, GameObject mapEntity, Direction direction) {
-        if (mapEntity instanceof MapTile) {
-            MapTile mapTile = (MapTile)mapEntity;
+    private static boolean hasCollidedWithMapEntity(GameObject gameObject, GameObject otherEntity, Direction direction) {
+        // if entity that is being checked for collision against is a map tile
+        // collision is determined based on tile type
+        if (otherEntity instanceof MapTile) {
+            MapTile mapTile = (MapTile)otherEntity;
             switch (mapTile.getTileType()) {
                 case PASSABLE:
                     return false;
@@ -180,16 +215,10 @@ public class MapCollisionHandler {
                     return false;
             }
         }
-        else if (mapEntity instanceof MapEntity) {
-            MapEntity me = (MapEntity)mapEntity;
-            return me.intersects(gameObject);
-        }
-        else if (mapEntity instanceof Player) {
-            Player me = (Player)mapEntity;
-            return me.intersects(gameObject);
-        }
+
+        // for all other cases other than MapTile, let game object subclass (NPC, enhanced map tile, etc.), handle the intersection logic
         else {
-            return mapEntity.intersects(gameObject);
+            return otherEntity.intersects(gameObject);
         }
     }
 }
