@@ -31,7 +31,16 @@ public class TreeScript extends Script {
 
                     @Override
                     public boolean isRequirementMet() {
-                        return isPlayerBelowEntity();
+                        // ensures player is directly underneath tree trunk tile
+                        // this prevents the script from working if the player tries to interact with it from the side
+
+                        // if player is not below tree trunk tile, player location is not valid and this conditional script will not be reached
+                        if (player.getBounds().getY1() <= entity.getBounds().getY2()) {
+                            return false;
+                        }
+
+                        // if code gets here, it means player is below tree trunk tile and player location is valid, so this conditional script will continue
+                        return true;
                     }
                 });
 

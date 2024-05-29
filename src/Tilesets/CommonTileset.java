@@ -33,6 +33,7 @@ public class CommonTileset extends Tileset {
         // sign
         Frame signFrame = new FrameBuilder(getSubImage(3, 0))
                 .withScale(tileScale)
+                .withBounds(1, 2, 14, 14)
                 .build();
 
         MapTileBuilder signTile = new MapTileBuilder(signFrame)

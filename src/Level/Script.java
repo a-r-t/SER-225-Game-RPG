@@ -15,6 +15,7 @@ import ScriptActions.ScriptActionOutputManager;
 // Some examples include interact scripts (such as talking to an NPC) and trigger scripts (scripts that activate when the player walks on them)
 public abstract class Script {
     protected ArrayList<ScriptAction> scriptActions;
+    private int currentScriptActionIndex;
 
     // this is set to true if script is currently being executed
     protected boolean isActive = false;
@@ -81,8 +82,6 @@ public abstract class Script {
 
     public abstract ArrayList<ScriptAction> loadScriptActions();
 
-    private int currentScriptActionIndex;
-
     private boolean hasScriptActions() {
         return scriptActions.size() > 0;
     }
@@ -114,54 +113,5 @@ public abstract class Script {
             this.currentScriptActionIndex = 0;
             scriptActions.get(currentScriptActionIndex).setup();
         }
-    }
-
-    // gets an npc instance by its id value
-    protected NPC getNPC(int npcId) {
-        for (NPC npc : map.getNPCs()) {
-            if (npc.getId() == npcId) {
-                return npc;
-            }
-        }
-        return null;
-    }
-
-    // force an npc to enter a specified animation
-    // npc chosen based on its id value
-    protected void npcSetAnimation(int npcId, String animationName) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.setCurrentAnimationName(animationName);
-        }
-    }
-
-    // force an npc to enter a specified frame of their current animation
-    // npc chosen based on its id value
-    protected void npcSetAnimationFrameIndex(int npcId, int frameIndex) {
-        NPC npc = getNPC(npcId);
-        if (npc != null) {
-            npc.setCurrentAnimationFrameIndex(frameIndex);
-        }
-    }
-
-    // checks if a certain flag has been set or not
-    protected boolean isFlagSet(String flagName) {
-        return map.getFlagManager().isFlagSet(flagName);
-    }
-
-    // sets a flag to true
-    protected void setFlag(String flagName) {
-        map.getFlagManager().setFlag(flagName);
-    }
-
-    // sets a flag to falase
-    protected void unsetFlag(String flagName) {
-        map.getFlagManager().unsetFlag(flagName);
-    }
-
-    // checks if player is currently below the entity attached to this script
-    protected boolean isPlayerBelowEntity() {
-        Rectangle entityBounds = entity.getCalibratedBounds();
-        return player.getBounds().getY1() > entityBounds.getY2();
-    }
+    } 
 }

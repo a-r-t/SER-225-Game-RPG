@@ -42,8 +42,7 @@ public class TestMap extends Map {
         dinosaur.setInteractScript(new DinoScript());
         npcs.add(dinosaur);
         
-        Bug bug = new Bug(3, getMapTile(7, 12).getLocation());
-        bug.setCurrentAnimationName("STAND_RIGHT");
+        Bug bug = new Bug(3, getMapTile(7, 12).getLocation().subtractX(20));
         bug.setInteractScript(new BugScript());
         npcs.add(bug);
 

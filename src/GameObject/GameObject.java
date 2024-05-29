@@ -129,7 +129,7 @@ public class GameObject extends AnimatedSprite {
 		// move player back to right in front of the "solid" map tile's position, and stop attempting to move further
 		float amountMoved = 0;
 		boolean hasCollided = false;
-		MapEntity entityCollidedWith = null;
+		GameObject entityCollidedWith = null;
 		for (int i = 0; i < amountToMove; i++) {
 			moveX(direction.getVelocity());
 			MapCollisionCheckResult collisionCheckResult = MapCollisionHandler.getAdjustedPositionAfterCollisionCheckX(this, map, direction);
@@ -194,7 +194,7 @@ public class GameObject extends AnimatedSprite {
 		// move player back to right in front of the "solid" map tile's position, and stop attempting to move further
 		float amountMoved = 0;
 		boolean hasCollided = false;
-		MapEntity entityCollidedWith = null;
+		GameObject entityCollidedWith = null;
 		for (int i = 0; i < amountToMove; i++) {
 			moveY(direction.getVelocity());
 			MapCollisionCheckResult collisionCheckResult = MapCollisionHandler.getAdjustedPositionAfterCollisionCheckY(this, map, direction);
@@ -247,10 +247,10 @@ public class GameObject extends AnimatedSprite {
 	}
 
 	// game object subclass can override this method to listen for x axis collision events and react accordingly after calling "moveXHandleCollision"
-	public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) { }
+	public void onEndCollisionCheckX(boolean hasCollided, Direction direction, GameObject entityCollidedWith) { }
 
 	// game object subclass can override this method to listen for y axis collision events and react accordingly after calling "moveYHandleCollision"
-	public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) { }
+	public void onEndCollisionCheckY(boolean hasCollided, Direction direction, GameObject entityCollidedWith) { }
 
 	// gets x location taking into account map camera position
 	public float getCalibratedXLocation() {

@@ -464,57 +464,39 @@ public abstract class Map {
     private boolean isInteractedEntityValid(MapEntity interactedEntity, Player player) {
         Rectangle playerBounds = player.getBounds();
         Rectangle entityBounds = interactedEntity.getBounds();
-        boolean xDirValid = true;
-        boolean yDirValid = true;
-        if (player.getLastWalkingXDirection() == Direction.LEFT && playerBounds.getX1() < entityBounds.getX2()) {
-            xDirValid = false;
+
+        // this does several checks to ensure the player's location releative to the entity's is valid for interaction
+        // takes into account things like player's current location, entity's current location, player's facing direction, player's center point, etc.
+        // this prevents things like being able to interact with an entity without facing it and other oddities like that
+                
+        // if player is facing left and entity is completely to the left of the player, location is valid
+        if (player.getFacingDirection() == Direction.LEFT && entityBounds.getX2() < playerBounds.getX1()) {
+            return true;
+        }
+        // if player is facing right and entity is completely to the right of the player, location is valid
+        else if (player.getFacingDirection() == Direction.RIGHT && entityBounds.getX1() > playerBounds.getX2()) {
+            return true;
         }
 
-        else if (player.getLastWalkingXDirection() == Direction.RIGHT && playerBounds.getX2() > entityBounds.getX1()) {
-            xDirValid = false;
+        boolean isEntityOverOrUnderPlayer = (entityBounds.getY2() < playerBounds.getY1() || entityBounds.getY1() > playerBounds.getY2());
+        if (interactedEntity instanceof NPC) {
+            // if player is facing left and entity is either on top of or underneath player and player's center point is greater than entity's center point, location is valid
+            if (player.getFacingDirection() == Direction.LEFT && isEntityOverOrUnderPlayer && playerBounds.getX1() < entityBounds.getX2()) {
+                return true;
+            }
+            // if player is facing right and entity is either on top of or underneath player and player's center point is less than entity's center point, location is valid
+            else if (player.getFacingDirection() == Direction.RIGHT && isEntityOverOrUnderPlayer && playerBounds.getX2() > entityBounds.getX1()) {
+                return true;
+            }
+        }
+        else {
+            // if interacted with anything other than NPC, it doesn't matter which direction you're facing, so it's valid if above/below player
+            if (isEntityOverOrUnderPlayer) {
+                return true;
+            }
         }
 
-        else if (player.getLastWalkingXDirection() == Direction.NONE) {
-            xDirValid = false;
-        }
-
-        if (player.getLastWalkingYDirection() == Direction.UP && playerBounds.getY1() < entityBounds.getY2()) {
-            yDirValid = false;
-        }
-
-        else if (player.getLastWalkingYDirection() == Direction.DOWN && playerBounds.getY2() > entityBounds.getY1()) {
-            yDirValid = false;
-        }
-
-        else if (player.getLastWalkingYDirection() == Direction.NONE) {
-            yDirValid = false;
-        }
-
-        if (!xDirValid && !yDirValid) {
-            return false;
-        }
-
-        if (playerBounds.getY1() >= entityBounds.getY2()) {
-            Rectangle playerTopBounds = new Rectangle(playerBounds.getX(), playerBounds.getY() - 1, playerBounds.getWidth(), 1);
-            float areaOverlapped = interactedEntity.getAreaOverlapped(playerTopBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 3f), entityBounds.getWidth());
-        }
-        else if (playerBounds.getY2() <= entityBounds.getY1()) {
-            Rectangle playerBottomBounds = new Rectangle(playerBounds.getX(), playerBounds.getY2() + 1, playerBounds.getWidth(), 1);
-            float areaOverlapped = interactedEntity.getAreaOverlapped(playerBottomBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getWidth() / 3f), entityBounds.getWidth());
-        }
-        else if (playerBounds.getX1() >= entityBounds.getX2()) {
-            Rectangle playerLeftBounds = new Rectangle(playerBounds.getX() - 1, playerBounds.getY(), 1, playerBounds.getHeight());
-            float areaOverlapped = interactedEntity.getAreaOverlapped(playerLeftBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 3f), entityBounds.getHeight());
-        }
-        else if (playerBounds.getX2() <= entityBounds.getX()) {
-            Rectangle playerRightBounds = new Rectangle(playerBounds.getX2() + 1, playerBounds.getY(), 1, playerBounds.getHeight());
-            float areaOverlapped = interactedEntity.getAreaOverlapped(playerRightBounds);
-            return areaOverlapped >= Math.min(Math.round(playerBounds.getHeight() / 3f), entityBounds.getHeight());
-        }
-
+        // if none of the location validity checks matched, location is not valid and the interaction will fail
         return false;
     }
 
@@ -608,6 +590,10 @@ public abstract class Map {
 
     public int getEndBoundX() { return endBoundX; }
     public int getEndBoundY() { return endBoundY; }
+
+    public Player getPlayer() {
+        return this.player;
+    }
 
     public void setPlayer(Player player) {
         this.player = player;
