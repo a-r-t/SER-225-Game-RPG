@@ -1,6 +1,6 @@
 package Level;
 
-import Engine.GraphicsHandler;
+
 import GameObject.GameObject;
 import GameObject.SpriteSheet;
 
@@ -18,10 +18,4 @@ public class EnhancedMapTile extends MapTile {
     public void update(Player player) {
         super.update();
     }
-
-    @Override
-    public void draw(GraphicsHandler graphicsHandler) {
-        super.draw(graphicsHandler);
-    }
-
 }

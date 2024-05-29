@@ -269,7 +269,7 @@ public class MapTile extends MapEntity {
     }
 
     @Override
-    public boolean overlaps(IntersectableRectangle other) { return bottomLayer.overlaps(other); }
+    public boolean touching(IntersectableRectangle other) { return bottomLayer.touching(other); }
 
     @Override
     public float getAreaOverlapped(IntersectableRectangle other) { return bottomLayer.getAreaOverlapped(other); }
