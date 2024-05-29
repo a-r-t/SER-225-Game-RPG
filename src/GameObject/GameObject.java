@@ -1,7 +1,6 @@
 package GameObject;
 
 import Engine.GraphicsHandler;
-import EnhancedMapTiles.PushableRock;
 import Level.*;
 import Utils.Direction;
 import Utils.ImageUtils;

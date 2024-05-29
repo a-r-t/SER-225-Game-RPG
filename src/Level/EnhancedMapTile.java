@@ -1,9 +1,6 @@
 package Level;
 
-import java.awt.Color;
 
-import Engine.GraphicsHandler;
-import EnhancedMapTiles.PushableRock;
 import GameObject.GameObject;
 import GameObject.SpriteSheet;
 
