@@ -39,6 +39,7 @@ public class GameLoop {
 
                     if (delta >= 1) {
                         gamePanel.update();
+                        gamePanel.setDoPaint(true);
                         gamePanel.repaint();
                         frames++;
                         delta--;
@@ -82,6 +83,7 @@ public class GameLoop {
                     //Do as many game updates as we need to, potentially playing catchup.
                     while( now - lastUpdateTime > TIME_BETWEEN_UPDATES && updateCount < MAX_UPDATES_BEFORE_RENDER ) {
                         gamePanel.update();
+                        gamePanel.setDoPaint(true);
                         lastUpdateTime += TIME_BETWEEN_UPDATES;
                         updateCount++;
                     }
@@ -103,7 +105,7 @@ public class GameLoop {
                     }
 
                     // Yield until it has been at least the target time between renders. This saves the CPU from hogging.
-                    while ( now - lastRenderTime < TARGET_TIME_BETWEEN_RENDERS && now - lastUpdateTime < TIME_BETWEEN_UPDATES) {
+                    while (now - lastRenderTime < TARGET_TIME_BETWEEN_RENDERS && now - lastUpdateTime < TIME_BETWEEN_UPDATES) {
                         Thread.yield();
 
                         // This stops the app from consuming a ton of CPU/using a ton of power.
