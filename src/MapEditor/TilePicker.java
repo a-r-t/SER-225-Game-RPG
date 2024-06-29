@@ -87,8 +87,7 @@ public class TilePicker extends JPanel {
         }
 
         MapTile selectedTile = mapTiles.get(selectedTileIndex);
-        if (selectedTile == null)
-        {
+        if (selectedTile == null) {
             selectedTile = mapTiles.get(0);
             getParent().revalidate();
         }
