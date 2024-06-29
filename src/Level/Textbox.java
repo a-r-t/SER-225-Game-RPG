@@ -165,6 +165,7 @@ public class Textbox {
         if (text != null) {
             // draw text in textbox
             text.drawWithParsedNewLines(graphicsHandler, 10);
+            
             if (options != null) {
                 // draw options textbox
                 // if camera is at bottom of screen, textbox is drawn at top of screen instead of the bottom like usual

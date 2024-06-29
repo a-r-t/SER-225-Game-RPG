@@ -216,7 +216,7 @@ public class MapCollisionHandler {
             }
         }
 
-        // for all other cases other than MapTile, let game object subclass (NPC, enhanced map tile, etc.), handle the intersection logic
+        // for all other cases other than MapTile, let game object subclass (NPC, enhanced map tile, etc.) handle the intersection logic
         else {
             return otherEntity.intersects(gameObject);
         }
