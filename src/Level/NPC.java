@@ -42,8 +42,8 @@ public class NPC extends MapEntity {
     public void facePlayer(Player player) {
         // if npc's center point is to the right of the player's center point, npc needs to face left
         // else if npc's center point is to the left of the player's center point, npc needs to face right
-        float centerPoint = (getBounds().getX() + getBounds().getWidth() - 1) / 2;
-        float playerCenterPoint = (player.getBounds().getX() + player.getBounds().getWidth() - 1) / 2;
+        float centerPoint = getBounds().getX() + (getBounds().getWidth() / 2);
+        float playerCenterPoint = player.getBounds().getX() + (player.getBounds().getWidth() / 2);
         if (centerPoint < playerCenterPoint) {
             this.currentAnimationName = "STAND_RIGHT";
         }

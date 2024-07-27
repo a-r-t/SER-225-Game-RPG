@@ -58,6 +58,7 @@ public abstract class Map {
     protected ArrayList<NPC> npcs;
     protected ArrayList<Trigger> triggers;
 
+    // current script that is being executed (if any)
     protected Script activeScript;
 
     // if set to false, camera will not move as player moves
@@ -274,7 +275,7 @@ public abstract class Map {
         return x + width * y;
     }
 
-    // list of enemies defined to be a part of the map, should be overridden in a subclass
+    // list of scripts defined to be a part of the map, should be overridden in a subclass
     protected void loadScripts() { }
 
     // list of enhanced map tiles defined to be a part of the map, should be overridden in a subclass
@@ -413,7 +414,7 @@ public abstract class Map {
         ArrayList<MapEntity> surroundingMapEntities = new ArrayList<>();
 
         // gets surrounding tiles
-        Point playerCurrentTile = getTileIndexByPosition((int)player.getBoundsX1(), (int)player.getBoundsY1());
+        Point playerCurrentTile = getTileIndexByPosition((int)player.getBounds().getX1(), (int)player.getBounds().getY1());
         for (int i = (int)playerCurrentTile.y - 1; i <= playerCurrentTile.y + 1; i++) {
             for (int j = (int)playerCurrentTile.x - 1; j <= playerCurrentTile.x + 1; j++) {
                 MapTile mapTile = getMapTile(j, i);
