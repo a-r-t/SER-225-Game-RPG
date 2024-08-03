@@ -479,7 +479,7 @@ public abstract class Map {
             return true;
         }
 
-        boolean isEntityOverOrUnderPlayer = (entityBounds.getY2() < playerBounds.getY1() || entityBounds.getY1() > playerBounds.getY2());
+        boolean isEntityOverOrUnderPlayer = entityBounds.getY2() < playerBounds.getY1() || entityBounds.getY1() > playerBounds.getY2();
         if (interactedEntity instanceof NPC) {
             // if player is facing left and entity is either on top of or underneath player and player's center point is greater than entity's center point, location is valid
             if (player.getFacingDirection() == Direction.LEFT && isEntityOverOrUnderPlayer && playerBounds.getX1() < entityBounds.getX2()) {

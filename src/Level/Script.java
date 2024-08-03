@@ -43,9 +43,8 @@ public abstract class Script {
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
     public MapEntity getEntity() { return entity; }
-    public void setMapEntity(MapEntity entity) {
-        this.entity = entity;
-    }
+    public void setMapEntity(MapEntity entity) { this.entity = entity; }
+    
     public ArrayList<ScriptAction> getScriptActions() {
         return scriptActions;
     }
@@ -108,10 +107,13 @@ public abstract class Script {
     public boolean isActive() { return isActive; }
 
     public void setIsActive(boolean isActive) { 
-        if (hasScriptActions()) {
+        if (isActive && hasScriptActions()) {
             this.isActive = isActive; 
             this.currentScriptActionIndex = 0;
             scriptActions.get(currentScriptActionIndex).setup();
+        }
+        else {
+            this.isActive = isActive; 
         }
     } 
 }

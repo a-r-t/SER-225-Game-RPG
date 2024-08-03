@@ -61,7 +61,7 @@ public abstract class Player extends GameObject {
                 handlePlayerState();
             } while (previousPlayerState != playerState);
 
-        // move player with respect to map collisions based on how much player needs to move this frame
+            // move player with respect to map collisions based on how much player needs to move this frame
             lastAmountMovedY = super.moveYHandleCollision(moveAmountY);
             lastAmountMovedX = super.moveXHandleCollision(moveAmountX);
         }
@@ -175,11 +175,6 @@ public abstract class Player extends GameObject {
 
     @Override
     public void onEndCollisionCheckY(boolean hasCollided, Direction direction, GameObject entityCollidedWith) { }
-
-    // other entities can call this method to hurt the player
-    public void hurtPlayer(MapEntity mapEntity) {
-
-    }
 
     public PlayerState getPlayerState() {
         return playerState;
