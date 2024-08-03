@@ -7,6 +7,7 @@ import ScriptActions.*;
 
 
 // trigger script at beginning of game to set that heavy emotional plot
+// checkout the documentation website for a detailed guide on how the scripting system works
 public class LostBallScript extends Script {
 
     @Override

@@ -7,7 +7,6 @@ import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.NPC;
-import Level.Player;
 import Utils.Point;
 
 import java.util.HashMap;

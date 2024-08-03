@@ -15,6 +15,7 @@ import ScriptActions.TextboxScriptAction;
 import ScriptActions.UnlockPlayerScriptAction;
 
 // script for talking to tree with hole in it
+// checkout the documentation website for a detailed guide on how the scripting system works
 public class TreeScript extends Script {
 
 

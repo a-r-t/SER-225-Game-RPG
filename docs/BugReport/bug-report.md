@@ -16,7 +16,7 @@ search_exclude: true
 
 # Bug Report
 
-![bug-enemy.gif](../assets/images/bug-enemy.gif)
+![bug-walk.gif](../assets/images/bug-walk.gif)
 
 Below is a list of known bugs and oddities in the game code.
 There are definitely more bugs than what is listed here...they just haven't been discovered yet.

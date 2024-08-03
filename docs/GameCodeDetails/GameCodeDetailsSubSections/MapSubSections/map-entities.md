@@ -50,7 +50,7 @@ It's an alternative to setting an entity's status to `REMOVED` that keeps the en
 
 Setting a map entity's `isUncollidable` attribute to true will prevent other entities from being able to collide with it.
 Other entities will just ignore it when doing collision logic.
-However, the map entity that is set to `isUncolliable` can still perform collision logic against other entities if desired.
+However, the map entity that is set to `isUncollidable` can still perform collision logic against other entities if desired.
 
 ### Existence Flag
 

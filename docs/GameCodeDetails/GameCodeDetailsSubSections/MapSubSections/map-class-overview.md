@@ -87,10 +87,14 @@ public ArrayList<NPC> loadNPCs() {
     dinosaur.setInteractScript(new DinoScript());
     npcs.add(dinosaur);
 
+    Bug bug = new Bug(3, getMapTile(7, 12).getLocation().subtractX(20));
+    bug.setInteractScript(new BugScript());
+    npcs.add(bug);
+
     return npcs;
 }
 ```
 
-This adds two NPCs to the map -- the [walrus](./npcs.md#walrus) (`Walrus` class) and the [dinosaur](./npcs.md#dinosaur) (`Dinosaur` class).
+This adds three NPCs to the map -- the [walrus](./npcs.md#walrus) (`Walrus` class), the [dinosaur](./npcs.md#dinosaur) (`Dinosaur` class), and the [bug](./npcs.md#bug) (`Bug` class).
 The `getMapTile` `Map` method is used to make it easier to place the NPC on a specific tile index in the map by getting the tile at that index's location. 
 The other setters, like `setExistenceFlag` and `setInteractScript` are map entity attributes that can be used to make the NPCs behave a specific way, and are covered in more detail in both the [scripts](./scripts.md) and [NPCs](./npcs.md) pages.

@@ -81,15 +81,29 @@ The image file for the walrus is `Walrus.png`.
 ![dinosaur.png](../../../assets/images/dinosaur.png)
 
 This NPC is defined by the `Dinosaur` class. 
-Like the walrus, it doesn't do much other than wait for the player to interact with it.
+The dinosaur is able to be interacted with.
 Its `interactScript` is defined in the `DinoScript` class (located in the `Scripts.TestMap` package).
 The `DinoScript` is the most complex script in the game. 
-Understanding it is the key to mastering the scripting system and being create to do whatever you want in this game. 
+Understanding it is the key to mastering the scripting system and being able to create anything you want in this type of game. 
 Read more about scripts [here](./scripts.md).
 
 The dinosaur also has a walking animation, which is used during its `DinoScript` to force it to walk to a certain location.
 
 ![dinosaur-walk.gif](../../../assets/images/dinosaur-walk.gif)
+
+### Bug
+
+![bug.png](../../../assets/images/bug.png)
+
+This NPC is defined by the `Bug` class. 
+The bug is able to be interacted with.
+Its `interactScript` is defined in the `BugScript` class (located in the `Scripts.TestMap` package).
+The `BugScript` class shows an example of how to create user selectable options through the textbox (such as selecting "yes" or "no" to a question asked by an NPC).
+Read more about scripts [here](./scripts.md).
+
+Unlike the walrus and dinosaur NPCs, the bug NPC walks back and forth until it is interacted with rather than being stationary. The bug has a walking animation thatis used while it is moving back and forth.
+
+![bug-walk.gif](../../../assets/images/bug-walk.gif)
 
 ## NPC Id
 
@@ -112,4 +126,10 @@ The `walk` method moves the NPC in a specified direction and at a specified spee
 based on which direction they were told to walk in and which direction they are facing. 
 The NPC must have those animations defined in order to use this method.
 
-These methods are very useful in scripts, but manipulating an NPC can be done outside of these methods as well if some special logic is necessary. 
+These methods are very useful in scripts, but manipulating an NPC can be done outside of these methods as well if some special logic is necessary.
+
+NPCs have the option to override the base NPC class's a `performAction` method.
+This can essentially be treated as a normal entity's `update` method cycle, 
+however it is implemented in this way to allow a script to "lock" the NPC while it is executing.
+For example, the bug NPC's `performAction` method tells the bug to continuously walk back and forth.
+This method should be used for having NPCs behave in a certain way without the need for something to trigger it (e.g. having the NPC walk around), while an `interactScript` should be used to have an NPC behave in a certain way after they are spoken to (e.g. showing text in the textbox).

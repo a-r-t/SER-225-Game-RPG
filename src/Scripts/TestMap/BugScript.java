@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import Level.Script;
 import ScriptActions.*;
-import Utils.Direction;
 
 // script for talking to bug npc
+// checkout the documentation website for a detailed guide on how the scripting system works
 public class BugScript extends Script {
 
     @Override

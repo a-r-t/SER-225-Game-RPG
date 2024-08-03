@@ -40,41 +40,51 @@ The engine will pick up on when the time has come for a script to be executed (s
 include the script's execution in the update cycle until it has completed. The current script being executed is considered the "active script".
 
 Note that scripts do NOT "pause" the rest of the game.
-This was done intentionally to allow for things like animated tiles to not freeze in place, etc. While this did make things a bit more complicated,
-the end result lends to a much better made game. All scripts will typically use the `lockPlayer` option to prevent the player from moving or interacting with something else until the currently active script has finished executing.
+This was done intentionally to allow for things like animated tiles to not freeze in place and other background processes to still be run that are unrelated to the current script event. While this did make things a bit more complicated to implement,
+the end result lends to a much better made game engine that improves the player's immersion.
+All scripts will typically use the "lock player" script action to prevent the player from moving or interacting with something else until the currently active script has finished executing.
 
 ## Script State
 
 While a script is active, there are two states it can be in: `RUNNING` and `COMPLETED`. These are defined in the `ScriptState` enum in the `Level` package.
-Essentially, it gives each script full control over telling the game when it has finished executing. The game will continually be calling the script's update cycle while it is active,
-so the script will continually be responding each update cyle by telling the game it is either still running (sending back a `ScriptState.RUNNING` response) or that it has finished (sending back a `ScriptState.COMPLETED` response).
-As long as a script eventually returns a `COMPLETED` response, the game will eventually deactivate the script and continue on like normal afterwards.
+Essentially, it gives each script full control over telling the game when it has finished executing. 
+The game will continuously call a script's update cycle while it is active, and as a result the script will continuously respond telling the game whether it is either still running (sending back a `ScriptState.RUNNING` response) or that it has finished (sending back a `ScriptState.COMPLETED` response).
+As long as a script eventually returns a `COMPLETED` response, the game will handle deactivating the script and returning the game to its normal state.
 
 ## How to create a script
 
-The `Script` class is abstract, meaning it must be subclassed. Currently, the game has several `Script` subclasses
-located in the `Scripts.TestMap` package. The reason all scripts aren't just thrown into the generic `Scripts` package is that
-scripts tend to be separate out by map, and while there is only one map `TestMap` in this game currently, I wanted to make it easier for
+The `Script` class is abstract, meaning it must be subclassed. 
+Currently, the game has several `Script` subclasses located in the `Scripts.TestMap` package. The reason all scripts aren't just thrown into the generic `Scripts` package is that scripts tend to be separated out by map, and while there is only one map `TestMap` in this game currently, I wanted to make it easier for
 other developers to organize their scripts for the future. As a result, all scripts that are used in the `TestMap` map belong in the `Scripts.TestMap` package.
 
 There is one `Script` subclass, however, that IS inside the generic `Scripts` package: `SimpleTextScript`.
+This script's only instructions are to loads up a textbox, show text, and then close the textbox.
 I decided that this script is simple and generic enough that it could be used in many different maps. 
-It is up to the developer if a script belongs to a map, or is generic and reusable enough to be used across multiple maps.
+It is up to the developer to choose if a script belongs to a map, or is generic and reusable enough to be used across multiple maps.
 
 More on what these `Script` subclasses actually do is gone into detail later on this page.
 
-To create a new script, make a new class and extend from `Script`. I recommend using the `SimpleTextScript` class as a base template.
-At a minimum, each script should have the following three methods:
-- `setup` -- logic that gets run before event execution
-- `cleanup` -- logic that gets run after event execution
-- `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
+To create a new script, make a new class and extend from `Script`. I recommend using the `SimpleTextScript` class as a base template. The constructor of a script subclass will typically be empty, but in cases like `SimpleTextScript` it may require external information, which can easily be defined when necessary.
+
+Additionally, each script subclass must override the `loadScriptActions` method, which is where the script's instruction set is loaded from. The method signature looks like this:
+
+```java
+@Override
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // ... load instructions here
+
+    return scriptActions;
+}
+```
 
 ## How to attach a script to a map entity
 
 Scripts can be attached to any [NPC](./npcs.md), [MapTile](./map-tiles-and-tilesets.md), or [EnhancedMapTile](./enhanced-map-tiles.md) class instance as an "interact script".
 This means the script will become active and execute when the player interacts with the entity.
-A map subclass handles attaching scripts to its entities. For example, in the `TestMap` map subclass in its `loadNPCs` method,
-it creates the `Walrus` NPC and then calls its `setInteractScript` method to assign it an interact script.
+A map subclass handles attaching scripts to its entities. 
+For example, in the `TestMap` map subclass in its `loadNPCs` method, it creates the `Walrus` NPC and then calls its `setInteractScript` method to assign it an interact script.
 The interact script it assigns to this NPC is the `WalrusScript` class, which is a script subclass found in the `Scripts.TestMap` package.
 
 ```java
@@ -86,162 +96,45 @@ walrus.setInteractScript(new WalrusScript());
 npcs.add(walrus);
 ```
 
-Scripts can also be attached to any [Trigger](./triggers.md) class instance as a "trigger script". This means that the script will become active
-when the player activates the trigger by walking on top of it. Triggers have a `setTriggerScript` method that can be used,
-but typically the script is passed into its constructor.
+Scripts can also be attached to any [Trigger](./triggers.md) class instance as a "trigger script". 
+This means that the script will become active when the player activates the trigger by walking on top of it. Triggers have a `setTriggerScript` method that can be used, but typically the script is just passed into its constructor.
 
 ```java
 triggers.add(new Trigger(790, 1030, 100, 10, new LostBallScript(), "hasLostBall"));
 ```
 
-## How to create a script event
+## Script Actions
+
+A script can have any number of script actions in its instruction set.
+
+The `ScriptAction` class represents an instruction in a script.
+The `ScriptActions` package contains many different reusable script action subclasses that can be used in any script.
+Some examples of script actions include showing text in the textbox, moving an NPC around the map, etc.
+
+Each `ScriptAction` subclass can define the following three methods:
+- `setup` -- logic that gets run before event execution, this method is only called one time
+- `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
+- `cleanup` -- logic that gets run after event execution, this method is only called one time
+
+Each of the script action subclasses currently included in this game engine are explained [here]().
+Instructions on how to create your own script action subclass can be found [here]().
+
+## How to create a new script event with instructions
 
 Once you have a script subclass, you are free to have it perform...well any event logic you want. 
-It's extremely customizable, as any script event is capable of doing anything it wants to the game, such as bringing up a textbox, moving NPCs, changing map tiles, etc.
+It's extremely customizable, as any script event is capable of doing anything it wants to the game through the use of script actions (both pre-existing and new ones that a developer can create), such as bringing up a textbox, moving NPCs, changing map tiles, etc.
 
-Let's break down the `SimpleTextScript` to start, which is a script subclass located in the `Scripts` package.
-It is the simplest script in the game. All it does is bring up a [textbox](#Textbox) that displays specified text, and the ends.
-This script is used on the several sign map tiles in the game as interact scripts.
+Scripts are made up of any number of `ScriptAction` class instances, which represents an instruction telling the script what to do when it reaches that particular segment.
 
-![simple-text-script.gif](../../../assets/images/simple-text-script.gif)
+The best way to understand how the scripts all work is by looking at the existing scripts in the game.
+Each of the scripts currently in the game have their own page going into more detail on how they work and which script actions they use: 
 
-In every script, the `execute` method is the actual "event" being carried out, so let's look at that first.
+`SimpleTextScript`, 
 
-```java
- @Override
-public ScriptState execute() {
-    // call setup code
-    start();
+Understanding and creating scripts can be a bit difficult at first due to their more complex nature compared to the rest of the game engine, but they're one of those things where once it all "clicks", they becomes pretty trivial to work with.
 
-    // while textbox is not finished displaying all text, script keeps running
-    if (!isTextboxQueueEmpty()) {
-        return ScriptState.RUNNING;
-    }
-
-    // call cleanup code
-    end();
-
-    // script ends
-    return ScriptState.COMPLETED;
-}
-```
-
-Typically, a script will need to "set up" some stuff before executing the main event. To do this, a script makes a call to the `start` method, which you can see is the first line of code inside this script's `execute` method.
-The base `Script` class ensures that this setup step is only carried out once, otherwise it would get called every update cycle and the script would keep repeating its setup step and never make progress.
-After performing this logic, the base `Script` class will then call the `setup` method. Since all scripts, including `SimpleTextScript`, override the `setup` method, it will run the logic inside the subclass's method.
-
-The `SimpleTextScript` class's `setup` method looks like this:
-
-```java
-@Override
-protected void setup() {
-    lockPlayer();
-    showTextbox();
-    addTextToTextboxQueue(textItems);
-}
-```
-
-The base `Script` class has a ton of useful methods included that allows a script subclass's event to perform certain actions without needing to code them from scratch.
-The provided event methods in `Script` class are detailed later in this page [here](#Event Methods).
-The above `setup` method uses three of these aforementioned methods.
-
-The first method it calls is `lockPlayer`, which "locks" the player in place and prevents them from moving around and doing other normal game actions.
-This is ideal, as you don't want the player to be able to walk away from a script executing, or potentially break the game by interacting with an entity while another entity's script is currently executing.
-
-Next, `showTextbox` will show the textbox on screen (which you can see happen in the below gif):
-
-![simple-text-script.gif](../../../assets/images/simple-text-script.gif)
-
-Finally, the `addTextToTextboxQueue` method will add text to the textbox's queue, which is what tells it what text it is going to need to display.
-More detailed information on how the textbox works can be found later on this page [here](#Textbox).
-
-Now that the setup step is complete, the `execute` method continues on:
-
-```java
- @Override
-public ScriptState execute() {
-    // call setup code
-    start();
-
-    // while textbox is not finished displaying all text, script keeps running
-    if (!isTextboxQueueEmpty()) {
-        return ScriptState.RUNNING;
-    }
-
-    // call cleanup code
-    end();
-
-    // script ends
-    return ScriptState.COMPLETED;
-}
-```
-
-After the `start` method call, the next part of the script's event essentially just waits until the player has finished
-going through every text item that the textbox needs to display.
-
-```java
-// while textbox is not finished displaying all text, script keeps running
-if (!isTextboxQueueEmpty()) {
-    return ScriptState.RUNNING;
-}
-```
-
-The `isTexboxQueueEmpty` method returns false if the player has not finished going through every text item that the textbox needs to display.
-If the player has finished going through all the text items that the textbox needs to display, it will return true.
-
-This if statement is basically saying "if the player has not finished going through all the text items that the textbox needs to display, tell the game that this script is still running".
-It does this by returning back to the script engine `ScriptState.RUNNING` meaning the script's update logic (and therefore `execute` method) will be called again next frame of the game loop.
-This can go on indefinitely until the player has finished going through all text items of the textbox.
-
-Finally, when the player has finished going through each text item of the textbox, the script calls the `end` method.
-This is similar to the `start` method, where the base `Script` class will perform some logic and then make a call to the `cleanup` method.
-Since all script subclasses should override the `cleanup` method, the subclass's `cleanup` method will be called.
-
-Let's look at the `SimpleTextScript` class's `cleanup` method:
-
-```java
-@Override
-protected void cleanup() {
-    unlockPlayer();
-    hideTextbox();
-}
-```
-
-The `unlockPlayer` method will give control back to the player, allowing them to move around and such again.
-Typically, `lockPlayer` is always called in a script's `setup` method, so `unlockPlayer` in turn is always called in a script's `cleanup` method
-to ensure the game can continue on like normal after the script ends.
-
-And predictably, the `hideTextbox` method will remove the textbox from the screen.
-
-And now one last time, going back to the `SimpleTextScript` class's `execute` method, there is one more thing that needs to be done:
-telling the scripting engine that the script has completed.
-
-```java
- @Override
-public ScriptState execute() {
-    // call setup code
-    start();
-
-    // while textbox is not finished displaying all text, script keeps running
-    if (!isTextboxQueueEmpty()) {
-        return ScriptState.RUNNING;
-    }
-
-    // call cleanup code
-    end();
-
-    // script ends
-    return ScriptState.COMPLETED;
-}
-```
-
-To tell the scripting engine that the script has completed, it just needs to return `ScriptState.COMPLETED`.
-All scripts must eventually return this, otherwise the scripting engine will just keep running the script indefinitely.
-
-That covers the "basics" of the scripting engine. 
-To see more details on some other scripting events currently in the game, 
-the [Flags](#Flags) section of this page covers the `WalrusScript` class in more detail, and the
-[Segmented Scripts](#Segmented Scripts) section of this page covers the `DinoScript` class in more detail.
+// TODO: Finish off with "Terminology" (flags, etc.) and some other base script stuff,
+// then make more pages for all the script actions and scripts
 
 ## Flags
 
