@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Scriptings
-nav_order: 11
+title: Scripting Engine Overview
+nav_order: 9
 parent: Map
 grand_parent: Game Code Details
-permalink: /GameCodeDetails/Map/Scripts
+permalink: /GameCodeDetails/Map/ScriptingEngineOverview
 ---
 
 ## Table of contents
