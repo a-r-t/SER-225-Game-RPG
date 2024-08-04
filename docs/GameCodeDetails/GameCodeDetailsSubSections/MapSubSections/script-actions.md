@@ -15,396 +15,367 @@ permalink: /GameCodeDetails/Map/ScriptActions
 
 ---
 
-# Scripts
+# Script Actions
 
-## What is a script?
+## What is a script action?
 
-A script (represented by the `Script` class in the `Level` package) is an abstract class that allows for an "event" to be constructed and later executed.
-For those of you that took SER120 here at Quinnipiac or are familiar with Java Swing components, you can think of a script like how you would code a `JButton's` click event.
-The idea is that a script contains code that should be executed at a later time, but the code needs to be defined up front in order for the game to use it.
+A script action is one specific instruction for the game to perform during a script.
+A script is a collection of script actions (instruction set).
+You can think of each script action as a building block or a lego piece, while the script itself is the sequential combination of them.
 
-Nearly all games of this genre have some sort of scripting engine that can almost be thought of as its own "language".
-Essentially, it's the game's job to execute a given script, without knowing what the script is going to do ahead of time or what the script is capable of doing.
-Now, for this game, I didn't need to make things too complicated -- the scripts are just typical Java code sectioned off into separate classes
-that can be assigned to map entities (as interact scripts for [NPCs](./npcs.md)/[Map Tiles](./map-tiles-and-tilesets.md) and trigger scripts for [Triggers](./triggers.md)).
-The same script can be assigned to any number of entities if desired to have each one execute the same event.
+When the script has reached a specific script action instruction, the script action will first run its "setup" logic.
+This "setup" logic is only run one time.
+Next, the script will continually run its "execution" logic every update frame until it has completed.
+Finally, the script will run its "cleanup" logic, which is only run one time.
 
-Understanding this game's scripting "engine" is the key to being able to do...well anything that you want to the game.
-The game is built around interact scripts and trigger scripts, so being able to make your own scripts or edit the existing scripts gives you infinite power (well...within the confines of this Java game).
-Script events can be made to technically do "anything" to the game, it's just up to the coder's skill level and determination to make it happen!
+Each `ScriptAction` base class defines the following three methods to allow any subclass to include their own setup, execute, and cleanup logic:
+- `setup` -- logic that gets run before event execution, this method is only called one time.
+- `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
+- `cleanup` -- logic that gets run after event execution, this method is only called one time.
 
-## Execution
+The below sections of this page strictly cover script actions.
+To see how script actions come together to create a fully functioning script, check out the scripts page [here](./scripts.md).
 
-The game engine will handle script execution when it comes to interact scripts and trigger scripts associated with map entities.
-The engine will pick up on when the time has come for a script to be executed (such as interacting with an NPC that has an `interactScript`), and will
-include the script's execution in the update cycle until it has completed. The current script being executed is considered the "active script".
+## What script actions are already included in the game engine?
 
-Note that scripts do NOT "pause" the rest of the game.
-This was done intentionally to allow for things like animated tiles to not freeze in place and other background processes to still be run that are unrelated to the current script event. While this did make things a bit more complicated to implement,
-the end result lends to a much better made game engine that improves the player's immersion.
-All scripts will typically use the "lock player" script action to prevent the player from moving or interacting with something else until the currently active script has finished executing.
+This game engine provides a ton of pre-made script actions that can be used in any script.
+The sections below will go into detail on what they do and how they work.
 
-## Script State
+### Lock Player and Unlock Player
 
-While a script is active, there are two states it can be in: `RUNNING` and `COMPLETED`. These are defined in the `ScriptState` enum in the `Level` package.
-Essentially, it gives each script full control over telling the game when it has finished executing. 
-The game will continuously call a script's update cycle while it is active, and as a result the script will continuously respond telling the game whether it is either still running (sending back a `ScriptState.RUNNING` response) or that it has finished (sending back a `ScriptState.COMPLETED` response).
-As long as a script eventually returns a `COMPLETED` response, the game will handle deactivating the script and returning the game to its normal state.
+When the player is "locked", it means they cannot move or interact with anything, essentially freezing them in place.
+The player is often locked at the beginning of every script in order to allow for the script to play out without the player being able to just walk away or mess up a cutscene.
 
-## How to create a script
+The `LockPlayerScriptAction` class can be used to lock the player.
 
-The `Script` class is abstract, meaning it must be subclassed. 
-Currently, the game has several `Script` subclasses located in the `Scripts.TestMap` package. The reason all scripts aren't just thrown into the generic `Scripts` package is that scripts tend to be separated out by map, and while there is only one map `TestMap` in this game currently, I wanted to make it easier for
-other developers to organize their scripts for the future. As a result, all scripts that are used in the `TestMap` map belong in the `Scripts.TestMap` package.
+Something very important is to ensure that you remember to unlock the player at the end of the script, or else the game will become unplayable as the player will be stuck in place unable to do anything forever.
 
-There is one `Script` subclass, however, that IS inside the generic `Scripts` package: `SimpleTextScript`.
-This script's only instructions are to loads up a textbox, show text, and then close the textbox.
-I decided that this script is simple and generic enough that it could be used in many different maps. 
-It is up to the developer to choose if a script belongs to a map, or is generic and reusable enough to be used across multiple maps.
+The `UnlockPlayerScriptAction` class can be used to unlock the player.
 
-More on what these `Script` subclasses actually do is gone into detail later on this page.
-
-To create a new script, make a new class and extend from `Script`. I recommend using the `SimpleTextScript` class as a base template. The constructor of a script subclass will typically be empty, but in cases like `SimpleTextScript` it may require external information, which can easily be defined when necessary.
-
-Additionally, each script subclass must override the `loadScriptActions` method, which is where the script's instruction set is loaded from. The method signature looks like this:
+These two script actions are very simple to use and do not require any arguments:
 
 ```java
-@Override
 public ArrayList<ScriptAction> loadScriptActions() {
     ArrayList<ScriptAction> scriptActions = new ArrayList<>();
 
-    // ... load instructions here
+    scriptActions.add(new LockPlayerScriptAction()); // lock player in place
+
+    // all other script actions go in between
+
+    scriptActions.add(new UnlockPlayerScriptAction()); // unlock player
 
     return scriptActions;
 }
 ```
 
-## How to attach a script to a map entity
+Examples of these script actions in use can be found in every script in the game, such as `SimpleTextScript`, `WalrusScript`, etc.
 
-Scripts can be attached to any [NPC](./npcs.md), [MapTile](./map-tiles-and-tilesets.md), or [EnhancedMapTile](./enhanced-map-tiles.md) class instance as an "interact script".
-This means the script will become active and execute when the player interacts with the entity.
-A map subclass handles attaching scripts to its entities. 
-For example, in the `TestMap` map subclass in its `loadNPCs` method, it creates the `Walrus` NPC and then calls its `setInteractScript` method to assign it an interact script.
-The interact script it assigns to this NPC is the `WalrusScript` class, which is a script subclass found in the `Scripts.TestMap` package.
+### Show Text in Textbox
+
+The `TextboxScriptAction` can be used to show the textbox on screen, display as little or as much text as desired, and finally close the textbox when finished.
+This action acts as a "wrapper" to abstract away interacting with the `Textbox` class in the `Level` package and using its logic.
+This action supports both standard text as well as utilizing the options feature (which you can read more about [here](./scripting-engine-overview.md#textbox)).
+
+Below are some examples of using this action to simply open up a textbox, display text that the user can cycle through, and then close the textbox when there is no more text left:
 
 ```java
-Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
 
-// walrus's interact script is set here
-walrus.setInteractScript(new WalrusScript());
+    // this will just show one line of text
+    addScriptAction(new TextboxScriptAction() {{
+        addText("Hello world!");
+    }});
 
-npcs.add(walrus);
+    // this will show two lines of text, the new line indicator tells the textbox where drop the text on to the next line
+    addScriptAction(new TextboxScriptAction() {{
+        addText("Hello world!\nHow are you doing today?");
+    }});
+
+    addScriptAction(new TextboxScriptAction() {{
+        // this will first show two lines of text, the new line indicator tells the textbox where drop the text on to the next line
+        addText("Hello world!\nHow are you doing today?");
+
+        // afterwards, it will show this next line of text
+        addText("I love programming!")
+    }});
+
+    return scriptActions;
+}
 ```
 
-Scripts can also be attached to any [Trigger](./triggers.md) class instance as a "trigger script". 
-This means that the script will become active when the player activates the trigger by walking on top of it. Triggers have a `setTriggerScript` method that can be used, but typically the script is just passed into its constructor.
+As you can see from the above example, any amount of text can be used.
+The textbox does not automatically determine if the text length will fit inside the textbox, so it may take some trial and error to ensure the order and orientation of the text within the textbox looks exactly as desired.
+Examples of these script actions in use can be found in every script in the game, such as `SimpleTextScript`, `WalrusScript`, etc.
+
+Utilizing the textbox's options feature can be setup similarly, but with the addition of providing the two options the user is able to select from:
 
 ```java
-triggers.add(new Trigger(790, 1030, 100, 10, new LostBallScript(), "hasLostBall"));
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // this will show "Do you like programming?" in the main textbox
+    // additionally, it will bring up the options textbox and show two possible options to choose from: "Yes" and "No"
+    scriptActions.add(new TextboxScriptAction() {{
+        addText("Do you like programming?", new String[] { "Yes", "No" });
+    }});
+
+    return scriptActions;
+}
 ```
 
-## Script Actions
+While the `Textbox` class technically can support any number of options, the actual options box graphics only works with two options that are of a certain text length.
+If expanded functionality is desired, the box graphics can be updated from within the `Textbox` class.
 
-A script can have any number of script actions in its instruction set.
+As far as what to actually do from here with the options textbox, such as getting the user's answer to use in a later script action, check out the Conditionals section on this page [here](./scripts.md#conditionals) first to gain context, and then to examples of actually using the options textbox in-game can be found in the `BugScript`, which is gone over in detail [here](./scripts.md#bug_script).
 
-The `ScriptAction` class represents an instruction in a script.
-The `ScriptActions` package contains many different reusable script action subclasses that can be used in any script.
-Some examples of script actions include showing text in the textbox, moving an NPC around the map, etc.
+### Set Flags and Unset Flags
 
-Each `ScriptAction` subclass can define the following three methods:
-- `setup` -- logic that gets run before event execution, this method is only called one time
-- `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
-- `cleanup` -- logic that gets run after event execution, this method is only called one time
+Flags can be set and unset in flag manager using the `ChangeFlagScriptAction` class.
+You can read about what Flags and Flag Manager are [here](./scripting-engine-overview.md#flags).
 
-Each of the script action subclasses currently included in this game engine are explained [here]().
-Instructions on how to create your own script action subclass can be found [here]().
-
-## How to create a new script event with instructions
-
-Once you have a script subclass, you are free to have it perform...well any event logic you want. 
-It's extremely customizable, as any script event is capable of doing anything it wants to the game through the use of script actions (both pre-existing and new ones that a developer can create), such as bringing up a textbox, moving NPCs, changing map tiles, etc.
-
-Scripts are made up of any number of `ScriptAction` class instances, which represents an instruction telling the script what to do when it reaches that particular segment.
-
-The best way to understand how the scripts all work is by looking at the existing scripts in the game.
-Each of the scripts currently in the game have their own page going into more detail on how they work and which script actions they use: 
-
-`SimpleTextScript`, 
-
-Understanding and creating scripts can be a bit difficult at first due to their more complex nature compared to the rest of the game engine, but they're one of those things where once it all "clicks", they becomes pretty trivial to work with.
-
-// TODO: Finish off with "Terminology" (flags, etc.) and some other base script stuff,
-// then make more pages for all the script actions and scripts
-
-## Flags
-
-A flag is just a boolean variable representing that something has "happened" in the game. If a flag is "set", it means that it is `true`. If a flag is "not set" (or "unset"), it means that it is `false`.
-A collection of flags represents the "state" the game is currently.
-Scripts often utilize flags in order to both selectively run code based on the current game state, and tell the game that something has "happened".
-Flags allow for things like changing what an NPC says when talked to based on where the player is in the game's story.
-
-There is a class called `FlagManager` that handles managing the current game state and the setting/unsetting of flags.
-The `FlagManager` instance is created in the `PlayLevelScreen` class. Currently, four flags are added to it.
+The action takes in two arguments: the flag to change, and the value that the flag should be.
+To set a flag, the value should be set to `true`.
+To unset a flag, the value should be set to `false`.
+The flag must have already been defined in flag manager for it to be able to be set/unset in a script.
 
 ```java
-// setup state
-flagManager = new FlagManager();
-flagManager.addFlag("hasLostBall", false);
-flagManager.addFlag("hasTalkedToWalrus", false);
-flagManager.addFlag("hasTalkedToDinosaur", false);
-flagManager.addFlag("hasFoundBall", false);
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // this will set the flag named isHappy
+    addScriptAction(new ChangeFlagScriptAction("isHappy", true));
+
+
+    // this will unset the flag named isSad
+    addScriptAction(new ChangeFlagScriptAction("isSad", false));
+
+    return scriptActions;
+}
 ```
 
-As you can see, each flag is given a descriptive enough name in order to figure out what it represents.
-For example, the "hasTalkedToWalrus" flag represents whether the player has already talked to the walrus NPC or not.
+The purpose of setting and unsetting flags is to update the game state.
+A flag that is set indicates to the game that something has already "happened", which can allow for more complex or sequential events.
+For example, if a game had a quest that required that the player has spoken to one NPC before speaking to another, flags can be used for scripts to determine what the player has or has not already done.
 
-An example of utilizing flags in a Script can be seen in the `WalrusScript` class, which is in the `Scripts.TestMap` package.
-In the script's `setup` method where it is preparing the textbox with text items to display, it first checks if the flag "hasTalkedToWalrus" has been set or not.
+Examples of these script actions in use can be found in `WalrusScript`, which sets a flag named `hasTalkedToWalrus` after the walrus has been spoken to the first time, as well as `DinoScript` and `TreeScript` to indicate to the game that certain events have taken place.
+Then, if the walrus is spoken to again, the script checks if the flag is set -- if it is, the walrus says a different message to the player.
+
+### Pause for a set amount of time
+
+This one is easy: the `WaitScriptAction` will pause a script for a certain amount of frames.
+This allows for some control over "timing".
+
+To use it, simply pass in the number of frames that the script should pause for:
 
 ```java
-@Override
-protected void setup() {
-    lockPlayer();
-    showTextbox();
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
 
-    // changes what walrus says when talking to him the first time (flag is not set) vs talking to him afterwards (flag is set)
-    if (!isFlagSet("hasTalkedToWalrus")) {
-        addTextToTextboxQueue( "Hi Cat!");
-        addTextToTextboxQueue( "...oh, you lost your ball?");
-        addTextToTextboxQueue( "Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
+    // this will pause the script for 60 frames
+    addScriptAction(new WaitScriptAction(60));
+
+    // this will pause the script for 80 frames
+    addScriptAction(new WaitScriptAction(80));
+
+    return scriptActions;
+}
+```
+
+When the number of frames to wait have passed, the wait script action will automatically end and move on to the next script action in the script's instruction set.
+
+An example of this script action can be found in `DinoScript`, which uses it to simulate a more "natural" interaction.
+
+### Manipulate NPCs
+
+There are several script actions that allow for manipulating NPCs on the map:
+- `NPCStandScriptAction`: Tells an NPC to stand and face a certain direction.
+- `NPCFacePlayerScriptAction`: Tells an NPC to turn towards the player (to make speaking to an NPC more immersive).
+- `NPCWalkScriptAction`: Tells an NPC to walk in a given direction at a given speed until they have moved a given distance.
+- `NPCChangeVisibilityScriptAction`: Used to hide/show an NPC on the map. When hidden, the NPC will disappear.
+- `NPCLockScriptAction`: Similar to the player lock/unlock script actions, this script action locks the NPC in place. Not always needed, but useful in some situations (such as when speaking to the bug, this stops the bug from moving back and forth).
+- `NPCUnlockScriptAction`: This unlocks a locked NPC.
+
+If an NPC script action is being used as an NPC's `interactScript` and no [NPC Id](./npcs.md#npc-id) is supplied as an argument, the action will be applied to the currently interacted with NPC. For all other instances, a specific NPC's Id must be provided to tell the action with NPC on the map to apply the logic to.
+
+Below is a simple example of telling an NPC that is currently being interacted with to face the player:
+
+```java
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // this will force the NPC being interacted with to face the player
+    addScriptAction(new NPCFacePlayerScriptAction());
+
+    return scriptActions;
+}
+```
+
+Below is an example of telling a specific NPC with an id of 1 to walk 90 pixels to the left at a speed of 2 pixels per frame:
+
+```java
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // this will force an NPC of id 1 to walk to the left at a speed of 2 pixels per frame until it has reached 90 pixels of distance traveled
+    addScriptAction(new NPCWalkScriptAction(1, Direction.LEFT, 90, 2));
+
+    return scriptActions;
+}
+```
+
+Examples of these actions being used can be found in all of the NPC interact scripts such as `WalrusScript`, `DinoScript`, and `BugScript`.
+
+## Creating a new script action
+
+Script actions are designed to be as modular and reusable as possible, as well as be convenient and developer-friendly to use.
+If you have a new script action idea that fits that use-case, you can create your own pretty easily.
+First, start by creating a new subclass of `ScriptAction`.
+Next, determine if the script action needs any additional pieces of data, which if so should be defined in its constructor.
+Finally, add an `execute` method. 
+You can also add `setup` and `cleanup` methods if they will be needed for your action.
+Your script action subclass will end up looking something like this:
+
+```java
+public class MyScriptAction extends ScriptAction {
+
+    // add instance vars/constructor mapping if needed...
+    public MyScriptAction() {
+
     }
-    else {
-        addTextToTextboxQueue( "I sure love doing walrus things!");
+
+    // this method is only run once when script action is loaded up (before execute)
+    // it is optional
+    @Override
+    public void setup() {
+
     }
-    entity.facePlayer(player);
+
+    // this method is called once every frame while the script action is active
+    // it is where the actual logic should take place for carrying out a specific event
+    @Override
+    public ScriptState execute() {
+        // ... script action execute logic
+
+        return ScriptState.COMPLETED;
+    }
+
+    // this method is only run once after script action has completed
+    // it is optional
+    @Override
+    public void cleanup() {
+
+    }
+
 }
 ```
 
-The if statement is using the event method `isFlagSet` to check if the "hasTalkedToWalrus" flag is NOT set yet, which means it is the first time the player is talking to the walrus.
-Based on that, different text is loaded into the textbox.
-
-Later on in the `cleanup` method of the script, the "hasTalkedToWalrus" flag is set using the `setFlag` method.
-
-```java
-@Override
-protected void cleanup() {
-    unlockPlayer();
-    hideTextbox();
-
-    // set flag so that if walrus is talked to again after the first time, what he says changes
-    setFlag("hasTalkedToWalrus");
-}
-```
-
-This means that after the player has talked to the walrus the first time, the "hasTalkedToWalrus" flag will be set to true.
-Any script in the game can now know that the player has already talked to the walrus by checking on this flag.
-When talking to the walrus a second time, its `setup` script will see that the flag is set, and load different text into the textbox.
-
-## Textbox
-
-If you've played through the game already or read the above sections of this page, you'll see that the game utilizes a textbox
-that display text to the player. An example of this can be seen in the scripts for the sign map tiles:
-
-![simple-text-script.gif](../../../assets/images/simple-text-script.gif)
-
-[This](#How to create a script event) section of this page covers the `SimpleTextScript` script in great detail, which also covers usage of the textbox.
-Essentially, the textbox is a resource that can be called to be shown at any time in a script using the `showTextbox` method. It can then be given text to display with the `addTextToTexboxQueue` method.
-Finally, it can be told to hide by calling the `hideTextbox` method.
-
-The `Textbox` class can be found in the `Level` class and it handles all the textbox logic.
-Once it is called to be shown on screen, it becomes "active". The map will recognize this
-and then include the textbox in its update cycle. 
-
-The textbox's `addTextToTextQueue` method is used to tell the textbox what to display. In the above gif, the textbox is given the text "Cat's House" to display, so it does just that.
-However, the textbox can also accept multiple text items to display (an array of strings). The way this works is that it will display each text item until the user hits the interact key,
-at which point it will then display the next text item. This will keep going on until it runs out of text items to display.
-You can see this with the `WalrusScript`, where the script causes the textbox to cycle through several lines of dialogue.
-
-![talking-to-walrus.gif](../../../assets/images/talking-to-walrus.gif)
-
-If you compare the sign textbox script and the walrus talking script, you'll notice that the textbox is displayed
-on the bottom of the screen for the sign script and at the top of the screen for the walrus script.
-The textbox will by default always display on the bottom of the screen unless the camera has hit the end bounds of the map.
-If the camera hits the south end bounds of the map, there is a possibility that the player or other entities being talked to end up being covered by the textbox, since the player
-isn't guaranteed to be in at least the center of the screen on the y axis. To circumvent this issue, the textbox will change to display on the top of the screen if the camera is at the south end bounds of the map.
-
-The `Textbox` class cannot automatically detect that the given text will fit in its box, so it may take some trial and error to get text to fit right.
-Since the textbox has enough room for two lines of text, you can put a newline character `\n` in a text item to have it drop to the next line.
-Technically you can have as many newline characters as you'd like, but any more than one will cause the text to overflow the box vertically.
-
-## Segmented Scripts
-
-If you played through the game, you might have noticed that the interact script on the dinosaur NPC is pretty complex compared to the other scripts.
-
-![talking-to-dinosaur.gif](../../../assets/images/talking-to-dinosaur.gif)
-
-This script (`DinoScript` in the `Scripts.TestMap` package) is executing several event sequences:
-- Showing text
-- Pausing for a few
-- Dinosaur faces player and says more text
-- Dinosaur walks downwards
-- Dinosaur walks to the right
-- Dinosaur faces left
-- Dinosaur walks upwards
-- House door opens
-- Dinosaur walks into door
-- Dinosaur disappears
-- House door closes
-
-This script shows the true "power" of the script engine. Complex segmented events can be created through the use of clever coding.
-As gone over previous in the [How to create a script event](#How to create a script event) section, there are three components to a script:
-the `setup`, `cleanup`, and `execute` methods. However, in the case of a segmented script, the script can have multiple `setup`, `cleanup`, and `execute` steps.
-That means the `execute` method has several points where it calls its `start` and `end` methods in order to "set up" a particular event sequence,
-execute it, "cleans up" afterwards, and then moves on to the next event sequence.
-
-Looking at the `DinoScript` class itself can be overwhelming if you don't understand the scripting engine, so I recommend you first get familiar with
-the other scripts in the game, like `SimpleTextScript` and `WalrusScript`. Truthfully, `DinoScript` is doing the same exact thing as the other scripts are,
-but it does multiple "events" sequentially instead of just doing one thing. So while `SimpleTextScript` shows the textbox, displays text, and then removes the textbox,
-`DinoScript` does that process at certain points in its overall larger script event.
-
-The key to the segmented script just comes down to using an instance variable in the script subclass to keep track of which segment the script currently needs to be running.
-The `DinoScript` class defines a int variable named `sequence` to do this, and each `cleanup` step will increment `sequence` by 1 to ensure the next sequence will be started on the next frame.
-
-Getting an understanding of this script will unlock endless possibilities for you to be able to add on to this game,
-so I recommend taking the plunge into the class and figuring out how the segments work (really just a ton of if statements on the `sequence` variable)
-and how the script plays out. It'll be helpful to watch the above gif of the dinosaur event as you look through the code to figure out which piece does what functionality.
-While it does look overwhelming, I assure you that once it "clicks", the scripting engine will suddenly feel really simple, predictable and systematic.
-
-## Script references
-
-All scripts are provided references to the `map` and `player` class instances.
-This allows each script to perform actions on those classes, call their methods, etc.
-
-Interact scripts are also provided a reference to the entity they are attached to in the `entity` variable.
-While any entity can be manipulated in any script using the `getNPCById` base `Script` method, this `entity` reference
-just makes things more convenient, as it's common to need to perform actions on the current entity being interacted with.
-
-The `entity` reference uses a generic type, meaning in order to use it, a type must be explicitly stated in the creation of the script subclass.
-It is likely if you are taking Quinnipiac's SER225 class that you have not learned about generic typing yet, but that is not an issue.
-I'll tell you what you need to do below. 
-
-An example of this generic type being used is in the `WalrusScript` class (located in the `Scripts.TestMap` package).
-Look at how the class is declared:
+The best way to learn how to make a script action is to look at how the existing ones are implemented.
+One very simple one is `LockPlayerScriptAction`, which locks the player in place. 
+It looks like this:
 
 ```java
-// script for talking to walrus npc
-public class WalrusScript extends Script<NPC> {
-    // ...
-}
-```
-
-Instead of just `extends Script`, it has `extendsScript<NPC>`. This extra `<NPC>` syntax tells the base `Script` class
-that this script is going to be attached to an `NPC` class. The base `Script` class will then ensure that the `entity` reference variable
-is also that of an `NPC` type. This is useful as now this `entity` reference variable can work for `MapTile` or `EnhancedMapTile` entities as well without me having to make three separate `Script` classes.
-If I were to attach a script on to an `EnhancedMapTile` as its `interactScript` for example, it would look like this:
-
-```java
-public class SomeEnhancedMapTileScript extends Script<EnhancedMapTile> {
-    // ...
-}
-```
-
-That's it. It's also not required, so if you just did `extends Script` like in the `SimpleTextScript` class, things would work just fine.
-The only time you need to do this is if you want to use that `entity` reference, like the `WalrusScript` does in order
-to tell the walrus to face the player when its talked to:
-
-```java
-// script for talking to walrus npc
-public class WalrusScript extends Script<NPC> {
+public class LockPlayerScriptAction extends ScriptAction {
 
     @Override
-    protected void setup() {
-        // ...
-        
-        // tells entity being talked to that they need to face the player
-        entity.facePlayer(player);
+    public ScriptState execute() {
+        player.lock();
+        return ScriptState.COMPLETED;
+    }
+}
+```
+
+It has no constructor, no setup, and no cleanup.
+All it does when it executes is call the method `lock` on the player, and then return that the action is completed.
+
+More complicated script actions, however, require a bit more work.
+Let's now look at the `NPCWalkScriptAction`, which tells an NPC to move in a specified direction until it reaches a distance benchmark.
+I have trimmed the class's code down a bit for this example to only focus on the relevant topic at hand:
+
+```java
+public class NPCWalkScriptAction extends ScriptAction {
+    protected NPC npc;
+    protected Direction direction;
+    protected float distance;
+    protected float speed;
+    protected int amountMoved;
+
+    public NPCWalkScriptAction(int npcId, Direction direction, float distance, float speed) {
+        this.npc = map.getNPCById(npcId);
+        this.direction = direction;
+        this.distance = distance;
+        this.speed = speed;
     }
 
-    // ...
+    @Override
+    public void setup() {
+        amountMoved = 0;
+    }
+
+    @Override
+    public ScriptState execute() {
+        npc.walk(direction, speed);
+        amountMoved += speed;
+        if (amountMoved < distance) {
+            return ScriptState.RUNNING;
+        }
+        return ScriptState.COMPLETED;
+    }
 }
 ```
 
-## Event Methods
+The instance variables and constructor for the most part should be pretty obvious.
+The script action needs to know the direction to move the NPC in, the speed at which the NPC should move at, and the distance the NPC should move before the script action is completed.
+Additionally, the Id of the target NPC to move should be passed in so the script knows which one to perform this action on.
 
-While scripts can do anything they would like to the game, as they include references to the `player` and `map` class instances,
-the `Script` base class includes many useful methods of common events that can be used in any script. Having these methods
-makes the scripting process more streamlined and less prone to error, as well as resulting in script code being easier to read.
-Many of these methods are covered in earlier sections on this page.
+The `setup` method, which is only run once when the script action is loaded, sets `amountMoved` to 0 to reset it before the NPC starts moving.
 
-The following methods are included in the `Script` base class:
+The `execute` method, which is called every frame, will continually tell the NPC to walk in the given direction at the given speed by calling `npc.walk(direction, speed)`.
+The `amountMoved` is tracked each time `execute` is run and the NPC is moved until the point is reached where the target distance has been hit.
+If the target distance has not been hit yet, the `execute` method returns `ScriptState.RUNNING`, which tells the script "hey I'm not finished yet, but I completed one cycle -- call me again next frame so I can continue".
+Once the target distance has finally been reached, the `execute` method returns `ScriptState.COMPLETED`, which tells the script "I'm all set, don't call me again".
 
-**General**
-- `lockPlayer` -- player cannot move or do anything; typically called right when script starts up
-- `unlockPlayer` -- player can go back to moving and having normal control; typically called at end of script
-- `showTextbox` -- shows textbox on screen
-- `addTextToTextboxQueue` -- add text to textbox for it to display
-- `hideTextbox` -- hides textbox from screen
-- `isFlagSet` -- checks if a flag is currently set
-- `setFlag` -- sets a flag (sets it to `true`)
-- `unsetFlag` -- unsets a flag (sets it to `false`)
-- `setWaitTime` -- specify number of frames script should wait for before moving on
-- `isWaitTimeUp` -- used after a call to `setWaitTime` to check if the script's waiting period is done
+If you are curious why the `execute` method doesn't do something like use a loop and move the NPC to the target distance all in one call, it's because the scripting engine's goal is to execute scripts without "blocking" the rest of the game from running. 
+If a while loop was placed in that `execute` method, the ENTIRE game would pause while the NPC was moving, which means all background animations, other NPCs/entities, timers, and anything else that may be going on would all freeze in place.
+While a tad more complex, this scripting engine system allows the rest of the game to run in the background while a script is being execute, which allows for a much more immersive game and an overall better player experience.
+It also allows for more potential capabilities and gameplay features to be added by future developers.
+You can read more about the scripting engine's design and goals [here](./scripting-engine-overview.md).
 
-**Map Related**
-- `getMapTile` -- gets a map tile at a specified index
-- `setMapTile` -- changes the map tile at a specified index to a new one
+Creating a script action at first can be a tad challening, but once you have gotten one to work and understand the scripting engine well enough, they aren't bad at all. 
 
-**NPC Related**
-- `getNPC` -- gets an NPC instance from the map by its `id` number; more on NPC id can be found [here](./npcs.md#npc-id)
-- `npcFacePlayer` -- makes a specified NPC instance on the map to face the player
-- `npcWalk` -- makes a specified NPC instance on the map to walk in a specified direction at a specified speed
-- `npcSetAnimation` -- makes a specified NPC instance change their current animation to the one specified
-- `npcSetAnimationFrameIndex` -- makes a specified NPC instance change their current animation frame index to the one specified
+### Anonymous script action class instance
 
-Note that these methods should only be used if you desire to manipulate an NPC that is not the currently interacted with NPC.
-The currently interacted with NPC can be accessed easily through the use of the `entity` reference variable.
-The `entity` reference variable can be read about in the above section on this page [here](#Script references).
+There are situations where a developer may just need to execute some code in a script that isn't modular/reusable enough to make a new script action for, or it's only intended to be used in one spot since it's so specific.
+In that case, an anonymous script action class instance can be created without having to go through creating a new script action subclass and what not.
+It's STILL doing the same exact thing (setup, execute, cleanup, etc.) so don't try to pick this option out of laziness!
 
-**Other**
-- `isPlayerBelowEntity` -- checks if player is below the entity that is being interacted with
-
-Also, the `player` reference variable can be used to manipulate the player however desired.
-The `player` class has built in `stand` and `walk` methods which are designed to be used in scripts in order to force
-the player to do specified actions.
-
-If you want to see an example of one of these methods being used, your best bet is to look at the current scripts in the game
-in the `Scripts` package to see how they are used. Each of these methods only has one job.
-
-## Loading scripts on to entities in a map
-
-This is the job of a map subclass. For example, the `TestMap` class loads scripts on to the required entities.
-In its `loadNPCs` method, it attaches scripts on to the `Walrus` and `Dinosaur` NPC using their `setInteractScript` methods:
+Below is an example of creating an anonymous script action:
 
 ```java
-@Override
-public ArrayList<NPC> loadNPCs() {
-    ArrayList<NPC> npcs = new ArrayList<>();
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
 
-    Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
-    walrus.setInteractScript(new WalrusScript());
-    npcs.add(walrus);
+    // anonymous script action
+    addScriptAction(new ScriptAction() {
+        @Override
+        public ScriptState setup() {
 
-    Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
-    dinosaur.setExistenceFlag("hasTalkedToDinosaur");
-    dinosaur.setInteractScript(new DinoScript());
-    npcs.add(dinosaur);
+        }
 
-    return npcs;
+        @Override
+        public ScriptState execute() {
+
+        }
+
+        @Override
+        public ScriptState cleanup() {
+
+        }
+    });
+
+    return scriptActions;
 }
 ```
 
-There is a `loadScripts` method as well where scripts can be attached on to entities. This is useful for attaching scripts on to map tiles,
-as there's not really another place for that to be done.
-
-```java
-@Override
-public void loadScripts() {
-    getMapTile(21, 19).setInteractScript(new SimpleTextScript("Cat's house"));
-
-    getMapTile(7, 26).setInteractScript(new SimpleTextScript("Walrus's house"));
-
-    getMapTile(20, 4).setInteractScript(new SimpleTextScript("Dino's house"));
-
-    getMapTile(2, 6).setInteractScript(new TreeScript());
-}
-```
+An example of this can be found in `DinoScript`, which uses it when opening and closing the door it walks through during its event.
+Although now that I am thinking about it...a reusable script action for changing a map tile could be a good idea...

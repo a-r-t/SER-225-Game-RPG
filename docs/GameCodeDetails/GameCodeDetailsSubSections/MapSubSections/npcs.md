@@ -105,6 +105,8 @@ Unlike the walrus and dinosaur NPCs, the bug NPC walks back and forth until it i
 
 ![bug-walk.gif](../../../assets/images/bug-walk.gif)
 
+![bug-walking-in-map.gif](../../../assets/images/bug-walking-in-map.gif)
+
 ## NPC Id
 
 The constructor for an `NPC` class instance requires an `id` value. 

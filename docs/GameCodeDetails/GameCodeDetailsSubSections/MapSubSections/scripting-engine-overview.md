@@ -15,7 +15,7 @@ permalink: /GameCodeDetails/Map/ScriptingEngineOverview
 
 ---
 
-# Scripts
+# Scripting Engine Overview
 
 ## What is a script?
 
@@ -116,10 +116,10 @@ Each `ScriptAction` subclass can define the following three methods:
 - `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
 - `cleanup` -- logic that gets run after event execution, this method is only called one time
 
-Each of the script action subclasses currently included in this game engine are explained [here]().
-Instructions on how to create your own script action subclass can be found [here]().
+Each of the script action subclasses currently included in this game engine are explained [here](./script-actions.md).
+This page also covers how to create a new script action if necessary.
 
-## How to create a new script event with instructions
+## Creating a new script
 
 Once you have a script subclass, you are free to have it perform...well any event logic you want. 
 It's extremely customizable, as any script event is capable of doing anything it wants to the game through the use of script actions (both pre-existing and new ones that a developer can create), such as bringing up a textbox, moving NPCs, changing map tiles, etc.
@@ -127,18 +127,20 @@ It's extremely customizable, as any script event is capable of doing anything it
 Scripts are made up of any number of `ScriptAction` class instances, which represents an instruction telling the script what to do when it reaches that particular segment.
 
 The best way to understand how the scripts all work is by looking at the existing scripts in the game.
-Each of the scripts currently in the game have their own page going into more detail on how they work and which script actions they use: 
-
-`SimpleTextScript`, 
+Each of the scripts currently used in the game are explained [here](./scripts.md).
+Each of the script actions currently included in the game engine are explained [here](./script-actions.md)
 
 Understanding and creating scripts can be a bit difficult at first due to their more complex nature compared to the rest of the game engine, but they're one of those things where once it all "clicks", they becomes pretty trivial to work with.
 
-// TODO: Finish off with "Terminology" (flags, etc.) and some other base script stuff,
-// then make more pages for all the script actions and scripts
+## Resources
 
-## Flags
+When working with scripts, the following resources are provided to support more complex logic states and functionalities.
+The below subsections cover some of the most commonly used resources available to scripts.
 
-A flag is just a boolean variable representing that something has "happened" in the game. If a flag is "set", it means that it is `true`. If a flag is "not set" (or "unset"), it means that it is `false`.
+### Flags
+
+A flag is just a boolean variable representing that something has "happened" in the game. 
+If a flag is "set", it means that it is `true`. If a flag is "not set" (or "unset"), it means that it is `false`.
 A collection of flags represents the "state" the game is currently.
 Scripts often utilize flags in order to both selectively run code based on the current game state, and tell the game that something has "happened".
 Flags allow for things like changing what an NPC says when talked to based on where the player is in the game's story.
@@ -156,255 +158,63 @@ flagManager.addFlag("hasFoundBall", false);
 ```
 
 As you can see, each flag is given a descriptive enough name in order to figure out what it represents.
-For example, the "hasTalkedToWalrus" flag represents whether the player has already talked to the walrus NPC or not.
+For example, the `hasTalkedToWalrus` flag represents whether the player has already talked to the walrus NPC or not.
 
 An example of utilizing flags in a Script can be seen in the `WalrusScript` class, which is in the `Scripts.TestMap` package.
-In the script's `setup` method where it is preparing the textbox with text items to display, it first checks if the flag "hasTalkedToWalrus" has been set or not.
+Using a flag in this script correctly allows for the walrus NPC to say different messages to the player based on whether is is the first time the player has spoken to the walrus or not.
+More on how the `WalrusScript` class works and how it uses this flag for conditionally script behavior can be found [here](./scripts#walrus_script)
 
-```java
-@Override
-protected void setup() {
-    lockPlayer();
-    showTextbox();
+Any number of flags can be defined in the `FlagManager` class instance and then used within any script.
+The flags MUST already be defined first though (which happens when the `PlayLevelScreen` class creates the `FlagManager` class instance) prior to scripts being able to set/unset them. 
 
-    // changes what walrus says when talking to him the first time (flag is not set) vs talking to him afterwards (flag is set)
-    if (!isFlagSet("hasTalkedToWalrus")) {
-        addTextToTextboxQueue( "Hi Cat!");
-        addTextToTextboxQueue( "...oh, you lost your ball?");
-        addTextToTextboxQueue( "Hmmm...my walrus brain remembers seeing Dino with\nit last. Maybe you can check with him?");
-    }
-    else {
-        addTextToTextboxQueue( "I sure love doing walrus things!");
-    }
-    entity.facePlayer(player);
-}
-```
+### Textbox
 
-The if statement is using the event method `isFlagSet` to check if the "hasTalkedToWalrus" flag is NOT set yet, which means it is the first time the player is talking to the walrus.
-Based on that, different text is loaded into the textbox.
-
-Later on in the `cleanup` method of the script, the "hasTalkedToWalrus" flag is set using the `setFlag` method.
-
-```java
-@Override
-protected void cleanup() {
-    unlockPlayer();
-    hideTextbox();
-
-    // set flag so that if walrus is talked to again after the first time, what he says changes
-    setFlag("hasTalkedToWalrus");
-}
-```
-
-This means that after the player has talked to the walrus the first time, the "hasTalkedToWalrus" flag will be set to true.
-Any script in the game can now know that the player has already talked to the walrus by checking on this flag.
-When talking to the walrus a second time, its `setup` script will see that the flag is set, and load different text into the textbox.
-
-## Textbox
-
-If you've played through the game already or read the above sections of this page, you'll see that the game utilizes a textbox
-that display text to the player. An example of this can be seen in the scripts for the sign map tiles:
+A staple to RPG games, this game utilizes a textbox that display text to the player. 
+This immersion and communication technique allows for the player of the game to "speak" to NPCs, "interact" with entities, etc.
+An example of this can be seen in the scripts for the sign map tiles:
 
 ![simple-text-script.gif](../../../assets/images/simple-text-script.gif)
 
-[This](#How to create a script event) section of this page covers the `SimpleTextScript` script in great detail, which also covers usage of the textbox.
-Essentially, the textbox is a resource that can be called to be shown at any time in a script using the `showTextbox` method. It can then be given text to display with the `addTextToTexboxQueue` method.
-Finally, it can be told to hide by calling the `hideTextbox` method.
+The textbox is a resource that can be called to be shown at any time in a script using the `TextboxScriptAction` class. 
+It can then be given any number of lines of text to display.
+The player can keep triggering new lines of text to be shown until there is no more text left. 
+Once it has run out of text to show, the textbox will hide itself.
 
 The `Textbox` class can be found in the `Level` class and it handles all the textbox logic.
-Once it is called to be shown on screen, it becomes "active". The map will recognize this
-and then include the textbox in its update cycle. 
+Once it is called to be shown on screen, it becomes "active". 
+The map will recognize this and then include the textbox in its update cycle. 
 
-The textbox's `addTextToTextQueue` method is used to tell the textbox what to display. In the above gif, the textbox is given the text "Cat's House" to display, so it does just that.
-However, the textbox can also accept multiple text items to display (an array of strings). The way this works is that it will display each text item until the user hits the interact key,
-at which point it will then display the next text item. This will keep going on until it runs out of text items to display.
-You can see this with the `WalrusScript`, where the script causes the textbox to cycle through several lines of dialogue.
+You can see an example of the textbox handling many different text "segments" and the player proceeding through them when speaking with the walrus NPC:
 
 ![talking-to-walrus.gif](../../../assets/images/talking-to-walrus.gif)
 
-If you compare the sign textbox script and the walrus talking script, you'll notice that the textbox is displayed
-on the bottom of the screen for the sign script and at the top of the screen for the walrus script.
+Additionally, if you compare the sign textbox script and the walrus talking script, you'll notice that the textbox is displayed on the bottom of the screen for the sign script and at the top of the screen for the walrus script.
 The textbox will by default always display on the bottom of the screen unless the camera has hit the end bounds of the map.
-If the camera hits the south end bounds of the map, there is a possibility that the player or other entities being talked to end up being covered by the textbox, since the player
-isn't guaranteed to be in at least the center of the screen on the y axis. To circumvent this issue, the textbox will change to display on the top of the screen if the camera is at the south end bounds of the map.
+If the camera hits the south end bounds of the map, there is a possibility that the player or other entities being talked to could end up being covered by the textbox, since the player isn't guaranteed to be in at least the center of the screen on the y axis. 
+To circumvent this potential issue, the textbox will change to display on the top of the screen if the camera is at the south end bounds of the map.
 
 The `Textbox` class cannot automatically detect that the given text will fit in its box, so it may take some trial and error to get text to fit right.
 Since the textbox has enough room for two lines of text, you can put a newline character `\n` in a text item to have it drop to the next line.
 Technically you can have as many newline characters as you'd like, but any more than one will cause the text to overflow the box vertically.
 
-## Segmented Scripts
+#### Textbox Options
 
-If you played through the game, you might have noticed that the interact script on the dinosaur NPC is pretty complex compared to the other scripts.
+The textbox class also supports the ability to show a list of two options to the player and allow them to choose one.
+Upon choosing an option, the script that triggered the options textbox will receive the user's selection, which allows for on-the-spot dynamic script decision making.
+You can see this functionality when speaking with the bug NPC:
 
-![talking-to-dinosaur.gif](../../../assets/images/talking-to-dinosaur.gif)
+![talking-to-bug.gif](../../../assets/images/talking-to-bug.gif)
 
-This script (`DinoScript` in the `Scripts.TestMap` package) is executing several event sequences:
-- Showing text
-- Pausing for a few
-- Dinosaur faces player and says more text
-- Dinosaur walks downwards
-- Dinosaur walks to the right
-- Dinosaur faces left
-- Dinosaur walks upwards
-- House door opens
-- Dinosaur walks into door
-- Dinosaur disappears
-- House door closes
+More on how the `BugScript` class works and how it sets up this options select can be found [here](./scripts#bug_script)
 
-This script shows the true "power" of the script engine. Complex segmented events can be created through the use of clever coding.
-As gone over previous in the [How to create a script event](#How to create a script event) section, there are three components to a script:
-the `setup`, `cleanup`, and `execute` methods. However, in the case of a segmented script, the script can have multiple `setup`, `cleanup`, and `execute` steps.
-That means the `execute` method has several points where it calls its `start` and `end` methods in order to "set up" a particular event sequence,
-execute it, "cleans up" afterwards, and then moves on to the next event sequence.
+### Common References
 
-Looking at the `DinoScript` class itself can be overwhelming if you don't understand the scripting engine, so I recommend you first get familiar with
-the other scripts in the game, like `SimpleTextScript` and `WalrusScript`. Truthfully, `DinoScript` is doing the same exact thing as the other scripts are,
-but it does multiple "events" sequentially instead of just doing one thing. So while `SimpleTextScript` shows the textbox, displays text, and then removes the textbox,
-`DinoScript` does that process at certain points in its overall larger script event.
-
-The key to the segmented script just comes down to using an instance variable in the script subclass to keep track of which segment the script currently needs to be running.
-The `DinoScript` class defines a int variable named `sequence` to do this, and each `cleanup` step will increment `sequence` by 1 to ensure the next sequence will be started on the next frame.
-
-Getting an understanding of this script will unlock endless possibilities for you to be able to add on to this game,
-so I recommend taking the plunge into the class and figuring out how the segments work (really just a ton of if statements on the `sequence` variable)
-and how the script plays out. It'll be helpful to watch the above gif of the dinosaur event as you look through the code to figure out which piece does what functionality.
-While it does look overwhelming, I assure you that once it "clicks", the scripting engine will suddenly feel really simple, predictable and systematic.
-
-## Script references
-
-All scripts are provided references to the `map` and `player` class instances.
+All scripts and their script actions are provided references to the `map` and `player` class instances.
 This allows each script to perform actions on those classes, call their methods, etc.
 
 Interact scripts are also provided a reference to the entity they are attached to in the `entity` variable.
-While any entity can be manipulated in any script using the `getNPCById` base `Script` method, this `entity` reference
-just makes things more convenient, as it's common to need to perform actions on the current entity being interacted with.
+While any entity can be manipulated in any script using the `getNPCById` base `Script` method, this `entity` reference just makes things more convenient, as it's common to need to perform actions on the current entity being interacted with (such as forcing the interacted with NPC to face the player).
 
 The `entity` reference uses a generic type, meaning in order to use it, a type must be explicitly stated in the creation of the script subclass.
-It is likely if you are taking Quinnipiac's SER225 class that you have not learned about generic typing yet, but that is not an issue.
-I'll tell you what you need to do below. 
 
-An example of this generic type being used is in the `WalrusScript` class (located in the `Scripts.TestMap` package).
-Look at how the class is declared:
-
-```java
-// script for talking to walrus npc
-public class WalrusScript extends Script<NPC> {
-    // ...
-}
-```
-
-Instead of just `extends Script`, it has `extendsScript<NPC>`. This extra `<NPC>` syntax tells the base `Script` class
-that this script is going to be attached to an `NPC` class. The base `Script` class will then ensure that the `entity` reference variable
-is also that of an `NPC` type. This is useful as now this `entity` reference variable can work for `MapTile` or `EnhancedMapTile` entities as well without me having to make three separate `Script` classes.
-If I were to attach a script on to an `EnhancedMapTile` as its `interactScript` for example, it would look like this:
-
-```java
-public class SomeEnhancedMapTileScript extends Script<EnhancedMapTile> {
-    // ...
-}
-```
-
-That's it. It's also not required, so if you just did `extends Script` like in the `SimpleTextScript` class, things would work just fine.
-The only time you need to do this is if you want to use that `entity` reference, like the `WalrusScript` does in order
-to tell the walrus to face the player when its talked to:
-
-```java
-// script for talking to walrus npc
-public class WalrusScript extends Script<NPC> {
-
-    @Override
-    protected void setup() {
-        // ...
-        
-        // tells entity being talked to that they need to face the player
-        entity.facePlayer(player);
-    }
-
-    // ...
-}
-```
-
-## Event Methods
-
-While scripts can do anything they would like to the game, as they include references to the `player` and `map` class instances,
-the `Script` base class includes many useful methods of common events that can be used in any script. Having these methods
-makes the scripting process more streamlined and less prone to error, as well as resulting in script code being easier to read.
-Many of these methods are covered in earlier sections on this page.
-
-The following methods are included in the `Script` base class:
-
-**General**
-- `lockPlayer` -- player cannot move or do anything; typically called right when script starts up
-- `unlockPlayer` -- player can go back to moving and having normal control; typically called at end of script
-- `showTextbox` -- shows textbox on screen
-- `addTextToTextboxQueue` -- add text to textbox for it to display
-- `hideTextbox` -- hides textbox from screen
-- `isFlagSet` -- checks if a flag is currently set
-- `setFlag` -- sets a flag (sets it to `true`)
-- `unsetFlag` -- unsets a flag (sets it to `false`)
-- `setWaitTime` -- specify number of frames script should wait for before moving on
-- `isWaitTimeUp` -- used after a call to `setWaitTime` to check if the script's waiting period is done
-
-**Map Related**
-- `getMapTile` -- gets a map tile at a specified index
-- `setMapTile` -- changes the map tile at a specified index to a new one
-
-**NPC Related**
-- `getNPC` -- gets an NPC instance from the map by its `id` number; more on NPC id can be found [here](./npcs.md#npc-id)
-- `npcFacePlayer` -- makes a specified NPC instance on the map to face the player
-- `npcWalk` -- makes a specified NPC instance on the map to walk in a specified direction at a specified speed
-- `npcSetAnimation` -- makes a specified NPC instance change their current animation to the one specified
-- `npcSetAnimationFrameIndex` -- makes a specified NPC instance change their current animation frame index to the one specified
-
-Note that these methods should only be used if you desire to manipulate an NPC that is not the currently interacted with NPC.
-The currently interacted with NPC can be accessed easily through the use of the `entity` reference variable.
-The `entity` reference variable can be read about in the above section on this page [here](#Script references).
-
-**Other**
-- `isPlayerBelowEntity` -- checks if player is below the entity that is being interacted with
-
-Also, the `player` reference variable can be used to manipulate the player however desired.
-The `player` class has built in `stand` and `walk` methods which are designed to be used in scripts in order to force
-the player to do specified actions.
-
-If you want to see an example of one of these methods being used, your best bet is to look at the current scripts in the game
-in the `Scripts` package to see how they are used. Each of these methods only has one job.
-
-## Loading scripts on to entities in a map
-
-This is the job of a map subclass. For example, the `TestMap` class loads scripts on to the required entities.
-In its `loadNPCs` method, it attaches scripts on to the `Walrus` and `Dinosaur` NPC using their `setInteractScript` methods:
-
-```java
-@Override
-public ArrayList<NPC> loadNPCs() {
-    ArrayList<NPC> npcs = new ArrayList<>();
-
-    Walrus walrus = new Walrus(1, getMapTile(4, 28).getLocation().subtractY(40));
-    walrus.setInteractScript(new WalrusScript());
-    npcs.add(walrus);
-
-    Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
-    dinosaur.setExistenceFlag("hasTalkedToDinosaur");
-    dinosaur.setInteractScript(new DinoScript());
-    npcs.add(dinosaur);
-
-    return npcs;
-}
-```
-
-There is a `loadScripts` method as well where scripts can be attached on to entities. This is useful for attaching scripts on to map tiles,
-as there's not really another place for that to be done.
-
-```java
-@Override
-public void loadScripts() {
-    getMapTile(21, 19).setInteractScript(new SimpleTextScript("Cat's house"));
-
-    getMapTile(7, 26).setInteractScript(new SimpleTextScript("Walrus's house"));
-
-    getMapTile(20, 4).setInteractScript(new SimpleTextScript("Dino's house"));
-
-    getMapTile(2, 6).setInteractScript(new TreeScript());
-}
-```
+Most of the usages of these refrences are abstracted away in the script actions, but once in a while having direct access to them in the script subclass is also necessary.

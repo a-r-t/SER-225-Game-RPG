@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Scriptings
+title: Scripts
 nav_order: 11
 parent: Map
 grand_parent: Game Code Details
@@ -20,7 +20,7 @@ permalink: /GameCodeDetails/Map/Scripts
 ## What is a script?
 
 A script (represented by the `Script` class in the `Level` package) is an abstract class that allows for an "event" to be constructed and later executed.
-For those of you that took SER120 here at Quinnipiac or are familiar with Java Swing components, you can think of a script like how you would code a `JButton's` click event.
+For those of you that took SER120 here at Quinnipiac or are familiar with Java Swing components, you can think of a script like how you would code a `JButton` click event.
 The idea is that a script contains code that should be executed at a later time, but the code needs to be defined up front in order for the game to use it.
 
 Nearly all games of this genre have some sort of scripting engine that can almost be thought of as its own "language".
@@ -109,15 +109,14 @@ A script can have any number of script actions in its instruction set.
 
 The `ScriptAction` class represents an instruction in a script.
 The `ScriptActions` package contains many different reusable script action subclasses that can be used in any script.
-Some examples of script actions include showing text in the textbox, moving an NPC around the map, etc.
+Some examples of included script actions include showing text in the textbox, moving an NPC around the map, etc.
 
 Each `ScriptAction` subclass can define the following three methods:
 - `setup` -- logic that gets run before event execution, this method is only called one time
 - `execute` -- logic that gets run during event execution; this is the actual "event" being carried out.
 - `cleanup` -- logic that gets run after event execution, this method is only called one time
 
-Each of the script action subclasses currently included in this game engine are explained [here]().
-Instructions on how to create your own script action subclass can be found [here]().
+Each of the script action subclasses currently included in this game engine are explained [here](./script-actions).
 
 ## How to create a new script event with instructions
 
@@ -127,14 +126,13 @@ It's extremely customizable, as any script event is capable of doing anything it
 Scripts are made up of any number of `ScriptAction` class instances, which represents an instruction telling the script what to do when it reaches that particular segment.
 
 The best way to understand how the scripts all work is by looking at the existing scripts in the game.
-Each of the scripts currently in the game have their own page going into more detail on how they work and which script actions they use: 
-
-`SimpleTextScript`, 
+Each of the scripts currently used in the game are explained [here](./scripts.md).
 
 Understanding and creating scripts can be a bit difficult at first due to their more complex nature compared to the rest of the game engine, but they're one of those things where once it all "clicks", they becomes pretty trivial to work with.
 
-// TODO: Finish off with "Terminology" (flags, etc.) and some other base script stuff,
-// then make more pages for all the script actions and scripts
+## Resources
+
+When working with scripts
 
 ## Flags
 
