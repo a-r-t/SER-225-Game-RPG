@@ -17,17 +17,14 @@ permalink: /GameCodeDetails/Map/ScriptingEngineOverview
 
 # Scripting Engine Overview
 
-## What is a script?
+## What is a scripting engine?
 
-A script (represented by the `Script` class in the `Level` package) is an abstract class that allows for an "event" to be constructed and later executed.
-For those of you that took SER120 here at Quinnipiac or are familiar with Java Swing components, you can think of a script like how you would code a `JButton's` click event.
-The idea is that a script contains code that should be executed at a later time, but the code needs to be defined up front in order for the game to use it.
-
-Nearly all games of this genre have some sort of scripting engine that can almost be thought of as its own "language".
-Essentially, it's the game's job to execute a given script, without knowing what the script is going to do ahead of time or what the script is capable of doing.
+Nearly all games of the RPG genre have some sort of scripting engine implemented that can almost be thought of as its own "language".
+Essentially, it's the game's job to execute a given set of instructions, know as a **script**, without knowing what the script is going to do ahead of time or what the script is capable of doing.
 Now, for this game, I didn't need to make things too complicated -- the scripts are just typical Java code sectioned off into separate classes
 that can be assigned to map entities (as interact scripts for [NPCs](./npcs.md)/[Map Tiles](./map-tiles-and-tilesets.md) and trigger scripts for [Triggers](./triggers.md)).
 The same script can be assigned to any number of entities if desired to have each one execute the same event.
+Nearly all RPG games have their own scripting engines defined which allow for events to take place, such as Pokemon, Earthbound, and Undertale, which often have scripted events defined for talking to NPCs, creating cutscenes, and more.
 
 Understanding this game's scripting "engine" is the key to being able to do...well anything that you want to the game.
 The game is built around interact scripts and trigger scripts, so being able to make your own scripts or edit the existing scripts gives you infinite power (well...within the confines of this Java game).

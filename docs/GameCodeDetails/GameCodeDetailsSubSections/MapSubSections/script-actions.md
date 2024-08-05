@@ -78,6 +78,7 @@ This action supports both standard text as well as utilizing the options feature
 
 Below are some examples of using this action to simply open up a textbox, display text that the user can cycle through, and then close the textbox when there is no more text left:
 
+{% raw %}
 ```java
 public ArrayList<ScriptAction> loadScriptActions() {
     ArrayList<ScriptAction> scriptActions = new ArrayList<>();
@@ -103,6 +104,7 @@ public ArrayList<ScriptAction> loadScriptActions() {
     return scriptActions;
 }
 ```
+{% endraw %}
 
 As you can see from the above example, any amount of text can be used.
 The textbox does not automatically determine if the text length will fit inside the textbox, so it may take some trial and error to ensure the order and orientation of the text within the textbox looks exactly as desired.
@@ -110,6 +112,7 @@ Examples of these script actions in use can be found in every script in the game
 
 Utilizing the textbox's options feature can be setup similarly, but with the addition of providing the two options the user is able to select from:
 
+{% raw %}
 ```java
 public ArrayList<ScriptAction> loadScriptActions() {
     ArrayList<ScriptAction> scriptActions = new ArrayList<>();
@@ -123,11 +126,12 @@ public ArrayList<ScriptAction> loadScriptActions() {
     return scriptActions;
 }
 ```
+{% endraw %}
 
 While the `Textbox` class technically can support any number of options, the actual options box graphics only works with two options that are of a certain text length.
 If expanded functionality is desired, the box graphics can be updated from within the `Textbox` class.
 
-As far as what to actually do from here with the options textbox, such as getting the user's answer to use in a later script action, check out the Conditionals section on this page [here](./scripts.md#conditionals) first to gain context, and then to examples of actually using the options textbox in-game can be found in the `BugScript`, which is gone over in detail [here](./scripts.md#bug_script).
+As far as what to actually do from here with the options textbox, such as getting the user's answer to use in a later script action, check out the Conditionals section of this page [here](#conditional-script-action-groups) first to gain context, and then to examples of actually using the options textbox in-game can be found in the `BugScript`, which is gone over in detail [here](./scripts.md#bug_script).
 
 ### Set Flags and Unset Flags
 
@@ -225,6 +229,194 @@ public ArrayList<ScriptAction> loadScriptActions() {
 ```
 
 Examples of these actions being used can be found in all of the NPC interact scripts such as `WalrusScript`, `DinoScript`, and `BugScript`.
+
+### Conditional Script Action Groups
+
+Conditional script action groups allow for creating separate groups of script actions that should only be executed based on a specific condition.
+**While the below example may seem like the way to achieve this by using standard if statements to check on flag states, it will NOT work**:
+
+{% raw %}
+```java
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // this whole thing is WRONG and will not work
+    if (map.getFlagManager().isFlagSet("hasTalkedToWalrus")) {
+        addScriptAction(new TextboxScriptAction() {{
+            addText("It was nice to meet you");
+        }});
+    }
+    else {
+        addScriptAction(new TextboxScriptAction() {{
+            addText("Hello, my name is walrus!");
+        }});
+    }
+
+    return scriptActions;
+}
+```
+{% endraw %}
+
+While syntactically this is fine, functionality wise within the scripting engine this will not work.
+Since scripts and their script actions are only instantiated one time, this script would be created with only one or the other script action possibility, since the if statement/adding script actions only happens one time on load.
+The other possibility would just never happen, even if the if statement's condition were to evaulate that way, because the script action was never loaded.
+
+**To do this the correct way, conditional action groups must be used!**
+This will allow the scripting engine to know the full context of the script and its conditionals, so that it can evaluate conditions dynamically each time the script is executed.
+While this is a tad more complex, remember that script actions are all building blocks, and you can think of these condtional script action groups as a "container" to organize them in a particular manner.
+
+The above incorrect example needs to be converted to look like the below example in order to work in the game as one would expect:
+
+{% raw %}
+```java
+public ArrayList<ScriptAction> loadScriptActions() {
+    ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+
+    // create a conditional action block
+    addScriptAction(new ConditionalScriptAction() {{
+
+        // first conditional option (think of this as an "if" block)
+        addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+            // this conditional group must meet this requirement for its script actions to be executed
+            // this reads "if the flag 'hasTalkedToWalrus' is set"
+            addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+
+            // the script actions to add in this conditional group
+            addScriptAction(new TextboxScriptAction() {{
+                addText("It was nice to meet you");
+            }});
+        }});
+
+        // second conditional option (think of this as an "else if" block)
+        addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+            // this conditional group must meet this requirement for its script actions to be executed
+            // this reads "else if the flag 'hasTalkedToWalrus' is not set"
+            addRequirement(new FlagRequirement("hasTalkedToWalrus", false));
+
+            // the script actions to add in this conditional group
+            addScriptAction(new TextboxScriptAction() {{
+                addText("Hello, my name is walrus!");
+            }});
+        }});
+
+    }});
+
+    return scriptActions;
+}
+```
+{% endraw %}
+
+Yeah, I know the syntax is a bit...interesting...but don't let it bully you around!
+
+The initial line `addScriptAction(new ConditionalScriptAction()` defines a conditional block, which you can think of as the script action saying "hey, the code inside of this action is going to be an if statement block".
+
+The first part of this conditional action is `addConditionalScriptActionGroup(new ConditionalScriptActionGroup()`.
+You can think of a `ConditionalScriptActionGroup` as a part of an if statement.
+So this is telling the script "this is the first part of the if statement".
+
+The `addRequirement(new FlagRequirement("hasTalkedToWalrus", true));` line is then used to define what the if statement's condition is.
+This `addRequirement` goes hand-in-hand with the `ConditionalScriptActionGroup` and completes the if statement signature.
+In this case, it is saying "if the flag hasTalkedToWalrus is set, run these script actions".
+
+After that, it's just a matter of adding any number of desired script actions like normal to the conditional.
+
+The next `ConditionalActionGroup` here can essentially be through of as an "else if" statement.
+It reads "else if the flag hasTalkedToWalrus is not set, run these script actions".
+Just like in a normal if statement, only one `ConditionalActionGroup` inside of a `ConditionalScriptAction` will have their script actions executed during each evaluation.
+
+You are free to add script actions before and after the `ConditionalScriptAction`, add nested conditional script actions, have only one `ConditionalScriptActionGroup` in a `ConditionalScriptAction`, etc. -- they are just a different representation of an if statement in order to match the "building block" nature of a script.
+
+#### Conditional Requirements
+
+As mentioned in the above section on conditionals, requirements can be added to a `ConditinalScriptActionGroup` to define what condition needs to evaulate to true in order for that script action group to execute. 
+Taking just a snippet from the above code sample shows how to add a `FlagRequirement`, which checks on the state of a given flag.
+The below "if statement" ends up reading "if the flag hasTalkedToWalrus is set, run these script actions":
+
+{% raw %}
+```java
+// first conditional option (think of this as an "if" block)
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+    // this conditional group must meet this requirement for its script actions to be executed
+    // this reads "if the flag 'hasTalkedToWalrus' is set"
+    addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+
+    // the script actions to add in this conditional group
+    addScriptAction(new TextboxScriptAction() {{
+        addText("It was nice to meet you");
+    }});
+}});
+```
+{% endraw %}
+
+Conditional branching based on flag states are very common in RPG games, however there are times when a more "custom" requirement is needed.
+There is another class called `CustomRequirement` that can be used here instead of `FlagRequirement` to define a completely custom artibrary condition.
+Below is an example of how to use it:
+
+{% raw %}
+```java
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+    // create custom requirement that checks if the date is my birthday (lol sorry best example I could think of on the spot)
+    addRequirement(new CustomRequirement() {
+
+        @Override
+        public boolean isRequirementMet() {
+            LocalDate date = LocalDate.now();
+            return date.getMonthValue() == 2 && date.getDayOfMonth() == 11;
+        }
+    });
+
+    addScriptAction(new TextboxScriptAction() {{
+        addText("Happy birthday!");
+    }});
+}});
+```
+{% endraw %}
+
+Once again, I know the syntax is a little rough...Java was a bit limiting in what I could do here to make this work the way I wanted it to...
+
+You can see another example of a `CustomRequirement` used in the `TreeScript` where a custom requirement is used to check that the player is below the tree tile when interacting with it (which essentially forces the player to move the rock out of the way).
+You can read more about the `TreeScript` [here](./scripts.md#tree_script).
+
+Any number of requirements can be added to a conditional script action group:
+
+{% raw %}
+```java
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+    // if both the flag hasTalkedToWalrus is set AND the flag hasTalkedToDinosaur is set
+    addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+    addRequirement(new FlagRequirement("hasTalkedToDinosaur", true));
+
+    // ... add script actions here
+}});
+```
+{% endraw %}
+
+By default, all requirements will use AND logic (same as using && in an if statement).
+You can change all requirements to use OR logic instead by setting the flag strategy to OR:
+
+{% raw %}
+```java
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+
+    // if either the flag hasTalkedToWalrus is set OR the flag hasTalkedToDinosaur is set
+    addRequirement(new FlagRequirement("hasTalkedToWalrus", true));
+    addRequirement(new FlagRequirement("hasTalkedToDinosaur", true));
+    setFlagStrategy(FlagStrategy.OR);
+
+    // ... add script actions here
+}});
+```
+{% endraw %}
+
+The scripting engine does not support a mixture of ANDs and ORs like you can in regular if statements.
+If you need that sort of functionality, you will need to make nested conditionals.
+
+If a `ConditionalScriptActionGroup` does NOT have a requirement associated with it, it is treated like an "else" statement.
 
 ## Creating a new script action
 
