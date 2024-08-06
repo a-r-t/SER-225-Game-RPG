@@ -55,8 +55,7 @@ I think the best course of action is moving the pause logic from the `GamePanel`
 
 ## Moving the player with arrow keys doesn't override previous key press properly
 
-If you are holding the key to move the player to the right and then press left while holding the right key down still,
-the left key overrides the right key and moves the player left. 
+If you are holding the key to move the player to the right and then press left while holding the right key down still, the left key overrides the right key and moves the player left. 
 However, if holding the key to move the player to the left and then press the right while holding the left key down still, the let key does not override the right key and player will continue moving left. 
 This is inconsistent. 
 For a more natural feel in a game that moves a player with keyboard input,
@@ -64,3 +63,13 @@ it's generally best to have both keys able to continually override each other.
 
 This is not an arrow key specific thing -- this happens because of the order in which the if statement is checking which key is currently being pressed.
 Solving this will require updating the player walking logic to allow the movement keys to override one another.
+
+## JFrame size inconsistency between Windows and MacOS
+
+On MacOS, the JFrame size is larger than it is on Windows.
+This is because of the operating system's window styles. 
+On MacOS, the window is curved and adds extra space at the bottom in order to achieve this effect.
+On Windows, the window is rectangular and does not have this forced extra space.
+The Windows window is "correct" in that it is the ideal size that I was aiming for.
+
+I don't think this is solvable as this seems to be happening at the operating system level rather than the Java Swing level, but maybe there's something I'm missing...
