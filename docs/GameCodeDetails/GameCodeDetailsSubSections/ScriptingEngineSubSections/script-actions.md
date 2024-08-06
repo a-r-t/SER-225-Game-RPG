@@ -131,7 +131,7 @@ public ArrayList<ScriptAction> loadScriptActions() {
 While the `Textbox` class technically can support any number of options, the actual options box graphics only works with two options that are of a certain text length.
 If expanded functionality is desired, the box graphics can be updated from within the `Textbox` class.
 
-As far as what to actually do from here with the options textbox, such as getting the user's answer to use in a later script action, check out the Conditionals section of this page [here](#conditional-script-action-groups) first to gain context, and then to examples of actually using the options textbox in-game can be found in the `BugScript`, which is gone over in detail [here](./script-details.md#bug_script).
+As far as what to actually do from here with the options textbox, such as getting the user's answer to use in a later script action, check out the Conditionals section of this page [here](#conditional-script-action-groups) first to gain context, and then to examples of actually using the options textbox in-game can be found in the `BugScript`, which is gone over in detail [here](./script-details.md#bug-script).
 
 ### Set Flags and Unset Flags
 
@@ -379,7 +379,7 @@ addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
 Once again, I know the syntax is a little rough...Java was a bit limiting in what I could do here to make this work the way I wanted it to...
 
 You can see another example of a `CustomRequirement` used in the `TreeScript` where a custom requirement is used to check that the player is below the tree tile when interacting with it (which essentially forces the player to move the rock out of the way).
-You can read more about the `TreeScript` [here](./script-details.md#tree_script).
+You can read more about the `TreeScript` [here](./script-details.md#tree-script).
 
 Any number of requirements can be added to a conditional script action group:
 

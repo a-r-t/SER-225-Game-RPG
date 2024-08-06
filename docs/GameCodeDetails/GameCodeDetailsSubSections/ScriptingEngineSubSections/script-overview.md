@@ -161,7 +161,7 @@ For example, the `hasTalkedToWalrus` flag represents whether the player has alre
 
 An example of utilizing flags in a Script can be seen in the `WalrusScript` class, which is in the `Scripts.TestMap` package.
 Using a flag in this script correctly allows for the walrus NPC to say different messages to the player based on whether is is the first time the player has spoken to the walrus or not.
-More on how the `WalrusScript` class works and how it uses this flag for conditionally script behavior can be found [here](./scripts#walrus_script)
+More on how the `WalrusScript` class works and how it uses this flag for conditionally script behavior can be found [here](./script-details.md#walrus-script)
 
 Any number of flags can be defined in the `FlagManager` class instance and then used within any script.
 The flags MUST already be defined first though (which happens when the `PlayLevelScreen` class creates the `FlagManager` class instance) prior to scripts being able to set/unset them. 
@@ -204,7 +204,7 @@ You can see this functionality when speaking with the bug NPC:
 
 ![talking-to-bug.gif](../../../assets/images/talking-to-bug.gif)
 
-More on how the `BugScript` class works and how it sets up this options select can be found [here](./scripts#bug_script)
+More on how the `BugScript` class works and how it sets up this options select can be found [here](./script-details.md#bug-script).
 
 ### Common References
 
