@@ -7,7 +7,7 @@ import ScriptActions.*;
 
 // simple reusable script that just shows text in textbox
 // useful for generic dialogue, signs, etc.
-// checkout the documentation website for a detailed guide on how the scripting system works
+// checkout the documentation website for a detailed guide on how this script works
 public class SimpleTextScript extends Script {
     private String[] textItems;
 

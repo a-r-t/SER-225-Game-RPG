@@ -13,7 +13,7 @@ import Utils.Point;
 import Utils.Visibility;
 
 // script for talking to dino npc
-// checkout the documentation website for a detailed guide on how the scripting system works
+// checkout the documentation website for a detailed guide on how this script works
 public class DinoScript extends Script {
 
     @Override

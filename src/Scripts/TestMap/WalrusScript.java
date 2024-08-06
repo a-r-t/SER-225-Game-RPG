@@ -6,7 +6,7 @@ import Level.Script;
 import ScriptActions.*;
 
 // script for talking to walrus npc
-// checkout the documentation website for a detailed guide on how the scripting system works
+// checkout the documentation website for a detailed guide on how this script works
 public class WalrusScript extends Script {
 
     @Override

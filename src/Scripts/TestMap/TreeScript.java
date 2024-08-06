@@ -3,7 +3,6 @@ package Scripts.TestMap;
 import java.util.ArrayList;
 
 import Level.Script;
-import Level.ScriptState;
 import ScriptActions.CustomRequirement;
 import ScriptActions.ChangeFlagScriptAction;
 import ScriptActions.ConditionalScriptAction;
@@ -15,9 +14,8 @@ import ScriptActions.TextboxScriptAction;
 import ScriptActions.UnlockPlayerScriptAction;
 
 // script for talking to tree with hole in it
-// checkout the documentation website for a detailed guide on how the scripting system works
+// checkout the documentation website for a detailed guide on how this script works
 public class TreeScript extends Script {
-
 
     @Override
     public ArrayList<ScriptAction> loadScriptActions() {

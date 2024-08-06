@@ -79,6 +79,8 @@ public void loadScripts() {
 
     // attach simple text script to the map tile at x: 20 and y: 4 in the map
     getMapTile(20, 4).setInteractScript(new SimpleTextScript("Dino's house"));
+    
+    // ...
 }
 ```
 
@@ -440,6 +442,8 @@ This script is attached to the dinosaur NPC as an interact script in the `TestMa
 public ArrayList<NPC> loadNPCs() {
     ArrayList<NPC> npcs = new ArrayList<>();
 
+    // ...
+    
     Dinosaur dinosaur = new Dinosaur(2, getMapTile(13, 4).getLocation());
 
     dinosaur.setExistenceFlag("hasTalkedToDinosaur");
@@ -452,5 +456,233 @@ public ArrayList<NPC> loadNPCs() {
     // ...
 
     return npcs;
+}
+```
+
+## Bug Script
+
+`BugScript` is attached to the bug NPC, and executes when interacting with him.
+This script is interesting as it contains an example for how to implement an options textbox and how to perform a conditional based on what option the user selects.
+
+The code looks like this:
+
+{% raw %}
+```java
+public class BugScript extends Script {
+
+    @Override
+    public ArrayList<ScriptAction> loadScriptActions() {
+        ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+        scriptActions.add(new LockPlayerScriptAction());
+
+        scriptActions.add(new NPCLockScriptAction());
+
+        scriptActions.add(new NPCFacePlayerScriptAction());
+
+        scriptActions.add(new TextboxScriptAction() {{
+            addText("Hello!");
+            addText("Do you like bugs?", new String[] { "Yes", "No" });
+        }});
+
+        scriptActions.add(new ConditionalScriptAction() {{
+            addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+                addRequirement(new CustomRequirement() {
+                    @Override
+                    public boolean isRequirementMet() {
+                        int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+                        return answer == 0;
+                    }
+                });
+
+                addScriptAction(new TextboxScriptAction() {{
+                    addText("I knew you were a cool cat!");
+                    addText("I'm going to let you in on a little secret...\nYou can push some rocks out of the way.");
+                }});
+            }});
+
+            addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+                addRequirement(new CustomRequirement() {
+                    @Override
+                    public boolean isRequirementMet() {
+                        int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+                        return answer == 1;
+                    }
+                });
+                
+                addScriptAction(new TextboxScriptAction("Oh...uh...awkward..."));
+            }});
+        }});
+
+        scriptActions.add(new NPCUnlockScriptAction());
+        scriptActions.add(new UnlockPlayerScriptAction());
+
+        return scriptActions;
+    }
+}
+```
+{% endraw %}
+
+The script starts out as most scripts do.
+It first locks the player using the `LockPlayerScriptAction`, and also tells the bug to face the player using the `NPCFacePlayerScriptAction`.
+There is also a `NPCLockScriptAction` used, which "locks" an NPC, essentially preventing them from doing anything while the script is executing.
+The reason it is used here is because the bug has logic that causes it to walk back and forth, so by locking the bug NPC, it will stop walking and stand still while the script is in progress.
+
+The `TextboxScriptAction` is then used to show some text and provide the user with two options to select from (Yes and No) as an answer to his question of "Do you like bugs?":
+
+{% raw %}
+```java
+scriptActions.add(new TextboxScriptAction() {{
+    addText("Hello!");
+    addText("Do you like bugs?", new String[] { "Yes", "No" });
+}});
+```
+{% endraw %}
+
+After the player selects an option, that data is stored in the script output manager, and can be retrieved at anytime in a later script action.
+The bug script defines a conditional that checks on the user's answer by using custom requirements to look at the answer the user chose and showing different text based off of the user's selection.
+
+{% raw %}
+```java
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+    // creates custom requirement to check if the answer selected was "Yes"
+    addRequirement(new CustomRequirement() {
+        @Override
+        public boolean isRequirementMet() {
+            // get answer from flag manager (the flag will always be TEXTBOX_OPTION_SELECTION)
+            int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+
+            // check if the answer index selected was 0 (which is the first option, Yes)
+            return answer == 0;
+        }
+    });
+
+    // show text for when the player has selected "Yes"
+    addScriptAction(new TextboxScriptAction() {{
+        addText("I knew you were a cool cat!");
+        addText("I'm going to let you in on a little secret...\nYou can push some rocks out of the way.");
+    }});
+}});
+```
+{% endraw %}
+
+An options textbox will ALWAYS store the user's selection index in the `outputManager` at flag `TEXTBOX_OPTION_SELECTION`, so it can easily be used in custom requirements or even in other script actions just like it is being used here.
+
+The other conditional is very similar to the one above, but checks if the answer is "No" instead of "Yes" and shows different text for the "No" answer:
+
+{% raw %}
+```java
+addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+    // creates custom requirement to check if the answer selected was "No"
+    addRequirement(new CustomRequirement() {
+        @Override
+        public boolean isRequirementMet() {
+            // get answer from flag manager (the flag will always be TEXTBOX_OPTION_SELECTION)
+            int answer = outputManager.getFlagData("TEXTBOX_OPTION_SELECTION");
+
+            // check if the answer index selected was 1 (which is the second option, No)
+            return answer == 1;
+        }
+    });
+    
+    // show text for when the player has selected "No"
+    addScriptAction(new TextboxScriptAction("Oh...uh...awkward..."));
+}});
+```
+{% endraw %}
+
+This script is attached to the bug NPC as an interact script in the `TestMap` class with the following code:
+
+```java
+@Override
+public ArrayList<NPC> loadNPCs() {
+    ArrayList<NPC> npcs = new ArrayList<>();
+
+    // ...
+
+    Bug bug = new Bug(3, getMapTile(7, 12).getLocation().subtractX(20));
+
+    // sets BugScript as the bug NPC's interact script
+    bug.setInteractScript(new BugScript());
+
+    npcs.add(bug);
+
+    // ...
+
+    return npcs;
+}
+```
+
+## Tree Script
+
+`TreeScript` is attached to one of the tree base map tiles (the one at the very top left of the map blocked by the rock), and executes when interacting with it.
+
+The code looks like this:
+
+{% raw %}
+```java
+public class TreeScript extends Script {
+
+    @Override
+    public ArrayList<ScriptAction> loadScriptActions() {
+        ArrayList<ScriptAction> scriptActions = new ArrayList<>();
+        scriptActions.add(new LockPlayerScriptAction());
+        
+        scriptActions.add(new ConditionalScriptAction() {{
+            addConditionalScriptActionGroup(new ConditionalScriptActionGroup() {{
+                addRequirement(new FlagRequirement("hasTalkedToDinosaur", true));
+                addRequirement(new FlagRequirement("hasFoundBall", false));
+                addRequirement(new CustomRequirement() {
+
+                    @Override
+                    public boolean isRequirementMet() {
+                        // ensures player is directly underneath tree trunk tile
+                        // this prevents the script from working if the player tries to interact with it from the side
+
+                        // if player is not below tree trunk tile, player location is not valid and this conditional script will not be reached
+                        if (player.getBounds().getY1() <= entity.getBounds().getY2()) {
+                            return false;
+                        }
+
+                        // if code gets here, it means player is below tree trunk tile and player location is valid, so this conditional script will continue
+                        return true;
+                    }
+                });
+
+                addScriptAction(new TextboxScriptAction() {{
+                    addText("...");
+                    addText("I found my ball inside of the tree!\nYippee!");
+                }});
+
+                addScriptAction(new ChangeFlagScriptAction("hasFoundBall", true));
+            }});
+
+
+        }});
+       
+        scriptActions.add(new UnlockPlayerScriptAction());
+        return scriptActions;
+    }
+}
+```
+{% endraw %}
+
+This script starts with a conditional that has a bunch of requirements, and every script action in this script is inside the conditional.
+Essentially, this script will do NOTHING if the requirements aren't met, which makes sense due to the way the game's story progresses.
+The player needs to have spoken to the dinosaur already before they are allowed to "find" the ball by interacting with the tree trunk
+Additionally, there is a custom requirement that checks that the player is standing below the tree trunk rather than to the side of it -- this is done to force the player to have to move the pushable rock out of the way in order to find the ball.
+Isn't it interesting how much thought has to go into the code for such a simple game event?
+
+Once the requirements of the conditional have been met, the script simply uses a `TextboxScriptAction` to show some text that the ball was found, and then uses a `ChangeFlagScriptAction` to set the flag `hasFoundBall`.
+The game then detects that the flag `hasFoundBall` is set and pulls up the win screen (but this is done in a different spot all the way in the `PlayLevelScreen` class -- it is not the responsibility of the script to end the game, it's just the script's job to tell the game what state it is in).
+
+This script is attached to the map tile at location x: 2, Y: 6 (which is the base of the tree in the top left corner) in the `TestMap` class with the following code:
+
+```java
+@Override
+public void loadScripts() {
+    // ...
+
+    // get map tile at x: 2, y: 6 and set its interact script to TreeScript
+    getMapTile(2, 6).setInteractScript(new TreeScript());
 }
 ```
