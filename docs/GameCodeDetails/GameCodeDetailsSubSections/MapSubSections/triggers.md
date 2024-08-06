@@ -83,7 +83,7 @@ In the below demonstration, the player walks over the "left" trigger, which caus
 
 ![trigger-1.gif](../../../assets/images/trigger-1.gif)
 
-You can read more about scripts [here](./scripts.md).
+You can read more about scripts [here](./script-details.md).
 
 After setting off one of the three triggers, the other triggers will become inactive due to them all sharing the same `existenceFlag` which gets set after the `LostBallScript` ends.
 

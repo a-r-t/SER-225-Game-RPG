@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Scripting Engine Overview
-nav_order: 9
-parent: Map
+title: Script Overview
+nav_order: 1
+parent: Scripting Engine
 grand_parent: Game Code Details
-permalink: /GameCodeDetails/Map/ScriptingEngineOverview
+permalink: /GameCodeDetails/ScriptingEngine/ScriptOverview
 ---
 
 ## Table of contents
@@ -15,20 +15,22 @@ permalink: /GameCodeDetails/Map/ScriptingEngineOverview
 
 ---
 
-# Scripting Engine Overview
+# Script Overview
 
-## What is a scripting engine?
+# What is a script?
 
-Nearly all games of the RPG genre have some sort of scripting engine implemented that can almost be thought of as its own "language".
-Essentially, it's the game's job to execute a given set of instructions, know as a **script**, without knowing what the script is going to do ahead of time or what the script is capable of doing.
-Now, for this game, I didn't need to make things too complicated -- the scripts are just typical Java code sectioned off into separate classes
-that can be assigned to map entities (as interact scripts for [NPCs](./npcs.md)/[Map Tiles](./map-tiles-and-tilesets.md) and trigger scripts for [Triggers](./triggers.md)).
-The same script can be assigned to any number of entities if desired to have each one execute the same event.
-Nearly all RPG games have their own scripting engines defined which allow for events to take place, such as Pokemon, Earthbound, and Undertale, which often have scripted events defined for talking to NPCs, creating cutscenes, and more.
+A script (represented by the `Script` class in the `Level` package) is an abstract class that allows for an "event" to be constructed and later triggered and executed by the game as many times as desired.
+If you are familiar with Java Swing components, you can think of a script like how you would code a `JButton's` click event.
+The idea is that a script contains code that should be executed at a later time, but the code needs to be defined up front in order for the game to use it.
 
-Understanding this game's scripting "engine" is the key to being able to do...well anything that you want to the game.
-The game is built around interact scripts and trigger scripts, so being able to make your own scripts or edit the existing scripts gives you infinite power (well...within the confines of this Java game).
-Script events can be made to technically do "anything" to the game, it's just up to the coder's skill level and determination to make it happen!
+The game's scripting engine handles executing a script when it has been triggered, whether that is through interacting with an NPC, the player walking on a specific spot on the map, etc.
+From there, it's the script's job to tell the game what to do next through a set of instructions, which can include things like displaying text in the textbox, moving an NPC, and anything else that is desired.
+
+Each script is made up of an instruction set, with each instruction acting as a "buliding block".
+A script will start at its first instruction and work its way to the last instruction before terminating.
+Each instruction is known as a script action.
+It is highly recommended to understand both the scripting engine over page [here](./scripting-engine-overview.md) and the script actions page [here](./script-actions.md) before continuing on with this page.
+This is the most complicated area of the game engine and has a bit of a learning curve, but put some time into getting the hang of things and you will be an expert in no time!
 
 ## Execution
 
@@ -124,7 +126,7 @@ It's extremely customizable, as any script event is capable of doing anything it
 Scripts are made up of any number of `ScriptAction` class instances, which represents an instruction telling the script what to do when it reaches that particular segment.
 
 The best way to understand how the scripts all work is by looking at the existing scripts in the game.
-Each of the scripts currently used in the game are explained [here](./scripts.md).
+Each of the scripts currently used in the game are explained [here](./script-details.md).
 Each of the script actions currently included in the game engine are explained [here](./script-actions.md)
 
 Understanding and creating scripts can be a bit difficult at first due to their more complex nature compared to the rest of the game engine, but they're one of those things where once it all "clicks", they becomes pretty trivial to work with.
@@ -215,3 +217,5 @@ While any entity can be manipulated in any script using the `getNPCById` base `S
 The `entity` reference uses a generic type, meaning in order to use it, a type must be explicitly stated in the creation of the script subclass.
 
 Most of the usages of these refrences are abstracted away in the script actions, but once in a while having direct access to them in the script subclass is also necessary.
+
+// TODO: scriptoutputmanager???

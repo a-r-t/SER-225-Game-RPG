@@ -69,7 +69,7 @@ public TestMap() {
 It also sets the `playerStartLocation` variable to a specific location, which is what tells the game where to start the player at in the map when it's first loaded.
 
 Each map subclass can also override the `loadNPCs`, `loadEnhancedMapTiles`, `loadTriggers`, and `loadScripts` methods in order to define
-[NPCs](./npcs.md), [enhanced map tiles](./enhanced-map-tiles.md), [triggers](./triggers.md) and [scripts](./scripts.md) for a map.
+[NPCs](./npcs.md), [enhanced map tiles](./enhanced-map-tiles.md), [triggers](./triggers.md) and [scripts](./script-details.md) for a map.
 
 For example, in `TestMap`, the `loadNPCs` override method looks like this:
 
@@ -97,4 +97,4 @@ public ArrayList<NPC> loadNPCs() {
 
 This adds three NPCs to the map -- the [walrus](./npcs.md#walrus) (`Walrus` class), the [dinosaur](./npcs.md#dinosaur) (`Dinosaur` class), and the [bug](./npcs.md#bug) (`Bug` class).
 The `getMapTile` `Map` method is used to make it easier to place the NPC on a specific tile index in the map by getting the tile at that index's location. 
-The other setters, like `setExistenceFlag` and `setInteractScript` are map entity attributes that can be used to make the NPCs behave a specific way, and are covered in more detail in both the [scripts](./scripts.md) and [NPCs](./npcs.md) pages.
+The other setters, like `setExistenceFlag` and `setInteractScript` are map entity attributes that can be used to make the NPCs behave a specific way, and are covered in more detail in both the [scripts](./script-details.md) and [NPCs](./npcs.md) pages.
