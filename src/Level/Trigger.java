@@ -10,21 +10,17 @@ import java.awt.*;
 public class Trigger extends MapEntity {
     protected Script triggerScript;
 
-    public Trigger(int x, int y, int width, int height, Script triggerScript) {
+    public Trigger(float x, float y, int width, int height, Script triggerScript) {
         super(x, y);
         this.triggerScript = triggerScript;
-        this.setX(x);
-        this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
         this.setBounds(new Rectangle(0, 0, width, height));
     }
 
-    public Trigger(int x, int y, int width, int height, Script triggerScript, String existenceFlag) {
+    public Trigger(float x, float y, int width, int height, Script triggerScript, String existenceFlag) {
         super(x, y);
         this.triggerScript = triggerScript;
-        this.setX(x);
-        this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
         this.setBounds(new Rectangle(0, 0, width, height));

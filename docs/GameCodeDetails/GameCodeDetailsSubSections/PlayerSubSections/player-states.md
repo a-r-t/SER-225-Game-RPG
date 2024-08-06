@@ -78,4 +78,4 @@ The `INTERACTING` state is for this purpose -- there is no logic in the `playerI
 It is a script's job to lock the player by setting its player state to `INTERACTING`. 
 It is also a script's job to unlock the player when it is ready (typically after the script has completed) by setting the player's state back to something else (like `STANDING`).
 The `Script` class's methods `lockPlayer` and `unlockPlayer` will handle doing this locking and unlocking of the player.
-Read more about scripts [here](./scripts.md).
+Read more about scripts [here](./script-details.md).

@@ -28,16 +28,16 @@ The game doesn't draw anything to indicate that a trigger is there.
 This allows them to be placed anywhere on the map, and trigger an event when the player walks over them without the player being aware of it.
 
 Each trigger has an attribute for a `triggerScript`, which allows for the supplied script to be executed when the player walks over the trigger.
-Read more about scripts [here](./scripts.md).
+Read more about scripts [here](./scripting-engine-overview.md).
 
 Each trigger also can optionally be supplied an `existenceFlag`, 
 Triggers often use this feature to ensure they only are able to be triggered one time.
-You can read more about flags [here](./scripts.md#Flags), and more about the existence flag [here](./map-entities.md#Existence Flag)
+You can read more about flags [here](./scripting-engine-overview.md#flags), and more about the existence flag [here](./map-entities.md#existence-flag).
 
 ## How to create a trigger
 
 The `Trigger` class is very simple. 
-It just needs an x, y, width, and height to specify its location/size on the map, a [script](./scripts.md) to act as its `triggerScript`, and an optional flag [./scripts.md#Flags] to act as its `existenceFlag`.
+It just needs an x, y, width, and height to specify its location/size on the map, a [script](./scripting-engine-overview.md) to act as its `triggerScript`, and an optional [flag](./scripting-engine-overview.md#flags) to act as its `existenceFlag`.
 There is no real need to subclass them, as the trigger script is what essentially dictates what each trigger does; at their core, they are just a rectangle with a script attached.
 
 ## Adding a trigger to a map
@@ -83,7 +83,7 @@ In the below demonstration, the player walks over the "left" trigger, which caus
 
 ![trigger-1.gif](../../../assets/images/trigger-1.gif)
 
-You can read more about scripts [here](./scripts.md).
+You can read more about scripts [here](./script-details.md).
 
 After setting off one of the three triggers, the other triggers will become inactive due to them all sharing the same `existenceFlag` which gets set after the `LostBallScript` ends.
 

@@ -141,26 +141,6 @@ public class MapTile extends MapEntity {
     public float getY2() { return bottomLayer.getY2(); }
 
     @Override
-    public float getBoundsX1() {
-        return bottomLayer.getBoundsX1();
-    }
-
-    @Override
-    public float getBoundsX2() {
-        return bottomLayer.getBoundsX2();
-    }
-
-    @Override
-    public float getBoundsY1() {
-        return bottomLayer.getBoundsY1();
-    }
-
-    @Override
-    public float getBoundsY2() {
-        return bottomLayer.getBoundsY2();
-    }
-
-    @Override
     public Point getLocation() {
         return new Point(x, y);
     }

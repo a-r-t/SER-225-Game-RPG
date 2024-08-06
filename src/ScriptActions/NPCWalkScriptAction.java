@@ -34,9 +34,6 @@ public class NPCWalkScriptAction extends ScriptAction {
 
     @Override
     public ScriptState execute() {
-        if (this.npc == null) {
-            this.npc = (NPC)entity;
-        }
         npc.walk(direction, speed);
         amountMoved += speed;
         if (amountMoved < distance) {

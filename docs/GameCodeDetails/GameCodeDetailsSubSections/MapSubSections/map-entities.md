@@ -50,13 +50,13 @@ It's an alternative to setting an entity's status to `REMOVED` that keeps the en
 
 Setting a map entity's `isUncollidable` attribute to true will prevent other entities from being able to collide with it.
 Other entities will just ignore it when doing collision logic.
-However, the map entity that is set to `isUncolliable` can still perform collision logic against other entities if desired.
+However, the map entity that is set to `isUncollidable` can still perform collision logic against other entities if desired.
 
 ### Existence Flag
 
 A map entity can optionally define an `existenceFlag`. 
 A flag is a boolean value, and the game keeps track of multiple flags in order to track where the player's progress is at, determine which events should play out, etc. 
-More on flags can be read about [here](./scripts.md#Flags).
+More on flags can be read about [here](./script-details.md#Flags).
 
 If an entity's `existenceFlag` becomes set during the game, the entity will no longer "exist", and the game will not run its update and draw logic anymore.
 If the entity's `existenceFlag` becomes unset, it will "exist" again, and the game will run its logic like normal.
@@ -84,7 +84,7 @@ npcs.add(dinosaur);
 Any entity in the game can define its own interact script, which is a `Script` that executes when the player interacts with the entity.
 The player interacts with an entity by walking up to it in a close enough proximity and pressing the space key.
 
-Read more about scripts [here](./scripts.md). 
+Read more about scripts [here](./script-details.md). 
 This game is built around interact and trigger scripts, and is one of the most important pieces of the game to understand.
 
 In the game currently, `TestMap` adds interact scripts to the walrus NPC, dinosaur NPC, all three sign tiles, and the bottom tree trunk tile (where the player finds their ball at the end of the game).
