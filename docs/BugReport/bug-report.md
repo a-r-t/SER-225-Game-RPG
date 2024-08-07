@@ -66,10 +66,5 @@ Solving this will require updating the player walking logic to allow the movemen
 
 ## JFrame size inconsistency between Windows and MacOS
 
-On MacOS, the JFrame size is larger than it is on Windows.
-This is because of the operating system's window styles. 
-On MacOS, the window is curved and adds extra space at the bottom in order to achieve this effect.
-On Windows, the window is rectangular and does not have this forced extra space.
-The Windows window is "correct" in that it is the ideal size that I was aiming for.
-
-I don't think this is solvable as this seems to be happening at the operating system level rather than the Java Swing level, but maybe there's something I'm missing...
+On MacOS, the JFrame size is slightly larger than it is on Windows.
+Might have to do with how the frame style changes across the different operating systems, but I am not 100% sure...
