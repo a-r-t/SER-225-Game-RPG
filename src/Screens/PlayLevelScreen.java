@@ -38,8 +38,6 @@ public class PlayLevelScreen extends Screen {
         // setup player
         player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
         player.setMap(map);
-        Point playerStartPosition = map.getPlayerStartPosition();
-        player.setLocation(playerStartPosition.x, playerStartPosition.y);
         playLevelScreenState = PlayLevelScreenState.RUNNING;
         player.setFacingDirection(Direction.LEFT);
 

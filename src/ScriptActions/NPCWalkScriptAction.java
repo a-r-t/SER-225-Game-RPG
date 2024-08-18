@@ -9,7 +9,7 @@ public class NPCWalkScriptAction extends ScriptAction {
     protected Direction direction;
     protected float distance;
     protected float speed;
-    protected int amountMoved;
+    protected float amountMoved;
 
     public NPCWalkScriptAction(Direction direction, float distance, float speed) {
         this.direction = direction;

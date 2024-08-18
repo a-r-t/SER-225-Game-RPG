@@ -217,5 +217,3 @@ While any entity can be manipulated in any script using the `getNPCById` base `S
 The `entity` reference uses a generic type, meaning in order to use it, a type must be explicitly stated in the creation of the script subclass.
 
 Most of the usages of these refrences are abstracted away in the script actions, but once in a while having direct access to them in the script subclass is also necessary.
-
-// TODO: scriptoutputmanager???
