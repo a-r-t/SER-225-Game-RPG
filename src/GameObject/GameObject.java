@@ -161,6 +161,9 @@ public class GameObject extends AnimatedSprite {
 					amountMoved += Math.abs(xLocationBeforeAdjustment - getX());
 				}
 			}
+			else {
+				amountMoved += moveAmountXRemainder;
+			}
 		}
 
 		if (isAffectedByTriggers() && entityCollidedWith instanceof Trigger && map.getActiveScript() == null) {
@@ -294,19 +297,13 @@ public class GameObject extends AnimatedSprite {
 	public void draw(GraphicsHandler graphicsHandler) {
 		if (map != null) {
 			graphicsHandler.drawImage(
-					currentFrame.getImage(),
-					Math.round(getCalibratedXLocation()),
-					Math.round(getCalibratedYLocation()),
-					currentFrame.getWidth(),
-					currentFrame.getHeight(),
-					currentFrame.getImageEffect());
-
-			// Uncomment this to draw player's bounds to screen -- useful for debugging
-			/*
-			if (this instanceof Player) {
-				drawBounds(graphicsHandler, new Color(255, 0, 0, 100));
-			}
-			*/
+				currentFrame.getImage(),
+				Math.round(getCalibratedXLocation()),
+				Math.round(getCalibratedYLocation()),
+				currentFrame.getWidth(),
+				currentFrame.getHeight(),
+				currentFrame.getImageEffect()
+			);
 		} else {
 			super.draw(graphicsHandler);
 		}

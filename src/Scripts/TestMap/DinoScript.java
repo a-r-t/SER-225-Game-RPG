@@ -53,6 +53,7 @@ public class DinoScript extends Script {
                         Point location = map.getMapTile(17, 4).getLocation();
 
                         MapTile mapTile = new MapTileBuilder(openDoorFrame)
+                            .withTileType(TileType.NOT_PASSABLE)
                             .build(location.x, location.y);
 
                         map.setMapTile(17, 4, mapTile);
@@ -70,6 +71,7 @@ public class DinoScript extends Script {
                         Frame doorFrame = new FrameBuilder(map.getTileset().getSubImage(4, 3), 0)
                             .withScale(map.getTileset().getTileScale())
                             .build();
+
                         Point location = map.getMapTile(17, 4).getLocation();
 
                         MapTile mapTile = new MapTileBuilder(doorFrame)

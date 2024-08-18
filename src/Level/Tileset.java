@@ -39,7 +39,7 @@ public abstract class Tileset extends SpriteSheet {
 
     // get specific tile from tileset by index, if not found the default tile is returned
     public MapTileBuilder getTile(int tileNumber) {
-        return tiles.getOrDefault(tileNumber, defaultTile);
+        return tiles.getOrDefault(tileNumber, getDefaultTile());
     }
 
     public float getTileScale() {
