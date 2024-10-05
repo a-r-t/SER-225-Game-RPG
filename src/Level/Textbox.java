@@ -141,7 +141,6 @@ public class Textbox {
             keyLocker.unlockKey(interactKey);
         }
 
-        //if you have a textbox with more than 2 options you can thank Thomas A. Rua for fixing this code to make it work
         if (options != null) {
             if (Keyboard.isKeyDown(Key.DOWN) && !keyLocker.isKeyLocked(Key.DOWN)) {
                 keyLocker.lockKey(Key.DOWN);
