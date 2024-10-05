@@ -141,16 +141,25 @@ public class Textbox {
             keyLocker.unlockKey(interactKey);
         }
 
+        //if you have a textbox with more than 2 options you can thank Thomas A. Rua for fixing this code to make it work
         if (options != null) {
-            if (Keyboard.isKeyDown(Key.DOWN)) {
+            if (Keyboard.isKeyDown(Key.DOWN) && !keyLocker.isKeyLocked(Key.DOWN)) {
+                keyLocker.lockKey(Key.DOWN);
                 if (selectedOptionIndex < options.size() - 1) {
                     selectedOptionIndex++;
                 }
             }
-            if (Keyboard.isKeyDown(Key.UP)) {
+            if (Keyboard.isKeyDown(Key.UP) && !keyLocker.isKeyLocked(Key.UP)) {
+                keyLocker.lockKey(Key.UP);
                 if (selectedOptionIndex > 0) {
                     selectedOptionIndex--;
                 }
+            }
+            if (Keyboard.isKeyUp(Key.DOWN)) {
+                keyLocker.unlockKey(Key.DOWN);
+            }
+            if (Keyboard.isKeyUp(Key.UP)) {
+                keyLocker.unlockKey(Key.UP);
             }
         }
     }
