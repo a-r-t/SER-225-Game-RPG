@@ -5,6 +5,7 @@ import Level.ScriptState;
 import Utils.Visibility;
 
 public class NPCChangeVisibilityScriptAction extends ScriptAction {
+    protected int npcId;
     protected NPC npc;
     protected Visibility visibility;
 
@@ -13,13 +14,16 @@ public class NPCChangeVisibilityScriptAction extends ScriptAction {
     }
 
     public NPCChangeVisibilityScriptAction(int npcId, Visibility visibility) {
-        this.npc = map.getNPCById(npcId);
+        this.npcId = npcId;
         this.visibility = visibility;
     }
     
     @Override
     public void setup() {
-        if (this.npc == null) {
+        if (entity == null) {
+            this.npc = map.getNPCById(npcId);
+        }
+        else {
             this.npc = (NPC)entity;
         }
     }

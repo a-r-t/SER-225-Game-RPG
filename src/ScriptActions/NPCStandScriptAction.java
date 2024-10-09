@@ -5,6 +5,7 @@ import Level.ScriptState;
 import Utils.Direction;
 
 public class NPCStandScriptAction extends ScriptAction {
+    protected int npcId;
     protected NPC npc;
     protected Direction facingDirection;
 
@@ -19,7 +20,10 @@ public class NPCStandScriptAction extends ScriptAction {
 
     @Override
     public void setup() {
-        if (this.npc == null) {
+        if (entity == null) {
+            this.npc = map.getNPCById(npcId);
+        }
+        else {
             this.npc = (NPC)entity;
         }
     }

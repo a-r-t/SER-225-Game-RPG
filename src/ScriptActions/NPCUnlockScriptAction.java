@@ -4,6 +4,7 @@ import Level.NPC;
 import Level.ScriptState;
 
 public class NPCUnlockScriptAction extends ScriptAction {
+    protected int npcId;
     protected NPC npc;
 
     public NPCUnlockScriptAction() {}
@@ -14,7 +15,10 @@ public class NPCUnlockScriptAction extends ScriptAction {
 
     @Override
     public void setup() {
-        if (this.npc == null) {
+        if (entity == null) {
+            this.npc = map.getNPCById(npcId);
+        }
+        else {
             this.npc = (NPC)entity;
         }
     }
