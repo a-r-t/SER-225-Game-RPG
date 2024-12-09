@@ -5,7 +5,7 @@ import Level.ScriptState;
 import Utils.Direction;
 
 public class NPCWalkScriptAction extends ScriptAction {
-    protected int npcId;
+    protected Integer npcId = null;
     protected NPC npc;
     protected Direction direction;
     protected float distance;
@@ -19,7 +19,7 @@ public class NPCWalkScriptAction extends ScriptAction {
     }
 
     public NPCWalkScriptAction(int npcId, Direction direction, float distance, float speed) {
-        this.npc = map.getNPCById(npcId);
+        this.npcId = npcId;
         this.direction = direction;
         this.distance = distance;
         this.speed = speed;
@@ -27,11 +27,19 @@ public class NPCWalkScriptAction extends ScriptAction {
 
     @Override
     public void setup() {
-        if (entity == null) {
-            this.npc = map.getNPCById(npcId);
+        if (this.npcId == null) {
+            if (this.entity != null) {
+                this.npc = (NPC)entity;
+            }
+            else {
+                throw new RuntimeException("No NPC entity specified!");
+            }
         }
         else {
-            this.npc = (NPC)entity;
+            this.npc = map.getNPCById(npcId);
+            if (this.npc == null) {
+                throw new RuntimeException("NPC with id " + npcId + " not found!");
+            }
         }
         amountMoved = 0;
     }

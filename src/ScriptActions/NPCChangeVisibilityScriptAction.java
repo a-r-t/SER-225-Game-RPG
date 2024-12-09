@@ -5,7 +5,7 @@ import Level.ScriptState;
 import Utils.Visibility;
 
 public class NPCChangeVisibilityScriptAction extends ScriptAction {
-    protected int npcId;
+    protected Integer npcId = null;
     protected NPC npc;
     protected Visibility visibility;
 
@@ -20,11 +20,19 @@ public class NPCChangeVisibilityScriptAction extends ScriptAction {
     
     @Override
     public void setup() {
-        if (entity == null) {
-            this.npc = map.getNPCById(npcId);
+        if (this.npcId == null) {
+            if (this.entity != null) {
+                this.npc = (NPC)entity;
+            }
+            else {
+                throw new RuntimeException("No NPC entity specified!");
+            }
         }
         else {
-            this.npc = (NPC)entity;
+            this.npc = map.getNPCById(npcId);
+            if (this.npc == null) {
+                throw new RuntimeException("NPC with id " + npcId + " not found!");
+            }
         }
     }
 
