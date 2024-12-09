@@ -1,10 +1,6 @@
 package ScriptActions;
 
 import java.util.ArrayList;
-
-import Level.Map;
-import Level.MapEntity;
-import Level.Player;
 import Level.ScriptState;
 
 public class LoopFixedScriptAction extends ScriptAction {
@@ -47,8 +43,8 @@ public class LoopFixedScriptAction extends ScriptAction {
             }
         
             if (currentScriptActionIndex == 0) {
-                currentIteration++;
-            }
+               currentIteration++;
+            } 
         
             scriptActions.get(currentScriptActionIndex).setup();
         }
@@ -67,17 +63,5 @@ public class LoopFixedScriptAction extends ScriptAction {
         }
         
         return ScriptState.RUNNING;
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setEntity(MapEntity entity) {
-        this.entity = entity;
     }
 }

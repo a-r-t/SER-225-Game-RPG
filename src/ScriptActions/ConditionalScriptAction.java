@@ -1,10 +1,6 @@
 package ScriptActions;
 
 import java.util.ArrayList;
-
-import Level.Map;
-import Level.MapEntity;
-import Level.Player;
 import Level.ScriptState;
 
 public class ConditionalScriptAction extends ScriptAction {
@@ -113,17 +109,5 @@ public class ConditionalScriptAction extends ScriptAction {
             }
         }
         return ScriptState.RUNNING;
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setEntity(MapEntity entity) {
-        this.entity = entity;
     }
 }
