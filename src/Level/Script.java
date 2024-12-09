@@ -74,7 +74,6 @@ public abstract class Script {
             scriptAction.setMap(map);
             scriptAction.setPlayer(player);
             scriptAction.setEntity(entity);
-            scriptAction.setListeners(listeners);
             scriptAction.setOutputManager(scriptActionOutputManager);
             if (scriptAction instanceof ConditionalScriptAction) {
                 ConditionalScriptAction conditionalScriptAction = (ConditionalScriptAction)scriptAction;
