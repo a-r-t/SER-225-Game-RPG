@@ -40,59 +40,32 @@ public class LoopFixedScriptAction extends ScriptAction {
     public ScriptState execute() {
         if (previousScriptActionIndex != currentScriptActionIndex) {
             previousScriptActionIndex = currentScriptActionIndex;
+        
+            // handle iterations
+            if (currentScriptActionIndex == 0 && currentIteration >= numberOfIterations) {
+                return ScriptState.COMPLETED;
+            }
+        
             if (currentScriptActionIndex == 0) {
-                if (currentIteration < numberOfIterations) {
-                    currentIteration++;
-                    scriptActions.get(currentScriptActionIndex).setup();
-                    ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-                    ScriptState scriptState = currentScriptAction.execute();
-                    if (scriptState == ScriptState.COMPLETED) {
-                        currentScriptAction.cleanup();
-                        currentScriptActionIndex++;
-                        if (currentScriptActionIndex < scriptActions.size()) {
-                            scriptActions.get(currentScriptActionIndex).setup();
-                        }
-                        else {
-                            currentScriptActionIndex = 0;
-                            previousScriptActionIndex = -1;
-                        }
-                    }
-                }
-                else {
-                    return ScriptState.COMPLETED;
-                }
+                currentIteration++;
             }
-            else {
-                ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-                ScriptState scriptState = currentScriptAction.execute();
-                if (scriptState == ScriptState.COMPLETED) {
-                    currentScriptAction.cleanup();
-                    currentScriptActionIndex++;
-                    if (currentScriptActionIndex < scriptActions.size()) {
-                        scriptActions.get(currentScriptActionIndex).setup();
-                    }
-                    else {
-                        currentScriptActionIndex = 0;
-                        previousScriptActionIndex = -1;
-                    }
-                }
+        
+            scriptActions.get(currentScriptActionIndex).setup();
+        }
+        
+        ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
+        ScriptState scriptState = currentScriptAction.execute();
+        
+        if (scriptState == ScriptState.COMPLETED) {
+            currentScriptAction.cleanup();
+            currentScriptActionIndex++;
+        
+            if (currentScriptActionIndex >= scriptActions.size()) {
+                currentScriptActionIndex = 0;
+                previousScriptActionIndex = -1;
             }
         }
-        else {
-            ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-            ScriptState scriptState = currentScriptAction.execute();
-            if (scriptState == ScriptState.COMPLETED) {
-                currentScriptAction.cleanup();
-                currentScriptActionIndex++;
-                if (currentScriptActionIndex < scriptActions.size()) {
-                    scriptActions.get(currentScriptActionIndex).setup();
-                }
-                else {
-                    currentScriptActionIndex = 0;
-                    previousScriptActionIndex = -1;
-                }
-            }
-        }
+        
         return ScriptState.RUNNING;
     }
 

@@ -96,58 +96,28 @@ public class LoopIndefiniteScriptAction extends ScriptAction {
     public ScriptState execute() {
         if (previousScriptActionIndex != currentScriptActionIndex) {
             previousScriptActionIndex = currentScriptActionIndex;
-            if (currentScriptActionIndex == 0) {
-                if (!areRequirementsMet()) {
-                    scriptActions.get(currentScriptActionIndex).setup();
-                    ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-                    ScriptState scriptState = currentScriptAction.execute();
-                    if (scriptState == ScriptState.COMPLETED) {
-                        currentScriptAction.cleanup();
-                        currentScriptActionIndex++;
-                        if (currentScriptActionIndex < scriptActions.size()) {
-                            scriptActions.get(currentScriptActionIndex).setup();
-                        }
-                        else {
-                            currentScriptActionIndex = 0;
-                            previousScriptActionIndex = -1;
-                        }
-                    }
-                }
-                else {
-                    return ScriptState.COMPLETED;
-                }
+        
+            // handle determining whether loop should stop or not
+            if (currentScriptActionIndex == 0 && areRequirementsMet()) {
+                return ScriptState.COMPLETED;
             }
-            else {
-                ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-                ScriptState scriptState = currentScriptAction.execute();
-                if (scriptState == ScriptState.COMPLETED) {
-                    currentScriptAction.cleanup();
-                    currentScriptActionIndex++;
-                    if (currentScriptActionIndex < scriptActions.size()) {
-                        scriptActions.get(currentScriptActionIndex).setup();
-                    }
-                    else {
-                        currentScriptActionIndex = 0;
-                        previousScriptActionIndex = -1;
-                    }
-                }
+        
+            scriptActions.get(currentScriptActionIndex).setup();
+        }
+        
+        ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
+        ScriptState scriptState = currentScriptAction.execute();
+        
+        if (scriptState == ScriptState.COMPLETED) {
+            currentScriptAction.cleanup();
+            currentScriptActionIndex++;
+        
+            if (currentScriptActionIndex >= scriptActions.size()) {
+                currentScriptActionIndex = 0;
+                previousScriptActionIndex = -1;
             }
         }
-        else {
-            ScriptAction currentScriptAction = scriptActions.get(currentScriptActionIndex);
-            ScriptState scriptState = currentScriptAction.execute();
-            if (scriptState == ScriptState.COMPLETED) {
-                currentScriptAction.cleanup();
-                currentScriptActionIndex++;
-                if (currentScriptActionIndex < scriptActions.size()) {
-                    scriptActions.get(currentScriptActionIndex).setup();
-                }
-                else {
-                    currentScriptActionIndex = 0;
-                    previousScriptActionIndex = -1;
-                }
-            }
-        }
+        
         return ScriptState.RUNNING;
     }
 
