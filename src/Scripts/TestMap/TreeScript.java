@@ -2,7 +2,9 @@ package Scripts.TestMap;
 
 import java.util.ArrayList;
 
+import Level.GameListener;
 import Level.Script;
+import Level.ScriptState;
 import ScriptActions.CustomRequirement;
 import ScriptActions.ChangeFlagScriptAction;
 import ScriptActions.ConditionalScriptAction;
@@ -49,9 +51,18 @@ public class TreeScript extends Script {
                 }});
 
                 addScriptAction(new ChangeFlagScriptAction("hasFoundBall", true));
+
+                // alert all listeners (which includes play level screen) that the game has been won
+                addScriptAction(new ScriptAction() {
+                    @Override
+                    public ScriptState execute() {
+                        for (GameListener listener: listeners) {
+                            listener.onWin();
+                        }
+                        return ScriptState.COMPLETED;
+                    }
+                });
             }});
-
-
         }});
        
         scriptActions.add(new UnlockPlayerScriptAction());

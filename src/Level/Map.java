@@ -76,6 +76,9 @@ public abstract class Map {
     // reference to current player
     protected Player player;
 
+    // other external classes can use this to listen for events
+    protected ArrayList<GameListener> listeners = new ArrayList<>();
+
     public Map(String mapFileName, Tileset tileset) {
         this.mapFileName = mapFileName;
         this.tileset = tileset;
@@ -326,6 +329,7 @@ public abstract class Map {
             if (script.getScriptActions() == null) {
                 activeScript.setMap(this);
                 activeScript.setPlayer(player);
+                activeScript.setListeners(listeners);
                 activeScript.initialize();
             }
             activeScript.setIsActive(true);
@@ -338,6 +342,7 @@ public abstract class Map {
             if (mapTile.getInteractScript() != null) {
                 mapTile.getInteractScript().setMap(this);
                 mapTile.getInteractScript().setPlayer(player);
+                mapTile.getInteractScript().setListeners(listeners);
                 mapTile.getInteractScript().initialize();
             }
         }
@@ -345,6 +350,7 @@ public abstract class Map {
             if (npc.getInteractScript() != null) {
                 npc.getInteractScript().setMap(this);
                 npc.getInteractScript().setPlayer(player);
+                npc.getInteractScript().setListeners(listeners);
                 npc.getInteractScript().initialize();
             }
         }
@@ -352,6 +358,7 @@ public abstract class Map {
             if (enhancedMapTile.getInteractScript() != null) {
                 enhancedMapTile.getInteractScript().setMap(this);
                 enhancedMapTile.getInteractScript().setPlayer(player);
+                enhancedMapTile.getInteractScript().setListeners(listeners);
                 enhancedMapTile.getInteractScript().initialize();
             }
         }
@@ -359,6 +366,7 @@ public abstract class Map {
             if (trigger.getTriggerScript() != null) {
                 trigger.getTriggerScript().setMap(this);
                 trigger.getTriggerScript().setPlayer(player);
+                trigger.getTriggerScript().setListeners(listeners);
                 trigger.getTriggerScript().initialize();
             }
         }
@@ -598,5 +606,13 @@ public abstract class Map {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void addListener(GameListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public ArrayList<GameListener> getListeners() {
+        return listeners;
     }
 }

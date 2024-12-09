@@ -34,6 +34,7 @@ public abstract class Script {
     protected Player player;
 
     protected ScriptActionOutputManager scriptActionOutputManager;
+    protected ArrayList<GameListener> listeners = new ArrayList<>();
 
     public Script() {
         scriptActionOutputManager = new ScriptActionOutputManager();
@@ -49,8 +50,13 @@ public abstract class Script {
     public ArrayList<ScriptAction> getScriptActions() {
         return scriptActions;
     }
+    
     public ScriptActionOutputManager getScriptActionOutputManager() {
         return scriptActionOutputManager;
+    }
+
+    public void setListeners(ArrayList<GameListener> listeners) {
+        this.listeners = listeners;
     }
 
     public void initialize() {
@@ -68,6 +74,7 @@ public abstract class Script {
             scriptAction.setMap(map);
             scriptAction.setPlayer(player);
             scriptAction.setEntity(entity);
+            scriptAction.setListeners(listeners);
             scriptAction.setOutputManager(scriptActionOutputManager);
             if (scriptAction instanceof ConditionalScriptAction) {
                 ConditionalScriptAction conditionalScriptAction = (ConditionalScriptAction)scriptAction;

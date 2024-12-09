@@ -10,7 +10,7 @@ import Players.Cat;
 import Utils.Direction;
 
 // This class is for when the RPG game is actually being played
-public class PlayLevelScreen extends Screen {
+public class PlayLevelScreen extends Screen implements GameListener {
     protected ScreenCoordinator screenCoordinator;
     protected Map map;
     protected Player player;
@@ -45,6 +45,10 @@ public class PlayLevelScreen extends Screen {
         // let pieces of map know which button to listen for as the "interact" button
         map.getTextbox().setInteractKey(player.getInteractKey());
 
+        // add this screen as a "game listener" so other areas of the game that don't normally have direct access to it (such as scripts) can "signal" to have it do something
+        // this is used in the "onWin" method -- a script signals to this class that the game has been won by calling its "onWin" method
+        map.addListener(this);
+
         // preloads all scripts ahead of time rather than loading them dynamically
         // both are supported, however preloading is recommended
         map.preloadScripts();
@@ -65,11 +69,12 @@ public class PlayLevelScreen extends Screen {
                 winScreen.update();
                 break;
         }
+    }
 
-        // if flag is set at any point during gameplay, game is "won"
-        if (map.getFlagManager().isFlagSet("hasFoundBall")) {
-            playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
-        }
+    @Override
+    public void onWin() {
+        // when this method is called within the game, it signals the game has been "won"
+        playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
@@ -87,7 +92,6 @@ public class PlayLevelScreen extends Screen {
     public PlayLevelScreenState getPlayLevelScreenState() {
         return playLevelScreenState;
     }
-
 
     public void resetLevel() {
         initialize();
