@@ -46,11 +46,21 @@ public class NPCWalkScriptAction extends ScriptAction {
 
     @Override
     public ScriptState execute() {
-        npc.walk(direction, speed);
         amountMoved += speed;
-        if (amountMoved < distance) {
+        if (amountMoved < distance)
+        {
+            npc.walk(direction, speed);
             return ScriptState.RUNNING;
         }
-        return ScriptState.COMPLETED;
+        else if (amountMoved > distance)
+        {
+            npc.walk(direction, Math.min(amountMoved - distance, distance));
+            return ScriptState.COMPLETED;
+        }
+        else // (amountMoved == distance)
+        {
+            npc.walk(direction, speed);
+            return ScriptState.COMPLETED;
+        }
     }
 }

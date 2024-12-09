@@ -6,6 +6,8 @@ import java.util.Queue;
 import GameObject.Rectangle;
 import ScriptActions.ConditionalScriptAction;
 import ScriptActions.ConditionalScriptActionGroup;
+import ScriptActions.LoopFixedScriptAction;
+import ScriptActions.LoopIndefiniteScriptAction;
 import ScriptActions.ScriptAction;
 import ScriptActions.ScriptActionOutputManager;
 
@@ -74,6 +76,18 @@ public abstract class Script {
                     for (ScriptAction conditionalScriptActionGroupScriptAction : conditionalScriptActionGroup.getScriptActions()) {
                         scriptActionsToInitialize.add(conditionalScriptActionGroupScriptAction);
                     }
+                }
+            }
+            else if (scriptAction instanceof LoopIndefiniteScriptAction) {
+                LoopIndefiniteScriptAction loopScriptAction = (LoopIndefiniteScriptAction)scriptAction;
+                for (ScriptAction loopScriptActionScriptAction : loopScriptAction.getScriptActions()) {
+                    scriptActionsToInitialize.add(loopScriptActionScriptAction);
+                }
+            }
+            else if (scriptAction instanceof LoopFixedScriptAction) {
+                LoopFixedScriptAction loopScriptAction = (LoopFixedScriptAction)scriptAction;
+                for (ScriptAction loopScriptActionScriptAction : loopScriptAction.getScriptActions()) {
+                    scriptActionsToInitialize.add(loopScriptActionScriptAction);
                 }
             }
         }
